@@ -17,14 +17,30 @@
       font-family: Arial, sans-serif;
       color: #ffffff;
     }
+
     #map {
       width: 90%;
       height: 80%;
       border: 2px solid #ffffff;
       border-radius: 10px;
     }
+
     h1 {
       margin-bottom: 10px;
+    }
+
+    .popup-content {
+      font-size: 1rem;
+      color: #000;
+    }
+
+    .popup-content h2 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .popup-content p {
+      margin: 5px 0;
     }
   </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
@@ -34,18 +50,64 @@
   <h1>🌍 Interaktiv Världskarta</h1>
   <div id="map"></div>
   <script>
+    // Skapa kartan
     const map = L.map('map').setView([0, 0], 2);
 
+    // Lägg till OpenStreetMap som baslager
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // Exempel: Lägg till en markör i Stockholm
-    L.marker([59.3293, 18.0686])
-      .addTo(map)
-      .bindPopup('📍 Stockholm, Sverige')
-      .openPopup();
+    // Landdata (exempel)
+    const countries = {
+      "Sverige": {
+        coords: [59.3293, 18.0686],
+        military: "30 000 aktiva soldater",
+        population: "10 500 000",
+        area: "450 295 km²",
+        economy: "657 miljarder USD"
+      },
+      "USA": {
+        coords: [37.0902, -95.7129],
+        military: "1 400 000 aktiva soldater",
+        population: "331 000 000",
+        area: "9 833 517 km²",
+        economy: "25,5 biljoner USD"
+      },
+      "Kina": {
+        coords: [35.8617, 104.1954],
+        military: "2 000 000 aktiva soldater",
+        population: "1 410 000 000",
+        area: "9 596 961 km²",
+        economy: "17,5 biljoner USD"
+      }
+    };
+
+    // Lägg till markörer för varje land
+    for (const country in countries) {
+      const data = countries[country];
+      L.marker(data.coords)
+        .addTo(map)
+        .bindPopup(`
+          <div class="popup-content">
+            <h2>${country}</h2>
+            <p><strong>Militär styrka:</strong> ${data.military}</p>
+            <p><strong>Befolkning:</strong> ${data.population}</p>
+            <p><strong>Area:</strong> ${data.area}</p>
+            <p><strong>Ekonomi:</strong> ${data.economy}</p>
+          </div>
+        `);
+    }
+
+    // Funktion för att visa popup på klick
+    map.on('click', function (e) {
+      const { lat, lng } = e.latlng;
+      const popup = L.popup()
+        .setLatLng([lat, lng])
+        .setContent(`<p>Klicka på ett markerat land för att se dess information.</p>`)
+        .openOn(map);
+    });
   </script>
 </body>
 </html>
