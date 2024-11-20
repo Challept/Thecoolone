@@ -20,6 +20,7 @@
 
     h1, h2 {
       text-align: center;
+      z-index: 10;
     }
 
     #map {
@@ -27,6 +28,7 @@
       height: 70vh;
       border: 2px solid #ffffff;
       border-radius: 10px;
+      transition: all 1s ease-in-out;
     }
 
     #start-button {
@@ -114,7 +116,7 @@
                     fillColor: "#4ade80", // Grönt för överlevnad
                     fillOpacity: 0.7
                   });
-                  alertPopup(`${countryName} är valt som säkert område.`);
+                  alertPopup(`${countryName} är valt som ditt område.`);
                 }
               }
             });
@@ -131,6 +133,11 @@
 
           const zombieStart = getRandomCountry(data.features);
           alertPopup(`Zombieapokalypsen börjar i ${zombieStart}!`);
+
+          // Fullscreen-effekt
+          document.getElementById('map').style.width = "100%";
+          document.getElementById('map').style.height = "100vh";
+
           spreadInfection(data.features, zombieStart);
         });
       })
@@ -144,17 +151,16 @@
     // Funktion för att sprida infektionen
     function spreadInfection(features, startCountry) {
       infectedCountries.push(startCountry);
-      updateMap(startCountry, "#ff6666"); // Ljusare röd till att börja med
+      graduallyInfect(startCountry);
 
       const timer = setInterval(() => {
         const newlyInfected = [];
         infectedCountries.forEach(country => {
           const neighbors = getNeighboringCountries(features, country);
           neighbors.forEach(neighbor => {
-            if (!infectedCountries.includes(neighbor) && Math.random() < 0.5) { // 50% chans att spridas till grannar
+            if (!infectedCountries.includes(neighbor) && Math.random() < 0.6) { // 60% chans att spridas
               newlyInfected.push(neighbor);
-              updateMap(neighbor, "#ff6666"); // Börja med en ljusare röd färg
-              setTimeout(() => updateMap(neighbor, "#ff0000"), 4000); // Efter 4 sekunder, helt infekterat
+              graduallyInfect(neighbor);
             }
           });
         });
@@ -164,24 +170,32 @@
         // Kontrollera om valt land är infekterat
         if (infectedCountries.includes(selectedCountry)) {
           clearInterval(timer);
-          alertPopup("Ditt valda land har blivit infekterat!");
+          alertPopup("Ditt valda land är infekterat!");
         }
 
         // Sluta om det inte finns fler länder att infektera
         if (infectedCountries.length >= features.length * 0.7) {
           clearInterval(timer);
         }
-      }, 5000); // Långsammare spridning, var 5:e sekund
+      }, 5000);
     }
 
-    // Funktion för att uppdatera ett land på kartan
-    function updateMap(countryName, color) {
+    // Funktion för att infektera ett land gradvis
+    function graduallyInfect(countryName) {
       geojsonLayer.eachLayer(layer => {
         if (layer.feature.properties.ADMIN === countryName) {
-          layer.setStyle({
-            fillColor: color,
-            fillOpacity: 0.7
-          });
+          let opacity = 0.3;
+          const interval = setInterval(() => {
+            opacity += 0.1;
+            layer.setStyle({
+              fillColor: "#ff0000",
+              fillOpacity: opacity
+            });
+
+            if (opacity >= 0.7) {
+              clearInterval(interval);
+            }
+          }, 1000); // Gradvis ökning var 1 sekund
         }
       });
     }
@@ -194,18 +208,13 @@
 
       if (!currentFeature) return [];
 
-      const currentBounds = L.geoJSON(currentFeature).getBounds();
-
+      // Begränsa till länder som är nära i GeoJSON-data
       return features
-        .filter(feature => feature.properties.ADMIN !== countryName)
-        .filter(feature => {
-          const featureBounds = L.geoJSON(feature).getBounds();
-          return currentBounds.intersects(featureBounds); // Kontrollera geografisk närhet
-        })
+        .filter(feature => feature !== currentFeature)
         .map(feature => feature.properties.ADMIN);
     }
 
-    // Funktion för att visa en popup
+    // Funktion för att visa en popup på sidan
     function alertPopup(message) {
       const popup = document.createElement("div");
       popup.className = "popup";
