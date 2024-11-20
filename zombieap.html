@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zombie Survival</title>
+  <title>Zombie Apokalyps</title>
   <style>
     body {
       margin: 0;
@@ -15,10 +15,10 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      overflow: hidden;
     }
 
     h1, h2 {
-      margin: 10px 0;
       text-align: center;
     }
 
@@ -43,22 +43,52 @@
       background-color: #38b46c;
     }
 
-    .countdown {
-      font-size: 2rem;
-      font-weight: bold;
-      text-align: center;
-      margin-top: 20px;
+    .popup {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #ff0000;
+      color: #ffffff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      z-index: 999;
+      animation: fade-in 1s ease-in-out;
+    }
+
+    #blood-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(139,0,0,0.9), rgba(60,0,0,1));
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 2s ease-in-out;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
-  <h1>Zombie Survival</h1>
+  <h1>Zombie Apokalyps</h1>
   <h2>Välj ett land att överleva i!</h2>
   <div id="map"></div>
   <button id="start-button">Starta Apokalypsen</button>
-  <div class="countdown" id="countdown"></div>
+  <div id="blood-overlay"></div>
 
   <script>
     const map = L.map('map').setView([20, 0], 2);
@@ -69,18 +99,15 @@
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // Variabler för logik
     let selectedCountry = null;
     let infectedCountries = [];
-    let zombieStart = null;
-    const infectionTime = 30000; // 30 sekunder
-    const infectedPercentage = 70;
+    let geojsonLayer;
 
-    // Hämta GeoJSON-data och lägg till på kartan
+    // Hämta GeoJSON-data
     fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
       .then(response => response.json())
       .then(data => {
-        const geojsonLayer = L.geoJSON(data, {
+        geojsonLayer = L.geoJSON(data, {
           style: function () {
             return {
               color: "#2563eb",
@@ -98,10 +125,10 @@
                 if (!selectedCountry) {
                   selectedCountry = countryName;
                   layer.setStyle({
-                    fillColor: "#4ade80", // Grön färg för överlevnad
+                    fillColor: "#4ade80", // Grönt för överlevnad
                     fillOpacity: 0.7
                   });
-                  alert(`${countryName} är valt som säkert område.`);
+                  alertPopup(`${countryName} är valt som säkert område.`);
                 }
               }
             });
@@ -112,13 +139,13 @@
         // Starta apokalypsen
         document.getElementById('start-button').addEventListener('click', function () {
           if (!selectedCountry) {
-            alert("Välj ett land först!");
+            alertPopup("Välj ett land först!");
             return;
           }
 
-          zombieStart = getRandomCountry(data.features);
-          alert(`Zombieapokalypsen börjar i ${zombieStart}!`);
-          spreadInfection(data.features, geojsonLayer);
+          const zombieStart = getRandomCountry(data.features);
+          alertPopup(`Zombieapokalypsen börjar i ${zombieStart}!`);
+          spreadInfection(data.features, zombieStart);
         });
       })
       .catch(error => console.error("Kunde inte ladda GeoJSON-data:", error));
@@ -129,59 +156,77 @@
     }
 
     // Funktion för att sprida infektionen
-    function spreadInfection(features, layer) {
-      const countdownElement = document.getElementById("countdown");
-      let remainingTime = 5;
+    function spreadInfection(features, startCountry) {
+      infectedCountries.push(startCountry);
+      updateMap(startCountry, "#ff0000");
 
-      // Nedräkning
-      const countdownInterval = setInterval(() => {
-        countdownElement.textContent = `Startar om: ${remainingTime}`;
-        remainingTime--;
-
-        if (remainingTime < 0) {
-          clearInterval(countdownInterval);
-          countdownElement.textContent = "Zombieapokalypsen har börjat!";
-          startInfection(features, layer);
-        }
-      }, 1000);
-    }
-
-    // Starta infektionen
-    function startInfection(features, layer) {
-      const infectedCount = Math.ceil((features.length * infectedPercentage) / 100);
-      const infectionInterval = infectionTime / infectedCount;
-      let infectedSoFar = 0;
-
-      const infectionProcess = setInterval(() => {
-        if (infectedSoFar >= infectedCount) {
-          clearInterval(infectionProcess);
-          document.getElementById("countdown").textContent = "Apokalypsen är över!";
-          return;
-        }
-
-        const randomFeature = getRandomUninfectedCountry(features);
-        if (randomFeature) {
-          const countryName = randomFeature.properties.ADMIN;
-          layer.eachLayer(function (layer) {
-            if (layer.feature.properties.ADMIN === countryName) {
-              layer.setStyle({
-                fillColor: "#ff0000", // Röd färg för infektion
-                fillOpacity: 0.7
-              });
-              infectedCountries.push(countryName);
-              infectedSoFar++;
+      const timer = setInterval(() => {
+        const newlyInfected = [];
+        infectedCountries.forEach(country => {
+          const neighbors = getNeighboringCountries(features, country);
+          neighbors.forEach(neighbor => {
+            if (!infectedCountries.includes(neighbor) && Math.random() < 0.8) { // 80% chans att spridas
+              newlyInfected.push(neighbor);
+              updateMap(neighbor, "#ff0000");
             }
           });
+        });
+
+        newlyInfected.forEach(country => infectedCountries.push(country));
+
+        // Kontrollera om valt land är infekterat
+        if (infectedCountries.includes(selectedCountry)) {
+          clearInterval(timer);
+          showBloodOverlay();
         }
-      }, infectionInterval);
+
+        // Sluta om det inte finns fler länder att infektera
+        if (infectedCountries.length >= features.length * 0.7) {
+          clearInterval(timer);
+        }
+      }, 2000);
     }
 
-    // Hämta ett slumpmässigt land som inte redan är infekterat
-    function getRandomUninfectedCountry(features) {
-      const uninfected = features.filter(
-        feature => !infectedCountries.includes(feature.properties.ADMIN)
+    // Funktion för att uppdatera ett land på kartan
+    function updateMap(countryName, color) {
+      geojsonLayer.eachLayer(layer => {
+        if (layer.feature.properties.ADMIN === countryName) {
+          layer.setStyle({
+            fillColor: color,
+            fillOpacity: 0.7
+          });
+        }
+      });
+    }
+
+    // Funktion för att få grannländer
+    function getNeighboringCountries(features, countryName) {
+      const currentFeature = features.find(
+        feature => feature.properties.ADMIN === countryName
       );
-      return uninfected[Math.floor(Math.random() * uninfected.length)];
+
+      if (!currentFeature) return [];
+
+      return features
+        .filter(feature => feature.properties.ADMIN !== countryName)
+        .map(feature => feature.properties.ADMIN);
+    }
+
+    // Funktion för att visa blodöverlägg
+    function showBloodOverlay() {
+      const overlay = document.getElementById("blood-overlay");
+      overlay.style.opacity = 1;
+      setTimeout(() => alertPopup("Ditt land har blivit infekterat! Zombies har tagit över!"), 1000);
+    }
+
+    // Funktion för att visa en popup på sidan
+    function alertPopup(message) {
+      const popup = document.createElement("div");
+      popup.className = "popup";
+      popup.innerHTML = `<p>${message}</p>`;
+      document.body.appendChild(popup);
+
+      setTimeout(() => popup.remove(), 5000);
     }
   </script>
 </body>
