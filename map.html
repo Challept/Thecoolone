@@ -1473,6 +1473,12 @@ fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/coun
         // Hantera händelser på lagret
         layer.on({
           click: function (e) {
+            // Förhindra dubbelval av samma land
+            if (selectedCountries.includes(countryName)) {
+              alert("Detta land är redan valt!");
+              return;
+            }
+
             if (selectedCountries.length < 2) {
               selectedCountries.push(countryName);
               document.getElementById(
@@ -1484,8 +1490,11 @@ fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/coun
 
               if (selectedCountries.length === 2) {
                 analyzeBattle();
+                // Scrolla ner till analyssektionen
+                document.getElementById("battle-facts").scrollIntoView({ behavior: "smooth" });
               }
             } else {
+              // Återställ valda länder och börja om
               selectedCountries = [countryName];
               document.getElementById("country1").innerHTML = `
                 <h3>${countryName}</h3>
