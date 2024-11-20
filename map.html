@@ -20,7 +20,7 @@
 
     #map {
       width: 90%;
-      height: 80%;
+      height: 90%;
       border: 2px solid #ffffff;
       border-radius: 10px;
     }
@@ -45,6 +45,7 @@
   </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-ajax"></script>
 </head>
 <body>
   <h1>🌍 Interaktiv Världskarta</h1>
@@ -60,23 +61,20 @@
     }).addTo(map);
 
     // Landdata (exempel)
-    const countries = {
+    const countryData = {
       "Sverige": {
-        coords: [59.3293, 18.0686],
         military: "30 000 aktiva soldater",
         population: "10 500 000",
         area: "450 295 km²",
         economy: "657 miljarder USD"
       },
       "USA": {
-        coords: [37.0902, -95.7129],
         military: "1 400 000 aktiva soldater",
         population: "331 000 000",
         area: "9 833 517 km²",
         economy: "25,5 biljoner USD"
       },
       "Kina": {
-        coords: [35.8617, 104.1954],
         military: "2 000 000 aktiva soldater",
         population: "1 410 000 000",
         area: "9 596 961 km²",
@@ -84,12 +82,13 @@
       }
     };
 
-    // Lägg till markörer för varje land
-    for (const country in countries) {
-      const data = countries[country];
-      L.marker(data.coords)
-        .addTo(map)
-        .bindPopup(`
+    let selectedLayer = null; // För att spåra markerat land
+
+    // Funktion för att skapa popup med landinformation
+    function getPopupContent(country) {
+      if (countryData[country]) {
+        const data = countryData[country];
+        return `
           <div class="popup-content">
             <h2>${country}</h2>
             <p><strong>Militär styrka:</strong> ${data.military}</p>
@@ -97,17 +96,64 @@
             <p><strong>Area:</strong> ${data.area}</p>
             <p><strong>Ekonomi:</strong> ${data.economy}</p>
           </div>
-        `);
+        `;
+      } else {
+        return `<p>Ingen information tillgänglig för ${country}.</p>`;
+      }
     }
 
-    // Funktion för att visa popup på klick
-    map.on('click', function (e) {
-      const { lat, lng } = e.latlng;
-      const popup = L.popup()
-        .setLatLng([lat, lng])
-        .setContent(`<p>Klicka på ett markerat land för att se dess information.</p>`)
-        .openOn(map);
-    });
+    // Lägg till GeoJSON-data (ladda från en extern fil eller API)
+    const geojsonUrl = "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson";
+
+    // Hämta och lägg till GeoJSON-lager
+    L.geoJSON.ajax(geojsonUrl, {
+      style: function () {
+        return {
+          color: "#3388ff",
+          weight: 1,
+          fillColor: "#3388ff",
+          fillOpacity: 0.2
+        };
+      },
+      onEachFeature: function (feature, layer) {
+        const countryName = feature.properties.ADMIN;
+
+        // Hantera händelser på lagret
+        layer.on({
+          mouseover: function (e) {
+            e.target.setStyle({
+              fillOpacity: 0.5
+            });
+          },
+          mouseout: function (e) {
+            if (selectedLayer !== e.target) {
+              e.target.setStyle({
+                fillOpacity: 0.2
+              });
+            }
+          },
+          click: function (e) {
+            if (selectedLayer) {
+              selectedLayer.setStyle({
+                fillOpacity: 0.2,
+                fillColor: "#3388ff"
+              });
+            }
+            selectedLayer = e.target; // Uppdatera markerat lager
+            e.target.setStyle({
+              fillColor: "#42a5f5",
+              fillOpacity: 0.7
+            });
+
+            // Visa popup med landdata
+            const popup = L.popup()
+              .setLatLng(e.latlng)
+              .setContent(getPopupContent(countryName))
+              .openOn(map);
+          }
+        });
+      }
+    }).addTo(map);
   </script>
 </body>
 </html>
