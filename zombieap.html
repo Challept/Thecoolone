@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zombie Apocalypse</title>
+  <title>Zombie Survival</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: Arial, sans-serif;
-      background: #1e293b;
-      color: white;
+      background-color: #1e293b;
+      color: #ffffff;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -18,57 +17,51 @@
       height: 100vh;
     }
 
+    h1, h2 {
+      margin: 10px 0;
+      text-align: center;
+    }
+
     #map {
       width: 90%;
       height: 70vh;
-      border: 2px solid white;
+      border: 2px solid #ffffff;
       border-radius: 10px;
     }
 
-    #countdown {
-      font-size: 2rem;
+    #start-button {
       margin-top: 20px;
-      display: none;
-      animation: fade-in 1s ease-in-out;
-    }
-
-    @keyframes fade-in {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    #infected-message {
-      margin-top: 20px;
+      padding: 10px 20px;
       font-size: 1.2rem;
-      display: none;
+      background-color: #4ade80;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #start-button:hover {
+      background-color: #38b46c;
+    }
+
+    .countdown {
+      font-size: 2rem;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
     }
   </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
-  <h1>Zombie Apocalypse 🌍</h1>
+  <h1>Zombie Survival</h1>
+  <h2>Välj ett land att överleva i!</h2>
   <div id="map"></div>
-  <div id="countdown">5</div>
-  <div id="infected-message">Zombierna sprider sig...</div>
+  <button id="start-button">Starta Apokalypsen</button>
+  <div class="countdown" id="countdown"></div>
 
   <script>
-    // Skapa kartan
-    const map = L.map('map', {
-      maxBounds: [
-        [-90, -180],
-        [90, 180]
-      ],
-      maxBoundsViscosity: 1.0,
-      zoomSnap: 1,
-      zoomDelta: 0.5,
-      minZoom: 2,
-      maxZoom: 5
-    }).setView([20, 10], 2);
+    const map = L.map('map').setView([20, 0], 2);
 
     // Lägg till OpenStreetMap som baslager
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -76,8 +69,12 @@
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // Lagra infekterade länder
-    const infectedCountries = new Set();
+    // Variabler för logik
+    let selectedCountry = null;
+    let infectedCountries = [];
+    let zombieStart = null;
+    const infectionTime = 30000; // 30 sekunder
+    const infectedPercentage = 70;
 
     // Hämta GeoJSON-data och lägg till på kartan
     fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
@@ -95,79 +92,96 @@
           onEachFeature: function (feature, layer) {
             const countryName = feature.properties.ADMIN;
 
+            // Klicka för att välja land
             layer.on({
               click: function () {
-                if (infectedCountries.size > 0) return; // Tillåt bara ett första val
-
-                startCountdown(countryName, layer);
+                if (!selectedCountry) {
+                  selectedCountry = countryName;
+                  layer.setStyle({
+                    fillColor: "#4ade80", // Grön färg för överlevnad
+                    fillOpacity: 0.7
+                  });
+                  alert(`${countryName} är valt som säkert område.`);
+                }
               }
             });
           }
         });
-
         geojsonLayer.addTo(map);
+
+        // Starta apokalypsen
+        document.getElementById('start-button').addEventListener('click', function () {
+          if (!selectedCountry) {
+            alert("Välj ett land först!");
+            return;
+          }
+
+          zombieStart = getRandomCountry(data.features);
+          alert(`Zombieapokalypsen börjar i ${zombieStart}!`);
+          spreadInfection(data.features, geojsonLayer);
+        });
       })
       .catch(error => console.error("Kunde inte ladda GeoJSON-data:", error));
 
-    // Funktion för att starta nedräkning
-    function startCountdown(countryName, layer) {
+    // Funktion för att få ett slumpmässigt land
+    function getRandomCountry(features) {
+      return features[Math.floor(Math.random() * features.length)].properties.ADMIN;
+    }
+
+    // Funktion för att sprida infektionen
+    function spreadInfection(features, layer) {
       const countdownElement = document.getElementById("countdown");
-      let timeLeft = 5;
+      let remainingTime = 5;
 
-      countdownElement.style.display = "block";
-      countdownElement.textContent = timeLeft;
+      // Nedräkning
+      const countdownInterval = setInterval(() => {
+        countdownElement.textContent = `Startar om: ${remainingTime}`;
+        remainingTime--;
 
-      const interval = setInterval(() => {
-        timeLeft--;
-        countdownElement.textContent = timeLeft;
-
-        if (timeLeft <= 0) {
-          clearInterval(interval);
-          infectCountry(countryName, layer);
+        if (remainingTime < 0) {
+          clearInterval(countdownInterval);
+          countdownElement.textContent = "Zombieapokalypsen har börjat!";
+          startInfection(features, layer);
         }
       }, 1000);
     }
 
-    // Funktion för att infektera ett land
-    function infectCountry(countryName, layer) {
-      infectedCountries.add(countryName);
-      document.getElementById("countdown").style.display = "none";
-      document.getElementById("infected-message").style.display = "block";
+    // Starta infektionen
+    function startInfection(features, layer) {
+      const infectedCount = Math.ceil((features.length * infectedPercentage) / 100);
+      const infectionInterval = infectionTime / infectedCount;
+      let infectedSoFar = 0;
 
-      layer.setStyle({
-        fillColor: "red",
-        fillOpacity: 1
-      });
+      const infectionProcess = setInterval(() => {
+        if (infectedSoFar >= infectedCount) {
+          clearInterval(infectionProcess);
+          document.getElementById("countdown").textContent = "Apokalypsen är över!";
+          return;
+        }
 
-      spreadInfection();
+        const randomFeature = getRandomUninfectedCountry(features);
+        if (randomFeature) {
+          const countryName = randomFeature.properties.ADMIN;
+          layer.eachLayer(function (layer) {
+            if (layer.feature.properties.ADMIN === countryName) {
+              layer.setStyle({
+                fillColor: "#ff0000", // Röd färg för infektion
+                fillOpacity: 0.7
+              });
+              infectedCountries.push(countryName);
+              infectedSoFar++;
+            }
+          });
+        }
+      }, infectionInterval);
     }
 
-    // Funktion för att sprida infektionen
-    function spreadInfection() {
-      const spreadInterval = setInterval(() => {
-        const layers = map._layers;
-
-        for (const id in layers) {
-          const layer = layers[id];
-          if (layer.feature && layer.feature.properties) {
-            const countryName = layer.feature.properties.ADMIN;
-
-            if (!infectedCountries.has(countryName) && Math.random() < 0.1) {
-              infectedCountries.add(countryName);
-
-              layer.setStyle({
-                fillColor: "red",
-                fillOpacity: Math.min(0.3 + infectedCountries.size / 300, 1)
-              });
-
-              if (infectedCountries.size > 150) {
-                clearInterval(spreadInterval);
-                document.getElementById("infected-message").textContent = "Hela världen är nu infekterad! 🧟";
-              }
-            }
-          }
-        }
-      }, 300);
+    // Hämta ett slumpmässigt land som inte redan är infekterat
+    function getRandomUninfectedCountry(features) {
+      const uninfected = features.filter(
+        feature => !infectedCountries.includes(feature.properties.ADMIN)
+      );
+      return uninfected[Math.floor(Math.random() * uninfected.length)];
     }
   </script>
 </body>
