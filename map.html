@@ -139,21 +139,6 @@
     <div id="map"></div>
   </div>
 
-  <div id="search-container">
-    <input
-      id="search-box"
-      type="text"
-      placeholder="Sök efter ett land..."
-    />
-    <ul id="suggestions"></ul>
-  </div>
-
-  <div id="selected-container">
-    <h2>Valda länder:</h2>
-    <div id="country1"></div>
-    <div id="country2"></div>
-  </div>
-
   <div id="battle-container">
     <h2>1v1 Krig: Vilket land vinner?</h2>
     <div class="battle-results">
@@ -1500,15 +1485,12 @@ const countryData = {
       }
     }
 
-// Variabler för sök och val av länder
-let selectedCountries = [];
-let lastClickTime = 0;
-let highlightedLayers = [];
-
 // Hämta GeoJSON-data och lägg till på kartan
 fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
   .then(response => response.json())
   .then(data => {
+    let lastClickTime = 0; // Förhindra dubbla klick
+    let highlightedLayers = []; // För att hålla reda på valda länder
     const geojsonLayer = L.geoJSON(data, {
       style: function () {
         return {
@@ -1599,9 +1581,6 @@ fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/coun
       }
     });
     geojsonLayer.addTo(map);
-
-    // Initiera sökfunktion
-    initSearchFunction(data);
   })
   .catch(error => console.error("Kunde inte ladda GeoJSON-data:", error));
 
@@ -1620,47 +1599,6 @@ function analyzeBattle() {
       <strong>${winner}</strong> vinner över <strong>${loser}</strong> baserat på militär styrka och ekonomiska resurser! 
       <br> <strong>Anledning:</strong> ${winner} har en högre total poäng som inkluderar både militär och ekonomisk kapacitet.
     `;
-  }
-}
-
-// Funktion för att initiera sökfunktionen
-function initSearchFunction(geoData) {
-  const searchInput = document.getElementById("search-input");
-  const searchResults = document.getElementById("search-results");
-
-  searchInput.addEventListener("input", function () {
-    const query = searchInput.value.toLowerCase();
-    const matches = geoData.features
-      .map(feature => feature.properties.ADMIN)
-      .filter(name => name.toLowerCase().includes(query));
-
-    // Visa matchande resultat
-    searchResults.innerHTML = matches
-      .map(name => `<li onclick="selectCountry('${name}')">${name}</li>`)
-      .join("");
-  });
-}
-
-// Funktion för att hantera landval från sökresultat
-function selectCountry(countryName) {
-  if (selectedCountries.includes(countryName)) {
-    alert("Detta land är redan valt!");
-    return;
-  }
-
-  if (selectedCountries.length < 2) {
-    selectedCountries.push(countryName);
-    document.getElementById(
-      selectedCountries.length === 1 ? "country1" : "country2"
-    ).innerHTML = `
-      <h3>${countryName}</h3>
-      ${getPopupContent(countryName)}
-    `;
-
-    if (selectedCountries.length === 2) {
-      analyzeBattle();
-      document.getElementById("battle-facts").scrollIntoView({ behavior: "smooth" });
-    }
   }
 }
   </script>
