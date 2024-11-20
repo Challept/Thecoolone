@@ -1458,6 +1458,7 @@ const countryData = {
 fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
   .then(response => response.json())
   .then(data => {
+    let lastClickTime = 0; // Förhindra dubbla klick
     const geojsonLayer = L.geoJSON(data, {
       style: function () {
         return {
@@ -1473,6 +1474,14 @@ fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/coun
         // Hantera händelser på lagret
         layer.on({
           click: function (e) {
+            const currentTime = Date.now();
+
+            // Undvik dubbelklick inom 300 ms
+            if (currentTime - lastClickTime < 300) {
+              return;
+            }
+            lastClickTime = currentTime;
+
             // Förhindra dubbelval av samma land
             if (selectedCountries.includes(countryName)) {
               alert("Detta land är redan valt!");
