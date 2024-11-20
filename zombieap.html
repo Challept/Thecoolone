@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zombie Apocalypse</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #1e293b;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    #map {
+      width: 90%;
+      height: 70vh;
+      border: 2px solid white;
+      border-radius: 10px;
+    }
+
+    #countdown {
+      font-size: 2rem;
+      margin-top: 20px;
+      display: none;
+      animation: fade-in 1s ease-in-out;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    #infected-message {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      display: none;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+  <h1>Zombie Apocalypse 🌍</h1>
+  <div id="map"></div>
+  <div id="countdown">5</div>
+  <div id="infected-message">Zombierna sprider sig...</div>
+
+  <script>
+    // Skapa kartan
+    const map = L.map('map', {
+      maxBounds: [
+        [-90, -180],
+        [90, 180]
+      ],
+      maxBoundsViscosity: 1.0,
+      zoomSnap: 1,
+      zoomDelta: 0.5,
+      minZoom: 2,
+      maxZoom: 5
+    }).setView([20, 10], 2);
+
+    // Lägg till OpenStreetMap som baslager
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Lagra infekterade länder
+    const infectedCountries = new Set();
+
+    // Hämta GeoJSON-data och lägg till på kartan
+    fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
+      .then(response => response.json())
+      .then(data => {
+        const geojsonLayer = L.geoJSON(data, {
+          style: function () {
+            return {
+              color: "#2563eb",
+              weight: 1,
+              fillColor: "#60a5fa",
+              fillOpacity: 0.3
+            };
+          },
+          onEachFeature: function (feature, layer) {
+            const countryName = feature.properties.ADMIN;
+
+            layer.on({
+              click: function () {
+                if (infectedCountries.size > 0) return; // Tillåt bara ett första val
+
+                startCountdown(countryName, layer);
+              }
+            });
+          }
+        });
+
+        geojsonLayer.addTo(map);
+      })
+      .catch(error => console.error("Kunde inte ladda GeoJSON-data:", error));
+
+    // Funktion för att starta nedräkning
+    function startCountdown(countryName, layer) {
+      const countdownElement = document.getElementById("countdown");
+      let timeLeft = 5;
+
+      countdownElement.style.display = "block";
+      countdownElement.textContent = timeLeft;
+
+      const interval = setInterval(() => {
+        timeLeft--;
+        countdownElement.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          infectCountry(countryName, layer);
+        }
+      }, 1000);
+    }
+
+    // Funktion för att infektera ett land
+    function infectCountry(countryName, layer) {
+      infectedCountries.add(countryName);
+      document.getElementById("countdown").style.display = "none";
+      document.getElementById("infected-message").style.display = "block";
+
+      layer.setStyle({
+        fillColor: "red",
+        fillOpacity: 1
+      });
+
+      spreadInfection();
+    }
+
+    // Funktion för att sprida infektionen
+    function spreadInfection() {
+      const spreadInterval = setInterval(() => {
+        const layers = map._layers;
+
+        for (const id in layers) {
+          const layer = layers[id];
+          if (layer.feature && layer.feature.properties) {
+            const countryName = layer.feature.properties.ADMIN;
+
+            if (!infectedCountries.has(countryName) && Math.random() < 0.1) {
+              infectedCountries.add(countryName);
+
+              layer.setStyle({
+                fillColor: "red",
+                fillOpacity: Math.min(0.3 + infectedCountries.size / 300, 1)
+              });
+
+              if (infectedCountries.size > 150) {
+                clearInterval(spreadInterval);
+                document.getElementById("infected-message").textContent = "Hela världen är nu infekterad! 🧟";
+              }
+            }
+          }
+        }
+      }, 300);
+    }
+  </script>
+</body>
+</html>
