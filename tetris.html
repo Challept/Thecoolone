@@ -14,6 +14,7 @@
     body {
       margin: 0;
       background: linear-gradient(135deg, #1e293b, #3b82f6);
+      animation: gradient-animation 5s infinite;
       color: #ffffff;
       font-family: Arial, sans-serif;
       display: flex;
@@ -25,6 +26,12 @@
       user-select: none;
     }
 
+    @keyframes gradient-animation {
+      0% { background: linear-gradient(135deg, #1e293b, #3b82f6); }
+      50% { background: linear-gradient(135deg, #3b82f6, #1e293b); }
+      100% { background: linear-gradient(135deg, #1e293b, #3b82f6); }
+    }
+
     .game-container {
       display: flex;
       flex-direction: column;
@@ -34,6 +41,12 @@
     canvas {
       border: 5px solid #ffffff;
       background: #000000;
+      animation: pulse 2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+      50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
     }
 
     .controls-container {
@@ -50,6 +63,9 @@
       height: 100%;
       width: 150px;
       background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .ads-container.left {
@@ -70,18 +86,22 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       font-size: 2rem;
       color: white;
-      animation: fade-in 1s;
+      text-align: center;
+      opacity: 0;
+      animation: fade-in 1s forwards;
+    }
+
+    .game-over p {
+      font-size: 1.5rem;
+      margin-top: 10px;
     }
 
     @keyframes fade-in {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .about {
@@ -220,53 +240,15 @@
       if (collide(arena, player)) {
         arena.forEach(row => row.fill(0));
         showGameOver(player.score);
-        player.score = 0;
       }
     }
 
-    function rotate(matrix, dir) {
-      for (let y = 0; y < matrix.length; ++y) {
-        for (let x = 0; x < y; ++x) {
-          [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
-        }
-      }
-      if (dir > 0) {
-        matrix.forEach(row => row.reverse());
-      } else {
-        matrix.reverse();
-      }
-    }
-
-    function playerRotate(dir) {
-      const pos = player.pos.x;
-      let offset = 1;
-      rotate(player.matrix, dir);
-      while (collide(arena, player)) {
-        player.pos.x += offset;
-        offset = -(offset + (offset > 0 ? 1 : -1));
-        if (offset > player.matrix[0].length) {
-          rotate(player.matrix, -dir);
-          player.pos.x = pos;
-          return;
-        }
-      }
-    }
-
-    function arenaSweep() {
-      let rowCount = 1;
-      outer: for (let y = arena.length - 1; y >= 0; --y) {
-        for (let x = 0; x < arena[y].length; ++x) {
-          if (arena[y][x] === 0) {
-            continue outer;
-          }
-        }
-        const row = arena.splice(y, 1)[0].fill(0);
-        arena.unshift(row);
-        ++y;
-
-        player.score += rowCount * 10;
-        rowCount *= 2;
-      }
+    function showGameOver(score) {
+      const gameOver = document.createElement('div');
+      gameOver.classList.add('game-over');
+      gameOver.innerHTML = `Game Over<br>Din poäng: ${score}`;
+      document.body.appendChild(gameOver);
+      setTimeout(() => location.reload(), 3000);
     }
 
     const arena = createMatrix(12, 20);
