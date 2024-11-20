@@ -28,7 +28,7 @@
       height: 70vh;
       border: 2px solid #ffffff;
       border-radius: 10px;
-      transition: all 1s ease-in-out;
+      transition: all 1.5s ease-in-out;
     }
 
     #start-button {
@@ -116,7 +116,7 @@
                     fillColor: "#4ade80", // Grönt för överlevnad
                     fillOpacity: 0.7
                   });
-                  alertPopup(`${countryName} är valt som ditt område.`);
+                  alertPopup(`${countryName} är valt som säkert område.`);
                 }
               }
             });
@@ -137,6 +137,7 @@
           // Fullscreen-effekt
           document.getElementById('map').style.width = "100%";
           document.getElementById('map').style.height = "100vh";
+          document.body.style.flexDirection = "row";
 
           spreadInfection(data.features, zombieStart);
         });
@@ -158,7 +159,7 @@
         infectedCountries.forEach(country => {
           const neighbors = getNeighboringCountries(features, country);
           neighbors.forEach(neighbor => {
-            if (!infectedCountries.includes(neighbor) && Math.random() < 0.6) { // 60% chans att spridas
+            if (!infectedCountries.includes(neighbor) && Math.random() < 0.8) { // 80% chans att spridas
               newlyInfected.push(neighbor);
               graduallyInfect(neighbor);
             }
