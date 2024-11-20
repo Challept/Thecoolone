@@ -89,26 +89,1292 @@
     L.control.zoom({ position: 'topright' }).addTo(map);
 
     // Landdata (exempel)
-    const countryData = {
-      "Sverige": {
-        military: "30 000 aktiva soldater",
-        population: "10 500 000",
-        area: "450 295 km²",
-        economy: "657 miljarder USD"
-      },
-      "United States of America": {
-        military: "1 400 000 aktiva soldater",
-        population: "331 000 000",
-        area: "9 833 517 km²",
-        economy: "25,5 biljoner USD"
-      },
-      "China": {
-        military: "2 000 000 aktiva soldater",
-        population: "1 410 000 000",
-        area: "9 596 961 km²",
-        economy: "17,5 biljoner USD"
-      }
-    };
+const countryData = {
+  "Afghanistan": {
+    military: "170 000 aktiva soldater",
+    population: "40 000 000",
+    area: "652 230 km²",
+    economy: "20 miljarder USD"
+  },
+  "Albania": {
+    military: "8 500 aktiva soldater",
+    population: "2 800 000",
+    area: "28 748 km²",
+    economy: "15 miljarder USD"
+  },
+  "Algeria": {
+    military: "130 000 aktiva soldater",
+    population: "44 000 000",
+    area: "2 381 741 km²",
+    economy: "170 miljarder USD"
+  },
+  "Andorra": {
+    military: "Ingen militär",
+    population: "77 000",
+    area: "468 km²",
+    economy: "3 miljarder USD"
+  },
+  "Angola": {
+    military: "107 000 aktiva soldater",
+    population: "34 000 000",
+    area: "1 246 700 km²",
+    economy: "70 miljarder USD"
+  },
+  "Antigua and Barbuda": {
+    military: "240 aktiva soldater",
+    population: "98 000",
+    area: "442 km²",
+    economy: "1,6 miljarder USD"
+  },
+  "Argentina": {
+    military: "72 100 aktiva soldater",
+    population: "45 000 000",
+    area: "2 780 400 km²",
+    economy: "450 miljarder USD"
+  },
+  "Armenia": {
+    military: "44 800 aktiva soldater",
+    population: "3 000 000",
+    area: "29 743 km²",
+    economy: "13 miljarder USD"
+  },
+  "Australia": {
+    military: "58 600 aktiva soldater",
+    population: "26 000 000",
+    area: "7 692 024 km²",
+    economy: "1,6 biljoner USD"
+  },
+  "Austria": {
+    military: "22 050 aktiva soldater",
+    population: "9 000 000",
+    area: "83 879 km²",
+    economy: "480 miljarder USD"
+  },
+  "Azerbaijan": {
+    military: "64 050 aktiva soldater",
+    population: "10 000 000",
+    area: "86 600 km²",
+    economy: "55 miljarder USD"
+  },
+  "Bahamas": {
+    military: "1 300 aktiva soldater",
+    population: "400 000",
+    area: "13 943 km²",
+    economy: "12 miljarder USD"
+  },
+  "Bahrain": {
+    military: "8 200 aktiva soldater",
+    population: "1 700 000",
+    area: "765 km²",
+    economy: "40 miljarder USD"
+  },
+  "Bangladesh": {
+    military: "163 050 aktiva soldater",
+    population: "170 000 000",
+    area: "147 570 km²",
+    economy: "460 miljarder USD"
+  },
+  "Barbados": {
+    military: "610 aktiva soldater",
+    population: "290 000",
+    area: "430 km²",
+    economy: "5 miljarder USD"
+  },
+  "Belarus": {
+    military: "45 350 aktiva soldater",
+    population: "9 400 000",
+    area: "207 600 km²",
+    economy: "65 miljarder USD"
+  },
+  "Belgium": {
+    military: "26 300 aktiva soldater",
+    population: "11 500 000",
+    area: "30 528 km²",
+    economy: "590 miljarder USD"
+  },
+  "Belize": {
+    military: "1 500 aktiva soldater",
+    population: "420 000",
+    area: "22 966 km²",
+    economy: "2 miljarder USD"
+  },
+  "Benin": {
+    military: "7 250 aktiva soldater",
+    population: "13 000 000",
+    area: "114 763 km²",
+    economy: "17 miljarder USD"
+  },
+  "Bhutan": {
+    military: "8 000 aktiva soldater",
+    population: "800 000",
+    area: "38 394 km²",
+    economy: "2,5 miljarder USD"
+  },
+    "Bolivia": {
+    military: "34 100 aktiva soldater",
+    population: "12 000 000",
+    area: "1 098 581 km²",
+    economy: "40 miljarder USD"
+  },
+  "Bosnia and Herzegovina": {
+    military: "10 500 aktiva soldater",
+    population: "3 300 000",
+    area: "51 197 km²",
+    economy: "20 miljarder USD"
+  },
+  "Botswana": {
+    military: "9 000 aktiva soldater",
+    population: "2 400 000",
+    area: "581 730 km²",
+    economy: "18 miljarder USD"
+  },
+  "Brazil": {
+    military: "334 500 aktiva soldater",
+    population: "213 000 000",
+    area: "8 515 767 km²",
+    economy: "2,1 biljoner USD"
+  },
+  "Brunei": {
+    military: "7 200 aktiva soldater",
+    population: "450 000",
+    area: "5 765 km²",
+    economy: "13 miljarder USD"
+  },
+  "Bulgaria": {
+    military: "36 950 aktiva soldater",
+    population: "6 900 000",
+    area: "110 879 km²",
+    economy: "80 miljarder USD"
+  },
+  "Burkina Faso": {
+    military: "11 200 aktiva soldater",
+    population: "21 000 000",
+    area: "272 967 km²",
+    economy: "17 miljarder USD"
+  },
+  "Burundi": {
+    military: "30 050 aktiva soldater",
+    population: "12 000 000",
+    area: "27 834 km²",
+    economy: "3 miljarder USD"
+  },
+  "Cabo Verde": {
+    military: "1 200 aktiva soldater",
+    population: "550 000",
+    area: "4 033 km²",
+    economy: "2 miljarder USD"
+  },
+  "Cambodia": {
+    military: "124 300 aktiva soldater",
+    population: "16 500 000",
+    area: "181 035 km²",
+    economy: "28 miljarder USD"
+  },
+    "Cameroon": {
+    military: "25 400 aktiva soldater",
+    population: "27 200 000",
+    area: "475 442 km²",
+    economy: "45 miljarder USD"
+  },
+  "Canada": {
+    military: "67 400 aktiva soldater",
+    population: "38 000 000",
+    area: "9 984 670 km²",
+    economy: "2,2 biljoner USD"
+  },
+  "Central African Republic": {
+    military: "9 150 aktiva soldater",
+    population: "5 000 000",
+    area: "622 984 km²",
+    economy: "2,3 miljarder USD"
+  },
+  "Chad": {
+    military: "33 250 aktiva soldater",
+    population: "17 000 000",
+    area: "1 284 000 km²",
+    economy: "11 miljarder USD"
+  },
+  "Chile": {
+    military: "77 200 aktiva soldater",
+    population: "19 000 000",
+    area: "756 102 km²",
+    economy: "317 miljarder USD"
+  },
+  "China": {
+    military: "2 000 000 aktiva soldater",
+    population: "1 410 000 000",
+    area: "9 596 961 km²",
+    economy: "17,5 biljoner USD"
+  },
+  "Colombia": {
+    military: "293 200 aktiva soldater",
+    population: "51 000 000",
+    area: "1 141 748 km²",
+    economy: "314 miljarder USD"
+  },
+  "Comoros": {
+    military: "1 000 aktiva soldater",
+    population: "870 000",
+    area: "2 235 km²",
+    economy: "1,2 miljarder USD"
+  },
+  "Congo, Democratic Republic of the": {
+    military: "134 250 aktiva soldater",
+    population: "95 000 000",
+    area: "2 344 858 km²",
+    economy: "50 miljarder USD"
+  },
+  "Congo, Republic of the": {
+    military: "10 000 aktiva soldater",
+    population: "5 500 000",
+    area: "342 000 km²",
+    economy: "12 miljarder USD"
+  },
+    "Costa Rica": {
+    military: "Ingen militär",
+    population: "5 200 000",
+    area: "51 100 km²",
+    economy: "64 miljarder USD"
+  },
+  "Croatia": {
+    military: "15 200 aktiva soldater",
+    population: "4 000 000",
+    area: "56 594 km²",
+    economy: "70 miljarder USD"
+  },
+  "Cuba": {
+    military: "49 000 aktiva soldater",
+    population: "11 000 000",
+    area: "109 884 km²",
+    economy: "100 miljarder USD"
+  },
+  "Cyprus": {
+    military: "15 000 aktiva soldater",
+    population: "1 200 000",
+    area: "9 251 km²",
+    economy: "25 miljarder USD"
+  },
+  "Czech Republic": {
+    military: "21 750 aktiva soldater",
+    population: "10 700 000",
+    area: "78 867 km²",
+    economy: "290 miljarder USD"
+  },
+  "Denmark": {
+    military: "14 500 aktiva soldater",
+    population: "5 900 000",
+    area: "42 933 km²",
+    economy: "400 miljarder USD"
+  },
+  "Djibouti": {
+    military: "10 450 aktiva soldater",
+    population: "1 000 000",
+    area: "23 200 km²",
+    economy: "3 miljarder USD"
+  },
+  "Dominica": {
+    military: "Ingen militär",
+    population: "72 000",
+    area: "751 km²",
+    economy: "0,5 miljarder USD"
+  },
+  "Dominican Republic": {
+    military: "56 050 aktiva soldater",
+    population: "11 000 000",
+    area: "48 671 km²",
+    economy: "100 miljarder USD"
+  },
+  "Ecuador": {
+    military: "40 250 aktiva soldater",
+    population: "18 000 000",
+    area: "283 561 km²",
+    economy: "110 miljarder USD"
+  },
+    "Egypt": {
+    military: "438 500 aktiva soldater",
+    population: "110 000 000",
+    area: "1 010 408 km²",
+    economy: "400 miljarder USD"
+  },
+  "El Salvador": {
+    military: "24 500 aktiva soldater",
+    population: "6 500 000",
+    area: "21 041 km²",
+    economy: "30 miljarder USD"
+  },
+  "Equatorial Guinea": {
+    military: "2 400 aktiva soldater",
+    population: "1 500 000",
+    area: "28 051 km²",
+    economy: "13 miljarder USD"
+  },
+  "Eritrea": {
+    military: "201 750 aktiva soldater",
+    population: "6 000 000",
+    area: "117 600 km²",
+    economy: "2 miljarder USD"
+  },
+  "Estonia": {
+    military: "7 100 aktiva soldater",
+    population: "1 300 000",
+    area: "45 227 km²",
+    economy: "40 miljarder USD"
+  },
+  "Eswatini": {
+    military: "3 000 aktiva soldater",
+    population: "1 200 000",
+    area: "17 364 km²",
+    economy: "4 miljarder USD"
+  },
+  "Ethiopia": {
+    military: "138 000 aktiva soldater",
+    population: "120 000 000",
+    area: "1 104 300 km²",
+    economy: "100 miljarder USD"
+  },
+  "Fiji": {
+    military: "3 500 aktiva soldater",
+    population: "900 000",
+    area: "18 274 km²",
+    economy: "5 miljarder USD"
+  },
+  "Finland": {
+    military: "23 800 aktiva soldater",
+    population: "5 500 000",
+    area: "338 424 km²",
+    economy: "300 miljarder USD"
+  },
+  "France": {
+    military: "208 750 aktiva soldater",
+    population: "67 000 000",
+    area: "551 695 km²",
+    economy: "2,8 biljoner USD"
+  },
+    "Gabon": {
+    military: "4 700 aktiva soldater",
+    population: "2 300 000",
+    area: "267 668 km²",
+    economy: "18 miljarder USD"
+  },
+  "Gambia": {
+    military: "800 aktiva soldater",
+    population: "2 400 000",
+    area: "11 295 km²",
+    economy: "2 miljarder USD"
+  },
+  "Georgia": {
+    military: "20 650 aktiva soldater",
+    population: "3 700 000",
+    area: "69 700 km²",
+    economy: "18 miljarder USD"
+  },
+  "Germany": {
+    military: "183 500 aktiva soldater",
+    population: "83 000 000",
+    area: "357 022 km²",
+    economy: "4,2 biljoner USD"
+  },
+  "Ghana": {
+    military: "15 500 aktiva soldater",
+    population: "32 000 000",
+    area: "238 533 km²",
+    economy: "75 miljarder USD"
+  },
+  "Greece": {
+    military: "142 700 aktiva soldater",
+    population: "10 400 000",
+    area: "131 957 km²",
+    economy: "230 miljarder USD"
+  },
+  "Grenada": {
+    military: "Ingen militär",
+    population: "113 000",
+    area: "344 km²",
+    economy: "1,2 miljarder USD"
+  },
+  "Guatemala": {
+    military: "18 050 aktiva soldater",
+    population: "19 000 000",
+    area: "108 889 km²",
+    economy: "85 miljarder USD"
+  },
+  "Guinea": {
+    military: "9 700 aktiva soldater",
+    population: "13 000 000",
+    area: "245 857 km²",
+    economy: "15 miljarder USD"
+  },
+  "Guinea-Bissau": {
+    military: "4 450 aktiva soldater",
+    population: "2 000 000",
+    area: "36 125 km²",
+    economy: "1,5 miljarder USD"
+  },
+    "Haiti": {
+    military: "150 aktiva soldater",
+    population: "11 000 000",
+    area: "27 750 km²",
+    economy: "14 miljarder USD"
+  },
+  "Honduras": {
+    military: "14 950 aktiva soldater",
+    population: "10 000 000",
+    area: "112 492 km²",
+    economy: "30 miljarder USD"
+  },
+  "Hungary": {
+    military: "27 800 aktiva soldater",
+    population: "9 600 000",
+    area: "93 028 km²",
+    economy: "180 miljarder USD"
+  },
+  "Iceland": {
+    military: "Ingen militär",
+    population: "370 000",
+    area: "103 000 km²",
+    economy: "25 miljarder USD"
+  },
+  "India": {
+    military: "1 450 000 aktiva soldater",
+    population: "1 380 000 000",
+    area: "3 287 263 km²",
+    economy: "3,2 biljoner USD"
+  },
+  "Indonesia": {
+    military: "395 500 aktiva soldater",
+    population: "273 000 000",
+    area: "1 904 569 km²",
+    economy: "1,2 biljoner USD"
+  },
+  "Iran": {
+    military: "610 000 aktiva soldater",
+    population: "85 000 000",
+    area: "1 648 195 km²",
+    economy: "610 miljarder USD"
+  },
+  "Iraq": {
+    military: "193 000 aktiva soldater",
+    population: "41 000 000",
+    area: "438 317 km²",
+    economy: "230 miljarder USD"
+  },
+  "Ireland": {
+    military: "9 500 aktiva soldater",
+    population: "5 000 000",
+    area: "70 273 km²",
+    economy: "500 miljarder USD"
+  },
+  "Israel": {
+    military: "169 500 aktiva soldater",
+    population: "9 300 000",
+    area: "22 072 km²",
+    economy: "520 miljarder USD"
+  },
+    "Italy": {
+    military: "165 500 aktiva soldater",
+    population: "60 000 000",
+    area: "301 340 km²",
+    economy: "2,1 biljoner USD"
+  },
+  "Jamaica": {
+    military: "3 950 aktiva soldater",
+    population: "3 000 000",
+    area: "10 991 km²",
+    economy: "15 miljarder USD"
+  },
+  "Japan": {
+    military: "247 000 aktiva soldater",
+    population: "125 000 000",
+    area: "377 975 km²",
+    economy: "5 biljoner USD"
+  },
+  "Jordan": {
+    military: "100 500 aktiva soldater",
+    population: "10 000 000",
+    area: "89 342 km²",
+    economy: "45 miljarder USD"
+  },
+  "Kazakhstan": {
+    military: "39 000 aktiva soldater",
+    population: "19 000 000",
+    area: "2 724 900 km²",
+    economy: "190 miljarder USD"
+  },
+  "Kenya": {
+    military: "24 100 aktiva soldater",
+    population: "54 000 000",
+    area: "580 367 km²",
+    economy: "110 miljarder USD"
+  },
+  "Kiribati": {
+    military: "Ingen militär",
+    population: "120 000",
+    area: "811 km²",
+    economy: "0,2 miljarder USD"
+  },
+  "Kuwait": {
+    military: "17 500 aktiva soldater",
+    population: "4 300 000",
+    area: "17 818 km²",
+    economy: "110 miljarder USD"
+  },
+  "Kyrgyzstan": {
+    military: "10 900 aktiva soldater",
+    population: "6 500 000",
+    area: "199 951 km²",
+    economy: "8 miljarder USD"
+  },
+  "Laos": {
+    military: "29 100 aktiva soldater",
+    population: "7 500 000",
+    area: "236 800 km²",
+    economy: "20 miljarder USD"
+  },
+    "Latvia": {
+    military: "6 210 aktiva soldater",
+    population: "1 900 000",
+    area: "64 589 km²",
+    economy: "40 miljarder USD"
+  },
+  "Lebanon": {
+    military: "60 000 aktiva soldater",
+    population: "6 800 000",
+    area: "10 452 km²",
+    economy: "20 miljarder USD"
+  },
+  "Lesotho": {
+    military: "2 000 aktiva soldater",
+    population: "2 100 000",
+    area: "30 355 km²",
+    economy: "2 miljarder USD"
+  },
+  "Liberia": {
+    military: "2 010 aktiva soldater",
+    population: "5 200 000",
+    area: "111 369 km²",
+    economy: "3 miljarder USD"
+  },
+  "Libya": {
+    military: "30 000 aktiva soldater",
+    population: "7 000 000",
+    area: "1 759 541 km²",
+    economy: "50 miljarder USD"
+  },
+  "Liechtenstein": {
+    military: "Ingen militär",
+    population: "39 000",
+    area: "160 km²",
+    economy: "6 miljarder USD"
+  },
+  "Lithuania": {
+    military: "19 850 aktiva soldater",
+    population: "2 700 000",
+    area: "65 300 km²",
+    economy: "70 miljarder USD"
+  },
+  "Luxembourg": {
+    military: "900 aktiva soldater",
+    population: "640 000",
+    area: "2 586 km²",
+    economy: "80 miljarder USD"
+  },
+  "Madagascar": {
+    military: "13 500 aktiva soldater",
+    population: "30 000 000",
+    area: "587 041 km²",
+    economy: "15 miljarder USD"
+  },
+  "Malawi": {
+    military: "10 700 aktiva soldater",
+    population: "20 000 000",
+    area: "118 484 km²",
+    economy: "10 miljarder USD"
+  },
+    "Malaysia": {
+    military: "113 000 aktiva soldater",
+    population: "33 000 000",
+    area: "330 803 km²",
+    economy: "400 miljarder USD"
+  },
+  "Maldives": {
+    military: "3 000 aktiva soldater",
+    population: "540 000",
+    area: "298 km²",
+    economy: "5 miljarder USD"
+  },
+  "Mali": {
+    military: "13 000 aktiva soldater",
+    population: "21 000 000",
+    area: "1 240 192 km²",
+    economy: "19 miljarder USD"
+  },
+  "Malta": {
+    military: "1 950 aktiva soldater",
+    population: "520 000",
+    area: "316 km²",
+    economy: "17 miljarder USD"
+  },
+  "Marshall Islands": {
+    military: "Ingen militär",
+    population: "60 000",
+    area: "181 km²",
+    economy: "0,2 miljarder USD"
+  },
+  "Mauritania": {
+    military: "15 850 aktiva soldater",
+    population: "4 500 000",
+    area: "1 030 700 km²",
+    economy: "8 miljarder USD"
+  },
+  "Mauritius": {
+    military: "2 550 aktiva soldater",
+    population: "1 300 000",
+    area: "2 040 km²",
+    economy: "14 miljarder USD"
+  },
+  "Mexico": {
+    military: "216 000 aktiva soldater",
+    population: "130 000 000",
+    area: "1 964 375 km²",
+    economy: "1,3 biljoner USD"
+  },
+  "Micronesia": {
+    military: "Ingen militär",
+    population: "115 000",
+    area: "702 km²",
+    economy: "0,4 miljarder USD"
+  },
+  "Moldova": {
+    military: "5 150 aktiva soldater",
+    population: "2 600 000",
+    area: "33 846 km²",
+    economy: "12 miljarder USD"
+  },
+    "Monaco": {
+    military: "250 aktiva soldater",
+    population: "39 000",
+    area: "2 km²",
+    economy: "7 miljarder USD"
+  },
+  "Mongolia": {
+    military: "9 700 aktiva soldater",
+    population: "3 300 000",
+    area: "1 564 116 km²",
+    economy: "15 miljarder USD"
+  },
+  "Montenegro": {
+    military: "2 350 aktiva soldater",
+    population: "620 000",
+    area: "13 812 km²",
+    economy: "5 miljarder USD"
+  },
+  "Morocco": {
+    military: "195 800 aktiva soldater",
+    population: "37 000 000",
+    area: "446 550 km²",
+    economy: "130 miljarder USD"
+  },
+  "Mozambique": {
+    military: "11 200 aktiva soldater",
+    population: "33 000 000",
+    area: "801 590 km²",
+    economy: "15 miljarder USD"
+  },
+  "Myanmar": {
+    military: "406 000 aktiva soldater",
+    population: "55 000 000",
+    area: "676 578 km²",
+    economy: "65 miljarder USD"
+  },
+  "Namibia": {
+    military: "9 900 aktiva soldater",
+    population: "2 500 000",
+    area: "825 615 km²",
+    economy: "12 miljarder USD"
+  },
+  "Nauru": {
+    military: "Ingen militär",
+    population: "10 000",
+    area: "21 km²",
+    economy: "0,1 miljarder USD"
+  },
+  "Nepal": {
+    military: "96 600 aktiva soldater",
+    population: "30 000 000",
+    area: "147 516 km²",
+    economy: "35 miljarder USD"
+  },
+  "Netherlands": {
+    military: "35 400 aktiva soldater",
+    population: "17 500 000",
+    area: "41 543 km²",
+    economy: "1 biljon USD"
+  },
+    "New Zealand": {
+    military: "9 000 aktiva soldater",
+    population: "5 100 000",
+    area: "268 838 km²",
+    economy: "250 miljarder USD"
+  },
+  "Nicaragua": {
+    military: "12 000 aktiva soldater",
+    population: "6 900 000",
+    area: "130 373 km²",
+    economy: "14 miljarder USD"
+  },
+  "Niger": {
+    military: "5 300 aktiva soldater",
+    population: "25 000 000",
+    area: "1 267 000 km²",
+    economy: "14 miljarder USD"
+  },
+  "Nigeria": {
+    military: "143 000 aktiva soldater",
+    population: "220 000 000",
+    area: "923 768 km²",
+    economy: "440 miljarder USD"
+  },
+  "North Korea": {
+    military: "1 280 000 aktiva soldater",
+    population: "26 000 000",
+    area: "120 538 km²",
+    economy: "40 miljarder USD"
+  },
+  "North Macedonia": {
+    military: "8 000 aktiva soldater",
+    population: "2 100 000",
+    area: "25 713 km²",
+    economy: "14 miljarder USD"
+  },
+  "Norway": {
+    military: "23 250 aktiva soldater",
+    population: "5 500 000",
+    area: "385 207 km²",
+    economy: "500 miljarder USD"
+  },
+  "Oman": {
+    military: "42 600 aktiva soldater",
+    population: "4 500 000",
+    area: "309 500 km²",
+    economy: "80 miljarder USD"
+  },
+  "Pakistan": {
+    military: "654 000 aktiva soldater",
+    population: "240 000 000",
+    area: "881 913 km²",
+    economy: "350 miljarder USD"
+  },
+  "Palau": {
+    military: "Ingen militär",
+    population: "18 000",
+    area: "459 km²",
+    economy: "0,3 miljarder USD"
+  },
+    "Panama": {
+    military: "Ingen militär",
+    population: "4 400 000",
+    area: "75 417 km²",
+    economy: "70 miljarder USD"
+  },
+  "Papua New Guinea": {
+    military: "3 600 aktiva soldater",
+    population: "9 000 000",
+    area: "462 840 km²",
+    economy: "25 miljarder USD"
+  },
+  "Paraguay": {
+    military: "13 950 aktiva soldater",
+    population: "7 300 000",
+    area: "406 752 km²",
+    economy: "40 miljarder USD"
+  },
+  "Peru": {
+    military: "81 000 aktiva soldater",
+    population: "34 000 000",
+    area: "1 285 216 km²",
+    economy: "230 miljarder USD"
+  },
+  "Philippines": {
+    military: "143 100 aktiva soldater",
+    population: "115 000 000",
+    area: "300 000 km²",
+    economy: "400 miljarder USD"
+  },
+  "Poland": {
+    military: "114 050 aktiva soldater",
+    population: "38 000 000",
+    area: "312 696 km²",
+    economy: "700 miljarder USD"
+  },
+  "Portugal": {
+    military: "27 250 aktiva soldater",
+    population: "10 300 000",
+    area: "92 090 km²",
+    economy: "270 miljarder USD"
+  },
+  "Qatar": {
+    military: "16 500 aktiva soldater",
+    population: "2 900 000",
+    area: "11 586 km²",
+    economy: "180 miljarder USD"
+  },
+  "Romania": {
+    military: "69 300 aktiva soldater",
+    population: "19 000 000",
+    area: "238 397 km²",
+    economy: "300 miljarder USD"
+  },
+  "Russia": {
+    military: "1 154 000 aktiva soldater",
+    population: "143 000 000",
+    area: "17 098 242 km²",
+    economy: "1,7 biljoner USD"
+  },
+    "Portugal": {
+    military: "27 250 aktiva soldater",
+    population: "10 300 000",
+    area: "92 090 km²",
+    economy: "270 miljarder USD"
+  },
+  "Qatar": {
+    military: "16 500 aktiva soldater",
+    population: "2 900 000",
+    area: "11 586 km²",
+    economy: "180 miljarder USD"
+  },
+  "Romania": {
+    military: "69 300 aktiva soldater",
+    population: "19 000 000",
+    area: "238 397 km²",
+    economy: "300 miljarder USD"
+  },
+  "Russia": {
+    military: "1 154 000 aktiva soldater",
+    population: "143 000 000",
+    area: "17 098 242 km²",
+    economy: "1,7 biljoner USD"
+  },
+  "Rwanda": {
+    military: "33 000 aktiva soldater",
+    population: "13 000 000",
+    area: "26 338 km²",
+    economy: "10 miljarder USD"
+  },
+  "Saint Kitts and Nevis": {
+    military: "300 aktiva soldater",
+    population: "53 000",
+    area: "261 km²",
+    economy: "1 miljard USD"
+  },
+  "Saint Lucia": {
+    military: "900 aktiva soldater",
+    population: "180 000",
+    area: "617 km²",
+    economy: "2 miljarder USD"
+  },
+  "Saint Vincent and the Grenadines": {
+    military: "250 aktiva soldater",
+    population: "110 000",
+    area: "389 km²",
+    economy: "0,8 miljarder USD"
+  },
+  "Samoa": {
+    military: "Ingen militär",
+    population: "200 000",
+    area: "2 842 km²",
+    economy: "1 miljard USD"
+  },
+  "San Marino": {
+    military: "80 aktiva soldater",
+    population: "34 000",
+    area: "61 km²",
+    economy: "1,6 miljarder USD"
+  },
+    "Rwanda": {
+    military: "33 000 aktiva soldater",
+    population: "13 000 000",
+    area: "26 338 km²",
+    economy: "10 miljarder USD"
+  },
+  "Saint Kitts and Nevis": {
+    military: "300 aktiva soldater",
+    population: "53 000",
+    area: "261 km²",
+    economy: "1 miljard USD"
+  },
+  "Saint Lucia": {
+    military: "900 aktiva soldater",
+    population: "180 000",
+    area: "617 km²",
+    economy: "2 miljarder USD"
+  },
+  "Saint Vincent and the Grenadines": {
+    military: "250 aktiva soldater",
+    population: "110 000",
+    area: "389 km²",
+    economy: "0,8 miljarder USD"
+  },
+  "Samoa": {
+    military: "Ingen militär",
+    population: "200 000",
+    area: "2 842 km²",
+    economy: "1 miljard USD"
+  },
+  "San Marino": {
+    military: "80 aktiva soldater",
+    population: "34 000",
+    area: "61 km²",
+    economy: "1,6 miljarder USD"
+  },
+  "Sao Tome and Principe": {
+    military: "2 000 aktiva soldater",
+    population: "220 000",
+    area: "964 km²",
+    economy: "0,5 miljarder USD"
+  },
+  "Saudi Arabia": {
+    military: "227 000 aktiva soldater",
+    population: "35 000 000",
+    area: "2 149 690 km²",
+    economy: "800 miljarder USD"
+  },
+  "Senegal": {
+    military: "13 600 aktiva soldater",
+    population: "17 000 000",
+    area: "196 722 km²",
+    economy: "25 miljarder USD"
+  },
+  "Serbia": {
+    military: "28 150 aktiva soldater",
+    population: "7 000 000",
+    area: "88 361 km²",
+    economy: "60 miljarder USD"
+  },
+    "Saudi Arabia": {
+    military: "227 000 aktiva soldater",
+    population: "35 000 000",
+    area: "2 149 690 km²",
+    economy: "800 miljarder USD"
+  },
+  "Senegal": {
+    military: "13 600 aktiva soldater",
+    population: "17 000 000",
+    area: "196 722 km²",
+    economy: "25 miljarder USD"
+  },
+  "Serbia": {
+    military: "28 150 aktiva soldater",
+    population: "7 000 000",
+    area: "88 361 km²",
+    economy: "60 miljarder USD"
+  },
+  "Seychelles": {
+    military: "420 aktiva soldater",
+    population: "100 000",
+    area: "459 km²",
+    economy: "1,6 miljarder USD"
+  },
+  "Sierra Leone": {
+    military: "8 500 aktiva soldater",
+    population: "8 000 000",
+    area: "71 740 km²",
+    economy: "4 miljarder USD"
+  },
+  "Singapore": {
+    military: "51 000 aktiva soldater",
+    population: "5 700 000",
+    area: "728 km²",
+    economy: "400 miljarder USD"
+  },
+  "Slovakia": {
+    military: "15 850 aktiva soldater",
+    population: "5 400 000",
+    area: "49 035 km²",
+    economy: "120 miljarder USD"
+  },
+  "Slovenia": {
+    military: "7 250 aktiva soldater",
+    population: "2 100 000",
+    area: "20 273 km²",
+    economy: "60 miljarder USD"
+  },
+  "Solomon Islands": {
+    military: "Ingen militär",
+    population: "700 000",
+    area: "28 896 km²",
+    economy: "1,5 miljarder USD"
+  },
+  "Somalia": {
+    military: "19 800 aktiva soldater",
+    population: "16 000 000",
+    area: "637 657 km²",
+    economy: "7 miljarder USD"
+  },
+    "South Africa": {
+    military: "63 350 aktiva soldater",
+    population: "60 000 000",
+    area: "1 221 037 km²",
+    economy: "420 miljarder USD"
+  },
+  "South Korea": {
+    military: "599 000 aktiva soldater",
+    population: "52 000 000",
+    area: "100 210 km²",
+    economy: "1,8 biljoner USD"
+  },
+  "South Sudan": {
+    military: "185 000 aktiva soldater",
+    population: "11 000 000",
+    area: "619 745 km²",
+    economy: "4 miljarder USD"
+  },
+  "Spain": {
+    military: "120 350 aktiva soldater",
+    population: "47 000 000",
+    area: "505 992 km²",
+    economy: "1,5 biljoner USD"
+  },
+  "Sri Lanka": {
+    military: "255 000 aktiva soldater",
+    population: "22 000 000",
+    area: "65 610 km²",
+    economy: "80 miljarder USD"
+  },
+  "Sudan": {
+    military: "104 300 aktiva soldater",
+    population: "45 000 000",
+    area: "1 886 068 km²",
+    economy: "30 miljarder USD"
+  },
+  "Suriname": {
+    military: "1 840 aktiva soldater",
+    population: "600 000",
+    area: "163 820 km²",
+    economy: "3 miljarder USD"
+  },
+  "Sweden": {
+    military: "29 750 aktiva soldater",
+    population: "10 500 000",
+    area: "450 295 km²",
+    economy: "657 miljarder USD"
+  },
+  "Switzerland": {
+    military: "19 550 aktiva soldater",
+    population: "8 700 000",
+    area: "41 290 km²",
+    economy: "800 miljarder USD"
+  },
+  "Syria": {
+    military: "169 000 aktiva soldater",
+    population: "18 000 000",
+    area: "185 180 km²",
+    economy: "40 miljarder USD"
+  },
+    "Tajikistan": {
+    military: "8 800 aktiva soldater",
+    population: "10 000 000",
+    area: "143 100 km²",
+    economy: "8 miljarder USD"
+  },
+  "Tanzania": {
+    military: "27 000 aktiva soldater",
+    population: "65 000 000",
+    area: "945 087 km²",
+    economy: "70 miljarder USD"
+  },
+  "Thailand": {
+    military: "360 850 aktiva soldater",
+    population: "70 000 000",
+    area: "513 120 km²",
+    economy: "500 miljarder USD"
+  },
+  "Togo": {
+    military: "8 550 aktiva soldater",
+    population: "8 500 000",
+    area: "56 785 km²",
+    economy: "8 miljarder USD"
+  },
+  "Tonga": {
+    military: "450 aktiva soldater",
+    population: "100 000",
+    area: "747 km²",
+    economy: "0,5 miljarder USD"
+  },
+  "Trinidad and Tobago": {
+    military: "4 050 aktiva soldater",
+    population: "1 400 000",
+    area: "5 131 km²",
+    economy: "25 miljarder USD"
+  },
+  "Tunisia": {
+    military: "35 800 aktiva soldater",
+    population: "12 000 000",
+    area: "163 610 km²",
+    economy: "45 miljarder USD"
+  },
+  "Turkey": {
+    military: "355 200 aktiva soldater",
+    population: "85 000 000",
+    area: "783 356 km²",
+    economy: "900 miljarder USD"
+  },
+  "Turkmenistan": {
+    military: "36 500 aktiva soldater",
+    population: "6 000 000",
+    area: "488 100 km²",
+    economy: "45 miljarder USD"
+  },
+  "Tuvalu": {
+    military: "Ingen militär",
+    population: "12 000",
+    area: "26 km²",
+    economy: "0,05 miljarder USD"
+  },
+    "Tajikistan": {
+    military: "8 800 aktiva soldater",
+    population: "10 000 000",
+    area: "143 100 km²",
+    economy: "8 miljarder USD"
+  },
+  "Tanzania": {
+    military: "27 000 aktiva soldater",
+    population: "65 000 000",
+    area: "945 087 km²",
+    economy: "70 miljarder USD"
+  },
+  "Thailand": {
+    military: "360 850 aktiva soldater",
+    population: "70 000 000",
+    area: "513 120 km²",
+    economy: "500 miljarder USD"
+  },
+  "Togo": {
+    military: "8 550 aktiva soldater",
+    population: "8 500 000",
+    area: "56 785 km²",
+    economy: "8 miljarder USD"
+  },
+  "Tonga": {
+    military: "450 aktiva soldater",
+    population: "100 000",
+    area: "747 km²",
+    economy: "0,5 miljarder USD"
+  },
+  "Trinidad and Tobago": {
+    military: "4 050 aktiva soldater",
+    population: "1 400 000",
+    area: "5 131 km²",
+    economy: "25 miljarder USD"
+  },
+  "Tunisia": {
+    military: "35 800 aktiva soldater",
+    population: "12 000 000",
+    area: "163 610 km²",
+    economy: "45 miljarder USD"
+  },
+  "Turkey": {
+    military: "355 200 aktiva soldater",
+    population: "85 000 000",
+    area: "783 356 km²",
+    economy: "900 miljarder USD"
+  },
+  "Turkmenistan": {
+    military: "36 500 aktiva soldater",
+    population: "6 000 000",
+    area: "488 100 km²",
+    economy: "45 miljarder USD"
+  },
+  "Tuvalu": {
+    military: "Ingen militär",
+    population: "12 000",
+    area: "26 km²",
+    economy: "0,05 miljarder USD"
+  },
+    "Uganda": {
+    military: "45 000 aktiva soldater",
+    population: "48 000 000",
+    area: "241 038 km²",
+    economy: "40 miljarder USD"
+  },
+  "Ukraine": {
+    military: "209 000 aktiva soldater",
+    population: "41 000 000",
+    area: "603 550 km²",
+    economy: "200 miljarder USD"
+  },
+  "United Arab Emirates": {
+    military: "63 000 aktiva soldater",
+    population: "10 000 000",
+    area: "83 600 km²",
+    economy: "500 miljarder USD"
+  },
+  "United Kingdom": {
+    military: "148 500 aktiva soldater",
+    population: "67 000 000",
+    area: "243 610 km²",
+    economy: "3,1 biljoner USD"
+  },
+  "United States of America": {
+    military: "1 400 000 aktiva soldater",
+    population: "331 000 000",
+    area: "9 833 517 km²",
+    economy: "25,5 biljoner USD"
+  },
+  "Uruguay": {
+    military: "21 000 aktiva soldater",
+    population: "3 500 000",
+    area: "176 215 km²",
+    economy: "60 miljarder USD"
+  },
+  "Uzbekistan": {
+    military: "48 000 aktiva soldater",
+    population: "35 000 000",
+    area: "447 400 km²",
+    economy: "80 miljarder USD"
+  },
+  "Vanuatu": {
+    military: "300 aktiva soldater",
+    population: "320 000",
+    area: "12 189 km²",
+    economy: "0,9 miljarder USD"
+  },
+  "Vatican City": {
+    military: "135 aktiva soldater",
+    population: "800",
+    area: "0,44 km²",
+    economy: "0,8 miljarder USD"
+  },
+  "Venezuela": {
+    military: "123 000 aktiva soldater",
+    population: "28 000 000",
+    area: "916 445 km²",
+    economy: "70 miljarder USD"
+  },
+    "Vietnam": {
+    military: "482 000 aktiva soldater",
+    population: "98 000 000",
+    area: "331 212 km²",
+    economy: "400 miljarder USD"
+  },
+  "Yemen": {
+    military: "66 700 aktiva soldater",
+    population: "30 000 000",
+    area: "527 968 km²",
+    economy: "20 miljarder USD"
+  },
+  "Zambia": {
+    military: "15 100 aktiva soldater",
+    population: "19 000 000",
+    area: "752 612 km²",
+    economy: "25 miljarder USD"
+  },
+  "Zimbabwe": {
+    military: "29 000 aktiva soldater",
+    population: "15 000 000",
+    area: "390 757 km²",
+    economy: "20 miljarder USD"
+  }
+};
 
     let selectedLayer = null; // För att spåra markerat land
 
