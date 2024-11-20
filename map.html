@@ -1454,67 +1454,74 @@ const countryData = {
       }
     }
 
-    // Hämta GeoJSON-data och lägg till på kartan
-    fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
-      .then(response => response.json())
-      .then(data => {
-        const geojsonLayer = L.geoJSON(data, {
-          style: function () {
-            return {
-              color: "#2563eb",
-              weight: 1,
-              fillColor: "#60a5fa",
-              fillOpacity: 0.3
-            };
-          },
-          onEachFeature: function (feature, layer) {
-            const countryName = feature.properties.ADMIN;
+// Hämta GeoJSON-data och lägg till på kartan
+fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
+  .then(response => response.json())
+  .then(data => {
+    const geojsonLayer = L.geoJSON(data, {
+      style: function () {
+        return {
+          color: "#2563eb",
+          weight: 1,
+          fillColor: "#60a5fa",
+          fillOpacity: 0.3
+        };
+      },
+      onEachFeature: function (feature, layer) {
+        const countryName = feature.properties.ADMIN;
 
-            // Hantera händelser på lagret
-            layer.on({
-              click: function (e) {
-                if (selectedCountries.length < 2) {
-                  selectedCountries.push(countryName);
-                  document.getElementById(
-                    selectedCountries.length === 1 ? "country1" : "country2"
-                  ).innerHTML = `
-                    <h3>${countryName}</h3>
-                    ${getPopupContent(countryName)}
-                  `;
+        // Hantera händelser på lagret
+        layer.on({
+          click: function (e) {
+            if (selectedCountries.length < 2) {
+              selectedCountries.push(countryName);
+              document.getElementById(
+                selectedCountries.length === 1 ? "country1" : "country2"
+              ).innerHTML = `
+                <h3>${countryName}</h3>
+                ${getPopupContent(countryName)}
+              `;
 
-                  if (selectedCountries.length === 2) {
-                    analyzeBattle();
-                  }
-                } else {
-                  selectedCountries = [countryName];
-                  document.getElementById("country1").innerHTML = `
-                    <h3>${countryName}</h3>
-                    ${getPopupContent(countryName)}
-                  `;
-                  document.getElementById("country2").innerHTML = `
-                    <h3>Land 2</h3>
-                    <p>Information om landet visas här.</p>
-                  `;
-                  document.getElementById("battle-facts").innerHTML = "Välj ett till land för att jämföra.";
-                }
+              if (selectedCountries.length === 2) {
+                analyzeBattle();
               }
-            });
+            } else {
+              selectedCountries = [countryName];
+              document.getElementById("country1").innerHTML = `
+                <h3>${countryName}</h3>
+                ${getPopupContent(countryName)}
+              `;
+              document.getElementById("country2").innerHTML = `
+                <h3>Land 2</h3>
+                <p>Information om landet visas här.</p>
+              `;
+              document.getElementById("battle-facts").innerHTML = "Välj ett till land för att jämföra.";
+            }
           }
         });
-        geojsonLayer.addTo(map);
-      })
-      .catch(error => console.error("Kunde inte ladda GeoJSON-data:", error));
-
-    // Funktion för att analysera 1v1-kriget
-    function analyzeBattle() {
-      const [country1, country2] = selectedCountries.map(name => countryData[name]);
-      if (country1 && country2) {
-        const winner = country1.military > country2.military ? selectedCountries[0] : selectedCountries[1];
-        document.getElementById("battle-facts").innerHTML = `
-          <strong>${winner}</strong> vinner baserat på militär styrka och ekonomiska resurser!
-        `;
       }
-    }
+    });
+    geojsonLayer.addTo(map);
+  })
+  .catch(error => console.error("Kunde inte ladda GeoJSON-data:", error));
+
+// Funktion för att analysera 1v1-kriget
+function analyzeBattle() {
+  const [country1, country2] = selectedCountries.map(name => countryData[name]);
+  if (country1 && country2) {
+    // Analysera militär styrka först och ekonomi som tiebreaker
+    const country1Score = parseInt(country1.military.replace(/\D/g, "")) + parseFloat(country1.economy.replace(/[^0-9.]/g, ""));
+    const country2Score = parseInt(country2.military.replace(/\D/g, "")) + parseFloat(country2.economy.replace(/[^0-9.]/g, ""));
+    
+    const winner = country1Score > country2Score ? selectedCountries[0] : selectedCountries[1];
+    const loser = country1Score > country2Score ? selectedCountries[1] : selectedCountries[0];
+
+    document.getElementById("battle-facts").innerHTML = `
+      <strong>${winner}</strong> vinner över <strong>${loser}</strong> baserat på militär styrka och ekonomiska resurser! 
+      <br> <strong>Anledning:</strong> ${winner} har en högre total poäng som inkluderar både militär och ekonomisk kapacitet.
+    `;
+  }
+}
   </script>
 </body>
 </html>
