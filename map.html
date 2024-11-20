@@ -50,8 +50,14 @@
   <h1>🌍 Interaktiv Världskarta</h1>
   <div id="map"></div>
   <script>
-    // Skapa kartan
-    const map = L.map('map').setView([0, 0], 2);
+    // Skapa kartan och begränsa panorering till världens synliga område
+    const map = L.map('map', {
+      maxBounds: [
+        [-90, -180], // Sydvästra hörnet
+        [90, 180]    // Nordöstra hörnet
+      ],
+      maxBoundsViscosity: 1.0
+    }).setView([20, 10], 2);
 
     // Lägg till OpenStreetMap som baslager
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -67,13 +73,13 @@
         area: "450 295 km²",
         economy: "657 miljarder USD"
       },
-      "USA": {
+      "United States of America": {
         military: "1 400 000 aktiva soldater",
         population: "331 000 000",
         area: "9 833 517 km²",
         economy: "25,5 biljoner USD"
       },
-      "Kina": {
+      "China": {
         military: "2 000 000 aktiva soldater",
         population: "1 410 000 000",
         area: "9 596 961 km²",
