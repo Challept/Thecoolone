@@ -8,7 +8,7 @@
     body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
+      background: linear-gradient(135deg, #1e293b, #4ade80);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -23,24 +23,39 @@
       height: 90%;
       border: 2px solid #ffffff;
       border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
     h1 {
       margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     .popup-content {
       font-size: 1rem;
       color: #000;
+      animation: fade-in 0.5s ease-in-out;
     }
 
     .popup-content h2 {
       font-size: 1.2rem;
       margin-bottom: 10px;
+      color: #2563eb;
     }
 
     .popup-content p {
       margin: 5px 0;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
@@ -50,13 +65,18 @@
   <h1>🌍 Interaktiv Världskarta</h1>
   <div id="map"></div>
   <script>
-    // Skapa kartan och begränsa panorering till världens synliga område
+    // Skapa kartan och lås zoomning
     const map = L.map('map', {
       maxBounds: [
         [-90, -180], // Sydvästra hörnet
         [90, 180]    // Nordöstra hörnet
       ],
-      maxBoundsViscosity: 1.0
+      maxBoundsViscosity: 1.0,
+      zoomSnap: 1,
+      zoomDelta: 0.5,
+      minZoom: 2, // Minsta zoomnivå
+      maxZoom: 5, // Högsta zoomnivå
+      zoomControl: false // Ta bort standard zoom-knappar
     }).setView([20, 10], 2);
 
     // Lägg till OpenStreetMap som baslager
@@ -64,6 +84,9 @@
       maxZoom: 18,
       attribution: '© OpenStreetMap'
     }).addTo(map);
+
+    // Lägg till anpassade zoomknappar
+    L.control.zoom({ position: 'topright' }).addTo(map);
 
     // Landdata (exempel)
     const countryData = {
@@ -114,10 +137,10 @@
         const geojsonLayer = L.geoJSON(data, {
           style: function () {
             return {
-              color: "#3388ff",
+              color: "#2563eb",
               weight: 1,
-              fillColor: "#3388ff",
-              fillOpacity: 0.2
+              fillColor: "#60a5fa",
+              fillOpacity: 0.3
             };
           },
           onEachFeature: function (feature, layer) {
@@ -127,26 +150,28 @@
             layer.on({
               mouseover: function (e) {
                 e.target.setStyle({
-                  fillOpacity: 0.5
+                  fillOpacity: 0.5,
+                  fillColor: "#93c5fd"
                 });
               },
               mouseout: function (e) {
                 if (selectedLayer !== e.target) {
                   e.target.setStyle({
-                    fillOpacity: 0.2
+                    fillOpacity: 0.3,
+                    fillColor: "#60a5fa"
                   });
                 }
               },
               click: function (e) {
                 if (selectedLayer) {
                   selectedLayer.setStyle({
-                    fillOpacity: 0.2,
-                    fillColor: "#3388ff"
+                    fillOpacity: 0.3,
+                    fillColor: "#60a5fa"
                   });
                 }
                 selectedLayer = e.target; // Uppdatera markerat lager
                 e.target.setStyle({
-                  fillColor: "#42a5f5",
+                  fillColor: "#2563eb",
                   fillOpacity: 0.7
                 });
 
