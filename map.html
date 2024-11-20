@@ -1459,6 +1459,7 @@ fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/coun
   .then(response => response.json())
   .then(data => {
     let lastClickTime = 0; // Förhindra dubbla klick
+    let highlightedLayers = []; // För att hålla reda på valda länder
     const geojsonLayer = L.geoJSON(data, {
       style: function () {
         return {
@@ -1488,8 +1489,19 @@ fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/coun
               return;
             }
 
+            // Lägg till landet i listan och markera det
             if (selectedCountries.length < 2) {
               selectedCountries.push(countryName);
+
+              // Markera landet med grå färg
+              layer.setStyle({
+                fillColor: "#d1d5db", // Grå färg
+                fillOpacity: 0.7
+              });
+
+              // Spara lagret för att kunna återställa det senare
+              highlightedLayers.push(layer);
+
               document.getElementById(
                 selectedCountries.length === 1 ? "country1" : "country2"
               ).innerHTML = `
@@ -1499,12 +1511,30 @@ fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/coun
 
               if (selectedCountries.length === 2) {
                 analyzeBattle();
+
                 // Scrolla ner till analyssektionen
                 document.getElementById("battle-facts").scrollIntoView({ behavior: "smooth" });
               }
             } else {
-              // Återställ valda länder och börja om
+              // Återställ tidigare markerade länder
+              highlightedLayers.forEach(layer => {
+                layer.setStyle({
+                  fillColor: "#60a5fa", // Ursprunglig färg
+                  fillOpacity: 0.3
+                });
+              });
+
+              // Nollställ listorna
+              highlightedLayers = [];
               selectedCountries = [countryName];
+
+              // Markera det nya landet
+              layer.setStyle({
+                fillColor: "#d1d5db",
+                fillOpacity: 0.7
+              });
+              highlightedLayers.push(layer);
+
               document.getElementById("country1").innerHTML = `
                 <h3>${countryName}</h3>
                 ${getPopupContent(countryName)}
