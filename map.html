@@ -9,48 +9,88 @@
       margin: 0;
       padding: 0;
       background: linear-gradient(135deg, #1e293b, #4ade80);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
       font-family: Arial, sans-serif;
       color: #ffffff;
     }
 
+    header {
+      text-align: center;
+      padding: 20px;
+    }
+
+    header h1 {
+      margin: 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    #map-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
     #map {
       width: 90%;
-      height: 90%;
+      height: 70vh;
       border: 2px solid #ffffff;
       border-radius: 10px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
-    h1 {
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    #battle-container {
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 900px;
+      background: #ffffff;
+      color: #000000;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      animation: fade-in 1s ease-in-out;
     }
 
-    .popup-content {
-      font-size: 1rem;
-      color: #000;
-      animation: fade-in 0.5s ease-in-out;
-    }
-
-    .popup-content h2 {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
+    #battle-container h2 {
       color: #2563eb;
+      text-align: center;
+      margin-bottom: 10px;
     }
 
-    .popup-content p {
+    #battle-container p {
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+
+      .battle-results {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .country-card {
+      flex: 1;
+      padding: 20px;
+      background: #2563eb;
+      color: #ffffff;
+      border-radius: 10px;
+      text-align: center;
+      margin: 0 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .country-card h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.2rem;
+    }
+
+    .country-card p {
       margin: 5px 0;
+      font-size: 0.9rem;
     }
 
     @keyframes fade-in {
       from {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(20px);
       }
       to {
         opacity: 1;
@@ -62,10 +102,28 @@
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
-  <h1>🌍 Interaktiv Världskarta</h1>
-  <div id="map"></div>
+  <header>
+    <h1>🌍 Interaktiv Världskarta</h1>
+  </header>
+  <div id="map-container">
+    <div id="map"></div>
+  </div>
+  <div id="battle-container">
+    <h2>1v1 Krig: Vilket land vinner?</h2>
+    <div class="battle-results">
+      <div class="country-card" id="country1">
+        <h3>Land 1</h3>
+        <p>Information om landet visas här.</p>
+      </div>
+      <div class="country-card" id="country2">
+        <h3>Land 2</h3>
+        <p>Information om landet visas här.</p>
+      </div>
+    </div>
+    <p id="battle-facts">Fakta och analys av kriget kommer här.</p>
+  </div>
   <script>
-    // Skapa kartan och lås zoomning
+    // Skapa kartan
     const map = L.map('map', {
       maxBounds: [
         [-90, -180], // Sydvästra hörnet
@@ -74,9 +132,9 @@
       maxBoundsViscosity: 1.0,
       zoomSnap: 1,
       zoomDelta: 0.5,
-      minZoom: 2, // Minsta zoomnivå
-      maxZoom: 5, // Högsta zoomnivå
-      zoomControl: false // Ta bort standard zoom-knappar
+      minZoom: 2,
+      maxZoom: 5,
+      zoomControl: false
     }).setView([20, 10], 2);
 
     // Lägg till OpenStreetMap som baslager
@@ -1374,9 +1432,9 @@ const countryData = {
     area: "390 757 km²",
     economy: "20 miljarder USD"
   }
-};
+};    
 
-    let selectedLayer = null; // För att spåra markerat land
+    let selectedCountries = [];
 
     // Funktion för att skapa popup med landinformation
     function getPopupContent(country) {
@@ -1414,38 +1472,31 @@ const countryData = {
 
             // Hantera händelser på lagret
             layer.on({
-              mouseover: function (e) {
-                e.target.setStyle({
-                  fillOpacity: 0.5,
-                  fillColor: "#93c5fd"
-                });
-              },
-              mouseout: function (e) {
-                if (selectedLayer !== e.target) {
-                  e.target.setStyle({
-                    fillOpacity: 0.3,
-                    fillColor: "#60a5fa"
-                  });
-                }
-              },
               click: function (e) {
-                if (selectedLayer) {
-                  selectedLayer.setStyle({
-                    fillOpacity: 0.3,
-                    fillColor: "#60a5fa"
-                  });
-                }
-                selectedLayer = e.target; // Uppdatera markerat lager
-                e.target.setStyle({
-                  fillColor: "#2563eb",
-                  fillOpacity: 0.7
-                });
+                if (selectedCountries.length < 2) {
+                  selectedCountries.push(countryName);
+                  document.getElementById(
+                    selectedCountries.length === 1 ? "country1" : "country2"
+                  ).innerHTML = `
+                    <h3>${countryName}</h3>
+                    ${getPopupContent(countryName)}
+                  `;
 
-                // Visa popup med landdata
-                const popup = L.popup()
-                  .setLatLng(e.latlng)
-                  .setContent(getPopupContent(countryName))
-                  .openOn(map);
+                  if (selectedCountries.length === 2) {
+                    analyzeBattle();
+                  }
+                } else {
+                  selectedCountries = [countryName];
+                  document.getElementById("country1").innerHTML = `
+                    <h3>${countryName}</h3>
+                    ${getPopupContent(countryName)}
+                  `;
+                  document.getElementById("country2").innerHTML = `
+                    <h3>Land 2</h3>
+                    <p>Information om landet visas här.</p>
+                  `;
+                  document.getElementById("battle-facts").innerHTML = "Välj ett till land för att jämföra.";
+                }
               }
             });
           }
@@ -1453,6 +1504,17 @@ const countryData = {
         geojsonLayer.addTo(map);
       })
       .catch(error => console.error("Kunde inte ladda GeoJSON-data:", error));
+
+    // Funktion för att analysera 1v1-kriget
+    function analyzeBattle() {
+      const [country1, country2] = selectedCountries.map(name => countryData[name]);
+      if (country1 && country2) {
+        const winner = country1.military > country2.military ? selectedCountries[0] : selectedCountries[1];
+        document.getElementById("battle-facts").innerHTML = `
+          <strong>${winner}</strong> vinner baserat på militär styrka och ekonomiska resurser!
+        `;
+      }
+    }
   </script>
 </body>
 </html>
