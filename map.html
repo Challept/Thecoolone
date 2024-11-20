@@ -45,7 +45,6 @@
   </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-ajax"></script>
 </head>
 <body>
   <h1>🌍 Interaktiv Världskarta</h1>
@@ -102,58 +101,61 @@
       }
     }
 
-    // Lägg till GeoJSON-data (ladda från en extern fil eller API)
-    const geojsonUrl = "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson";
-
-    // Hämta och lägg till GeoJSON-lager
-    L.geoJSON.ajax(geojsonUrl, {
-      style: function () {
-        return {
-          color: "#3388ff",
-          weight: 1,
-          fillColor: "#3388ff",
-          fillOpacity: 0.2
-        };
-      },
-      onEachFeature: function (feature, layer) {
-        const countryName = feature.properties.ADMIN;
-
-        // Hantera händelser på lagret
-        layer.on({
-          mouseover: function (e) {
-            e.target.setStyle({
-              fillOpacity: 0.5
-            });
+    // Hämta GeoJSON-data och lägg till på kartan
+    fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
+      .then(response => response.json())
+      .then(data => {
+        const geojsonLayer = L.geoJSON(data, {
+          style: function () {
+            return {
+              color: "#3388ff",
+              weight: 1,
+              fillColor: "#3388ff",
+              fillOpacity: 0.2
+            };
           },
-          mouseout: function (e) {
-            if (selectedLayer !== e.target) {
-              e.target.setStyle({
-                fillOpacity: 0.2
-              });
-            }
-          },
-          click: function (e) {
-            if (selectedLayer) {
-              selectedLayer.setStyle({
-                fillOpacity: 0.2,
-                fillColor: "#3388ff"
-              });
-            }
-            selectedLayer = e.target; // Uppdatera markerat lager
-            e.target.setStyle({
-              fillColor: "#42a5f5",
-              fillOpacity: 0.7
-            });
+          onEachFeature: function (feature, layer) {
+            const countryName = feature.properties.ADMIN;
 
-            // Visa popup med landdata
-            const popup = L.popup()
-              .setLatLng(e.latlng)
-              .setContent(getPopupContent(countryName))
-              .openOn(map);
+            // Hantera händelser på lagret
+            layer.on({
+              mouseover: function (e) {
+                e.target.setStyle({
+                  fillOpacity: 0.5
+                });
+              },
+              mouseout: function (e) {
+                if (selectedLayer !== e.target) {
+                  e.target.setStyle({
+                    fillOpacity: 0.2
+                  });
+                }
+              },
+              click: function (e) {
+                if (selectedLayer) {
+                  selectedLayer.setStyle({
+                    fillOpacity: 0.2,
+                    fillColor: "#3388ff"
+                  });
+                }
+                selectedLayer = e.target; // Uppdatera markerat lager
+                e.target.setStyle({
+                  fillColor: "#42a5f5",
+                  fillOpacity: 0.7
+                });
+
+                // Visa popup med landdata
+                const popup = L.popup()
+                  .setLatLng(e.latlng)
+                  .setContent(getPopupContent(countryName))
+                  .openOn(map);
+              }
+            });
           }
         });
-      }
-    }).addTo(map);
+        geojsonLayer.addTo(map);
+      })
+      .catch(error => console.error("Kunde inte ladda GeoJSON-data:", error));
   </script>
 </body>
 </html>
