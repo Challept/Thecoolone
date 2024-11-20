@@ -56,19 +56,6 @@
       animation: fade-in 1s ease-in-out;
     }
 
-    #blood-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(139,0,0,0.9), rgba(60,0,0,1));
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 2s ease-in-out;
-    }
-
     @keyframes fade-in {
       from {
         opacity: 0;
@@ -88,7 +75,6 @@
   <h2>Välj ett land att överleva i!</h2>
   <div id="map"></div>
   <button id="start-button">Starta Apokalypsen</button>
-  <div id="blood-overlay"></div>
 
   <script>
     const map = L.map('map').setView([20, 0], 2);
@@ -158,16 +144,17 @@
     // Funktion för att sprida infektionen
     function spreadInfection(features, startCountry) {
       infectedCountries.push(startCountry);
-      updateMap(startCountry, "#ff0000");
+      updateMap(startCountry, "#ff6666"); // Ljusare röd till att börja med
 
       const timer = setInterval(() => {
         const newlyInfected = [];
         infectedCountries.forEach(country => {
           const neighbors = getNeighboringCountries(features, country);
           neighbors.forEach(neighbor => {
-            if (!infectedCountries.includes(neighbor) && Math.random() < 0.8) { // 80% chans att spridas
+            if (!infectedCountries.includes(neighbor) && Math.random() < 0.5) { // 50% chans att spridas till grannar
               newlyInfected.push(neighbor);
-              updateMap(neighbor, "#ff0000");
+              updateMap(neighbor, "#ff6666"); // Börja med en ljusare röd färg
+              setTimeout(() => updateMap(neighbor, "#ff0000"), 4000); // Efter 4 sekunder, helt infekterat
             }
           });
         });
@@ -177,14 +164,14 @@
         // Kontrollera om valt land är infekterat
         if (infectedCountries.includes(selectedCountry)) {
           clearInterval(timer);
-          showBloodOverlay();
+          alertPopup("Ditt valda land har blivit infekterat!");
         }
 
         // Sluta om det inte finns fler länder att infektera
         if (infectedCountries.length >= features.length * 0.7) {
           clearInterval(timer);
         }
-      }, 2000);
+      }, 5000); // Långsammare spridning, var 5:e sekund
     }
 
     // Funktion för att uppdatera ett land på kartan
@@ -207,19 +194,18 @@
 
       if (!currentFeature) return [];
 
+      const currentBounds = L.geoJSON(currentFeature).getBounds();
+
       return features
         .filter(feature => feature.properties.ADMIN !== countryName)
+        .filter(feature => {
+          const featureBounds = L.geoJSON(feature).getBounds();
+          return currentBounds.intersects(featureBounds); // Kontrollera geografisk närhet
+        })
         .map(feature => feature.properties.ADMIN);
     }
 
-    // Funktion för att visa blodöverlägg
-    function showBloodOverlay() {
-      const overlay = document.getElementById("blood-overlay");
-      overlay.style.opacity = 1;
-      setTimeout(() => alertPopup("Ditt land har blivit infekterat! Zombies har tagit över!"), 1000);
-    }
-
-    // Funktion för att visa en popup på sidan
+    // Funktion för att visa en popup
     function alertPopup(message) {
       const popup = document.createElement("div");
       popup.className = "popup";
