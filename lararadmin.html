@@ -8,113 +8,135 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 20px;
-      background: #1f2937;
+      padding: 0;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
       color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
     h1 {
-      text-align: center;
+      font-size: 2.5rem;
+      margin: 20px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
     }
 
-    .student-list {
+    #student-list {
+      list-style: none;
+      padding: 0;
       margin: 20px 0;
+      width: 90%;
+      max-width: 600px;
     }
 
-    .student {
+    li {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px;
-      background: #374151;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
       margin-bottom: 10px;
-      border-radius: 8px;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, background 0.2s ease;
     }
 
-    .student-id {
-      font-size: 1rem;
+    li:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.02);
     }
 
-    .controls {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn {
-      padding: 5px 10px;
-      font-size: 0.9rem;
+    button {
+      background: #4ade80;
+      color: #000;
       border: none;
       border-radius: 5px;
+      padding: 10px 15px;
+      font-size: 1rem;
       cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
     }
 
-    .btn.kick {
-      background: #ef4444;
-      color: #ffffff;
+    button:hover {
+      background: #22c55e;
+      transform: scale(1.1);
     }
 
-    .btn.restore {
-      background: #4ade80;
-      color: #000000;
+    button.kick {
+      background: #f87171;
+      color: #fff;
+    }
+
+    button.kick:hover {
+      background: #dc2626;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      width: 100%;
+      text-align: center;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <h1>Adminpanel</h1>
-  <div class="student-list" id="student-list">
-    <p>Laddar elever...</p>
-  </div>
+  <h1>Lärarens Adminpanel</h1>
+  <ul id="student-list">
+    <li>Laddar elever...</li>
+  </ul>
+
+  <footer>
+    &copy; 2024 Lärarens Verktyg
+  </footer>
 
   <script>
-    async function fetchStudents() {
-      const response = await fetch('/get-students');
-      const students = await response.json();
-      const studentList = document.getElementById('student-list');
+    const studentList = document.getElementById("student-list");
 
-      studentList.innerHTML = ''; // Töm listan
+    function fetchStudents() {
+      fetch("/get_students")
+        .then((response) => response.json())
+        .then((data) => {
+          studentList.innerHTML = ""; // Rensa listan
+          for (const [id, info] of Object.entries(data)) {
+            const li = document.createElement("li");
+            li.textContent = `Elev-ID: ${id} | Godkänd: ${info.approved ? "Ja" : "Nej"} | Fuskat: ${info.hasCheated ? "Ja" : "Nej"}`;
 
-      students.forEach((student) => {
-        const studentDiv = document.createElement('div');
-        studentDiv.className = 'student';
+            // Skapa Godkänn-knapp
+            const approveButton = document.createElement("button");
+            approveButton.textContent = "Godkänn";
+            approveButton.onclick = () => approveStudent(id);
 
-        const studentId = document.createElement('span');
-        studentId.className = 'student-id';
-        studentId.textContent = `${student.id} - Fusk: ${student.hasCheated ? 'Ja' : 'Nej'}`;
+            // Skapa Avvisa-knapp
+            const kickButton = document.createElement("button");
+            kickButton.textContent = "Avvisa";
+            kickButton.classList.add("kick");
+            kickButton.onclick = () => kickStudent(id);
 
-        const controls = document.createElement('div');
-        controls.className = 'controls';
-
-        const restoreBtn = document.createElement('button');
-        restoreBtn.className = 'btn restore';
-        restoreBtn.textContent = 'Återställ';
-        restoreBtn.onclick = () => handleAction(student.id, 'restore');
-
-        const kickBtn = document.createElement('button');
-        kickBtn.className = 'btn kick';
-        kickBtn.textContent = 'Kicka';
-        kickBtn.onclick = () => handleAction(student.id, 'kick');
-
-        controls.appendChild(restoreBtn);
-        controls.appendChild(kickBtn);
-
-        studentDiv.appendChild(studentId);
-        studentDiv.appendChild(controls);
-
-        studentList.appendChild(studentDiv);
-      });
+            li.appendChild(approveButton);
+            li.appendChild(kickButton);
+            studentList.appendChild(li);
+          }
+        });
     }
 
-    async function handleAction(studentId, action) {
-      await fetch('/update-student', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, studentId }),
-      });
-      fetchStudents(); // Uppdatera listan efter åtgärd
+    function approveStudent(id) {
+      fetch(`/approve_student/${id}`, { method: "POST" }).then(fetchStudents);
     }
 
-    // Uppdatera listan kontinuerligt
+    function kickStudent(id) {
+      fetch(`/kick_student/${id}`, { method: "POST" }).then(fetchStudents);
+    }
+
+    // Uppdatera listan var tredje sekund
     setInterval(fetchStudents, 3000);
+
+    // Initiera hämtning av elever
     fetchStudents();
   </script>
 </body>
