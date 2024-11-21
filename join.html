@@ -152,7 +152,7 @@
     <p>Förbered dig för quizet!</p>
   </div>
 
-<script>
+  <script>
     const apiUrl = "https://challew.pythonanywhere.com";
     const form = document.getElementById("join-form");
     const message = document.getElementById("message");
@@ -204,12 +204,15 @@
             clearInterval(interval); // Stop checking once the lobby has started
             popup.style.display = "none";
             startPopup.style.display = "flex";
+          } else {
+            popup.style.display = "flex"; // Show waiting popup if not started
+            startPopup.style.display = "none";
           }
         } catch (error) {
           console.error("Fel vid hämtning av startstatus:", error);
         }
-      }, 3000); // Check every 3 seconds
+      }, 1000); // Check every second
     }
-</script>
+  </script>
 </body>
 </html>
