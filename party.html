@@ -24,46 +24,47 @@
       margin-bottom: 15px;
     }
 
-    #status-message {
-      font-size: 1rem;
-      color: #ff6f61; /* Reddish-orange for status */
-      margin-bottom: 15px;
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    li {
+    .card {
       background: #1e40af;
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 8px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      animation: fadeIn 0.5s ease-in-out;
     }
 
-    button {
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      margin: 5px 0;
+      font-size: 1rem;
+      color: #d1d5db; /* Light gray text */
+    }
+
+    .card button {
       background-color: #e11d48;
       color: white;
       border: none;
-      padding: 5px 10px;
+      padding: 10px 15px;
       border-radius: 5px;
       cursor: pointer;
+      font-size: 1rem;
+      margin-top: 10px;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .card button:hover {
+      background-color: #b91c1c;
     }
   </style>
 </head>
@@ -71,7 +72,7 @@
   <h1>Lobby</h1>
   <p id="status-message">Genererar lobbykod...</p>
   <h2 id="lobby-code"></h2>
-  <ul id="student-list"></ul>
+  <div class="card-container" id="student-list"></div>
 
   <script>
     const studentList = document.getElementById("student-list");
@@ -83,7 +84,7 @@
     // Fetch and display the lobby code
     async function createLobby() {
       try {
-        const response = await fetch("https://4b50-83-250-213-73.ngrok-free.app/create_lobby", {
+        const response = await fetch("https://1bc2-83-250-213-73.ngrok-free.app/create_lobby", {
           method: "POST",
         });
         const data = await response.json();
@@ -107,21 +108,34 @@
       if (!lobbyCode) return;
 
       try {
-        const response = await fetch(`https://4b50-83-250-213-73.ngrok-free.app/get_lobby/${lobbyCode}`);
+        const response = await fetch(`https://1bc2-83-250-213-73.ngrok-free.app/get_lobby/${lobbyCode}`);
         const data = await response.json();
 
         if (!data.error) {
           studentList.innerHTML = ""; // Clear the list
           data.forEach(student => {
-            const li = document.createElement("li");
-            li.textContent = `${student.name} (${student.id}) - Status: ${student.status}`;
+            const card = document.createElement("div");
+            card.className = "card";
+
+            const name = document.createElement("h3");
+            name.textContent = student.name;
+
+            const id = document.createElement("p");
+            id.textContent = `ID: ${student.id}`;
+
+            const status = document.createElement("p");
+            status.textContent = `Status: ${student.status}`;
 
             const kickButton = document.createElement("button");
             kickButton.textContent = "Avvisa";
             kickButton.onclick = () => kickStudent(student.id);
 
-            li.appendChild(kickButton);
-            studentList.appendChild(li);
+            card.appendChild(name);
+            card.appendChild(id);
+            card.appendChild(status);
+            card.appendChild(kickButton);
+
+            studentList.appendChild(card);
           });
         } else {
           console.error(data.error);
@@ -134,7 +148,7 @@
     // Kick a student from the lobby
     async function kickStudent(studentId) {
       try {
-        await fetch(`https://4b50-83-250-213-73.ngrok-free.app/kick_student/${studentId}`, {
+        await fetch(`https://1bc2-83-250-213-73.ngrok-free.app/kick_student/${studentId}`, {
           method: "POST",
         });
         fetchLobby(); // Refresh the list after kicking
