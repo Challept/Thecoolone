@@ -39,6 +39,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
     }
 
     .card h3 {
@@ -49,7 +54,7 @@
     .card p {
       margin: 5px 0;
       font-size: 1rem;
-      color: #d1d5db; /* Light gray text */
+      color: #d1d5db;
     }
 
     .card button {
@@ -109,8 +114,11 @@
 
       try {
         const response = await fetch(`https://1bc2-83-250-213-73.ngrok-free.app/get_lobby/${lobbyCode}`);
-        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
+        const data = await response.json();
         if (!data.error) {
           studentList.innerHTML = ""; // Clear the list
           data.forEach(student => {
@@ -141,6 +149,7 @@
           console.error(data.error);
         }
       } catch (error) {
+        statusMessage.textContent = "Fel vid hämtning av lobbyn.";
         console.error("Error fetching lobby:", error);
       }
     }
@@ -160,8 +169,8 @@
     // Create the lobby on page load
     createLobby();
 
-    // Refresh the lobby every 5 seconds
-    setInterval(fetchLobby, 5000);
+    // Refresh the lobby every 3 seconds
+    setInterval(fetchLobby, 3000);
   </script>
 </body>
 </html>
