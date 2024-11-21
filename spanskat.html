@@ -219,7 +219,11 @@
       ]
     };
 
- const popup = document.getElementById("popup");
+const popup = document.getElementById("popup");
+const overlay = document.createElement("div"); // Skapa en överlagring för att blockera interaktion
+overlay.id = "overlay";
+document.body.appendChild(overlay);
+
 const codeInput = document.getElementById("code-input");
 const errorMessage = document.getElementById("error-message");
 const correctCode = "19317";
@@ -229,6 +233,7 @@ let popupActive = false; // Förhindrar flera popup-fönster samtidigt
 
 function togglePopup(show) {
   popup.style.display = show ? "block" : "none";
+  overlay.style.display = show ? "block" : "none"; // Visa/dölj överlagringen
   popupActive = show; // Håll reda på om popupen är aktiv
   gameActive = !show; // Pausa spelet när popupen visas
 }
@@ -253,6 +258,25 @@ function handleVisibilityChange() {
 }
 
 document.addEventListener("visibilitychange", handleVisibilityChange);
+
+// CSS för överlagringen
+const style = document.createElement("style");
+style.textContent = `
+  #overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999; /* Ligger bakom popupen */
+  }
+  #popup {
+    z-index: 1000; /* Popup är alltid över overlay */
+  }
+`;
+document.head.appendChild(style);
     
     let currentQuestions = [];
     let currentQuestionIndex = 0;
