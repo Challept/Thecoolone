@@ -51,7 +51,6 @@
     }
 
     #start-button {
-      display: none;
       margin-top: 20px;
       padding: 10px 20px;
       font-size: 1.5rem;
@@ -116,9 +115,8 @@
           studentList.appendChild(card);
         });
 
-        // Visa "Starta"-knappen om det finns elever
-        const startButton = document.getElementById("start-button");
-        startButton.style.display = data.length > 0 ? "block" : "none";
+        // "Starta"-knappen visas alltid
+        document.getElementById("start-button").style.display = "block";
       } catch (error) {
         console.error("Fel vid hämtning av lobbydata:", error);
         document.getElementById("status-message").textContent = "Fel vid hämtning av lobbydata.";
