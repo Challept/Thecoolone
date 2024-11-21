@@ -13,6 +13,23 @@
       padding: 20px;
     }
 
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    #lobby-code {
+      font-size: 1.8rem;
+      color: #ffd700; /* Guldtext för kod */
+      margin-bottom: 15px;
+    }
+
+    #status-message {
+      font-size: 1rem;
+      color: #ff6f61; /* Röd-orange för status */
+      margin-bottom: 15px;
+    }
+
     ul {
       list-style: none;
       padding: 0;
@@ -26,6 +43,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      animation: fadeIn 0.5s ease-in-out;
     }
 
     button {
@@ -36,26 +54,62 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   </style>
 </head>
 <body>
   <h1>Lobby</h1>
-  <h2>Kod: <span id="lobby-code"></span></h2>
+  <p id="status-message">Genererar lobbykod...</p>
+  <h2 id="lobby-code"></h2>
   <ul id="student-list"></ul>
 
   <script>
-    const lobbyCode = "470405"; // Replace with the correct lobby code
-    document.getElementById("lobby-code").textContent = lobbyCode;
-
     const studentList = document.getElementById("student-list");
+    const lobbyCodeElement = document.getElementById("lobby-code");
+    const statusMessage = document.getElementById("status-message");
+
+    let lobbyCode = null;
+
+    async function createLobby() {
+      try {
+        const response = await fetch("https://4b50-83-250-213-73.ngrok-free.app/create_lobby", {
+          method: "POST",
+        });
+        const data = await response.json();
+
+        if (data.lobby_code) {
+          lobbyCode = data.lobby_code;
+          lobbyCodeElement.textContent = `Kod: ${lobbyCode}`;
+          statusMessage.textContent = "Lobbykod genererad!";
+          fetchLobby(); // Start fetching the lobby data
+        } else {
+          throw new Error("Kunde inte generera lobbykod.");
+        }
+      } catch (error) {
+        statusMessage.textContent = "Fel vid generering av lobbykod.";
+        console.error("Error creating lobby:", error);
+      }
+    }
 
     async function fetchLobby() {
+      if (!lobbyCode) return;
+
       try {
-        const response = await fetch(`https://da55-83-250-213-73.ngrok-free.app/get_lobby/${lobbyCode}`);
+        const response = await fetch(`https://4b50-83-250-213-73.ngrok-free.app/get_lobby/${lobbyCode}`);
         const data = await response.json();
 
         if (!data.error) {
-          studentList.innerHTML = ""; // Clear current list
+          studentList.innerHTML = ""; // Clear the list
           data.forEach(student => {
             const li = document.createElement("li");
             li.textContent = `${student.name} (${student.id}) - Status: ${student.status}`;
@@ -80,15 +134,17 @@
         await fetch(`https://4b50-83-250-213-73.ngrok-free.app/kick_student/${studentId}`, {
           method: "POST",
         });
-        fetchLobby(); // Refresh list after kicking
+        fetchLobby(); // Refresh the list after kicking
       } catch (error) {
         console.error("Error kicking student:", error);
       }
     }
 
-    // Refresh the lobby every 3 seconds
-    setInterval(fetchLobby, 3000);
-    fetchLobby();
+    // Create the lobby on page load
+    createLobby();
+
+    // Refresh the lobby every 5 seconds
+    setInterval(fetchLobby, 5000);
   </script>
 </body>
 </html>
