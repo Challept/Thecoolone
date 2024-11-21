@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gå med i lobby</title>
   <style>
-    /* Allmän styling */
     body {
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #2a5298, #1e3c72);
@@ -54,7 +53,6 @@
       margin-top: 20px;
     }
 
-    /* Popup */
     #popup {
       display: none;
       position: fixed;
@@ -84,7 +82,6 @@
       margin: 10px 0;
     }
 
-    /* Start-popup */
     .start-popup {
       display: none;
       position: fixed;
@@ -143,7 +140,6 @@
   </form>
   <p id="message"></p>
 
-  <!-- Popup för att visa att spelaren är med -->
   <div id="popup">
     <h2>🎉 Du är med! 🎉</h2>
     <p id="popup-lobby-code"></p>
@@ -151,7 +147,6 @@
     <p>Vänta på att spelet börjar!</p>
   </div>
 
-  <!-- Start-popup när spelet börjar -->
   <div class="start-popup" id="start-popup">
     <h2>Spelet börjar nu!</h2>
     <p>Förbered dig för quizet!</p>
@@ -193,7 +188,7 @@
           popupLobbyCode.textContent = `Lobbykod: ${lobbyCode}`;
           popupStudentName.textContent = `Namn: ${studentName}`;
           popup.style.display = "flex";
-          checkStartSignal();
+          await waitForStartSignal(); // Vänta på startsignal
         }
       } catch (error) {
         message.textContent = "Ett fel inträffade. Försök igen.";
@@ -201,8 +196,8 @@
       }
     });
 
-    async function checkStartSignal() {
-      setInterval(async () => {
+    async function waitForStartSignal() {
+      while (true) {
         try {
           const response = await fetch(`${apiUrl}/get_lobby/${lobbyCode}`);
           const data = await response.json();
@@ -210,11 +205,13 @@
           if (student) {
             popup.style.display = "none";
             startPopup.style.display = "flex";
+            break; // Avsluta loopen när spelet börjar
           }
         } catch (error) {
           console.error("Fel vid hämtning av startstatus:", error);
         }
-      }, 3000);
+        await new Promise(resolve => setTimeout(resolve, 3000)); // Vänta i 3 sekunder
+      }
     }
   </script>
 </body>
