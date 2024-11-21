@@ -1,56 +1,80 @@
-/* Global styling */
+/* Uppdaterad Global Styling */
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background: linear-gradient(135deg, #8ec5fc, #e0c3fc);
+  background: linear-gradient(120deg, #d4fc79, #96e6a1);
   color: #333;
   text-align: center;
-  animation: fadeInBackground 5s infinite alternate;
+  animation: fadeInBackground 10s infinite alternate ease-in-out;
+  transition: background 2s ease-in-out;
 }
 
 /* Fade-in animation for the background */
 @keyframes fadeInBackground {
-  0% { background: linear-gradient(135deg, #8ec5fc, #e0c3fc); }
-  50% { background: linear-gradient(135deg, #a8edea, #fed6e3); }
-  100% { background: linear-gradient(135deg, #fdfcfb, #e2d1c3); }
+  0% { background: linear-gradient(120deg, #d4fc79, #96e6a1); }
+  50% { background: linear-gradient(120deg, #84fab0, #8fd3f4); }
+  100% { background: linear-gradient(120deg, #cfd9df, #e2ebf0); }
 }
 
 header {
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.6);
-  border-bottom: 2px solid #333;
-  animation: slideDown 1s ease-in-out;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.7);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
+  animation: slideDown 2s ease-in-out;
+  border-radius: 0 0 15px 15px;
 }
 
 header h1 {
-  font-size: 2.5rem;
-  color: #4a4e69;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 3rem;
+  color: #5f6caf;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+  animation: bounceIn 1.5s ease-in-out;
 }
 
 header p {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: #4a4e69;
   margin-top: 10px;
+  animation: fadeInText 2s ease-in-out;
 }
 
-/* Slide-down animation for header */
+/* Animation for header text */
 @keyframes slideDown {
   from { transform: translateY(-100%); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes bounceIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes fadeInText {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 main {
-  padding: 40px 20px;
+  padding: 50px 20px;
+  animation: fadeInMain 2s ease-in;
+}
+
+/* Fade-in animation for the main section */
+@keyframes fadeInMain {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 footer {
-  padding: 15px;
-  background: rgba(255, 255, 255, 0.6);
-  border-top: 2px solid #333;
+  padding: 20px;
+  background: linear-gradient(90deg, #8ec5fc, #e0c3fc);
+  border-top: 3px solid rgba(0, 0, 0, 0.2);
   color: #4a4e69;
-  animation: fadeInFooter 2s ease-in;
+  animation: fadeInFooter 3s ease-in;
+  box-shadow: 0px -6px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Fade-in animation for footer */
@@ -59,29 +83,36 @@ footer {
   to { opacity: 1; }
 }
 
-/* Card container */
+/* Uppdaterad Kort-container */
 .card-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
   margin: 0 auto;
   max-width: 1200px;
+  animation: fadeInCards 2s ease-in-out;
 }
 
-/* Card design */
+/* Animation för kortcontainer */
+@keyframes fadeInCards {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Uppdaterad Kort-design */
 .card {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 15px;
+  border-radius: 20px;
   overflow: hidden;
-  padding: 20px;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-  animation: zoomIn 0.8s ease-in-out;
+  padding: 25px;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  animation: zoomIn 1.2s ease-in-out;
 }
 
 .card:hover {
-  transform: scale(1.1);
-  box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.3);
+  transform: scale(1.15) rotate(1deg);
+  box-shadow: 0px 25px 50px rgba(0, 0, 0, 0.3);
 }
 
 .card-content {
@@ -89,9 +120,10 @@ footer {
 }
 
 .card h2 {
-  font-size: 1.8rem;
-  margin: 10px 0;
-  color: #4a4e69;
+  font-size: 1.9rem;
+  margin: 15px 0;
+  color: #5f6caf;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .card p {
@@ -103,15 +135,15 @@ footer {
 /* Om oss - Styling */
 #about-us {
   background: linear-gradient(135deg, #ffecd2, #fcb69f);
-  padding: 50px 20px;
+  padding: 60px 20px;
   text-align: center;
-  border-top: 2px solid rgba(0, 0, 0, 0.1);
-  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  border-top: 3px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.1);
   animation: fadeInSection 1.5s ease-in-out;
 }
 
 .about-content h2 {
-  font-size: 2rem;
+  font-size: 2.2rem;
   color: #4a4e69;
   margin-bottom: 20px;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
@@ -119,65 +151,26 @@ footer {
 }
 
 .about-content p {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: #333;
   margin: 15px 0;
   line-height: 1.8;
   animation: slideInRight 1.2s ease-out;
 }
 
-/* Animationer */
-@keyframes fadeInSection {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideInLeft {
-  from { transform: translateX(-50px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes slideInRight {
-  from { transform: translateX(50px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-/* Button styling */
 .btn {
   display: inline-block;
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 1rem;
   background: linear-gradient(90deg, #ff9a9e, #fad0c4);
   color: #333;
   text-decoration: none;
-  border-radius: 8px;
-  border: 1px solid #333;
+  border-radius: 12px;
+  border: 2px solid #333;
   transition: background 0.4s ease, transform 0.3s ease;
 }
 
 .btn:hover {
   background: linear-gradient(90deg, #fad0c4, #ff9a9e);
-  transform: translateY(-5px);
-}
-
-/* Zoom-in animation for cards */
-@keyframes zoomIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* Tooltip effect for buttons */
-.btn::after {
-  content: "Klicka här!";
-  display: block;
-  font-size: 0.8rem;
-  color: #4a4e69;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.3s, transform 0.3s;
-}
-
-.btn:hover::after {
-  opacity: 1;
-  transform: translateY(0);
+  transform: translateY(-8px);
 }
