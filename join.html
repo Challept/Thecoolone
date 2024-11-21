@@ -3,60 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anslut till Lobby</title>
+  <title>Gå med i Lobby</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       background: linear-gradient(135deg, #1e3a8a, #2563eb);
       color: white;
+      padding: 20px;
     }
 
-    form {
+    h1 {
       margin-top: 50px;
     }
 
+    .form-container {
+      margin-top: 30px;
+      background: #1e40af;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 400px;
+      margin: 0 auto;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-size: 1.2rem;
+    }
+
     input {
+      width: 100%;
       padding: 10px;
-      margin: 10px;
+      margin-top: 5px;
       border: none;
       border-radius: 5px;
+      font-size: 1rem;
     }
 
     button {
+      margin-top: 20px;
       padding: 10px 20px;
+      background: #4ade80;
+      color: black;
       border: none;
       border-radius: 5px;
-      background: green;
-      color: white;
+      font-size: 1rem;
       cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #22c55e;
+    }
+
+    .error {
+      color: #ff4d4f;
+      margin-top: 10px;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <h1>Anslut till Lobby</h1>
-  <form id="join-form">
-    <input type="text" id="lobby-code" placeholder="Lobbyns kod" required>
-    <input type="text" id="student-name" placeholder="Ditt namn" required>
-    <button type="submit">Anslut</button>
-  </form>
+  <h1>Gå med i Lobby</h1>
+  <div class="form-container">
+    <form id="join-form">
+      <label for="lobby-code">Lobbykod</label>
+      <input type="text" id="lobby-code" placeholder="Ange lobbykod" required />
+
+      <label for="name">Ditt namn</label>
+      <input type="text" id="name" placeholder="Ange ditt namn" required />
+
+      <button type="submit">Gå med</button>
+      <p class="error" id="error-message">Kunde inte ansluta. Kontrollera din kod.</p>
+    </form>
+  </div>
 
   <script>
+    const BASE_URL = "https://24ab-83-250-213-73.ngrok-free.app"; // Uppdatera till din ngrok-länk
+
     document.getElementById("join-form").addEventListener("submit", async (event) => {
       event.preventDefault();
-      const code = document.getElementById("lobby-code").value;
-      const name = document.getElementById("student-name").value;
 
-      const response = await fetch("https://a7b8-83-250-213-73.ngrok-free.app/join_lobby", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, name }),
-      });
+      const lobbyCode = document.getElementById("lobby-code").value.trim();
+      const name = document.getElementById("name").value.trim();
+      const errorMessage = document.getElementById("error-message");
 
-      if (response.ok) {
-        alert("Du har anslutit till lobbyn!");
-      } else {
-        alert("Kunde inte ansluta. Kontrollera koden.");
+      try {
+        const response = await fetch(`${BASE_URL}/join_lobby`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lobby_code: lobbyCode, name }),
+        });
+
+        if (response.ok) {
+          alert("Du har gått med i lobbyn!");
+          window.location.href = `/party.html?lobby_code=${lobbyCode}`;
+        } else {
+          errorMessage.style.display = "block";
+        }
+      } catch (error) {
+        console.error("Kunde inte ansluta:", error);
+        errorMessage.style.display = "block";
       }
     });
   </script>
