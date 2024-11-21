@@ -15,12 +15,14 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      overflow: hidden;
     }
 
     h1 {
       font-size: 3rem;
+      text-align: center;
       margin-bottom: 20px;
-      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 2s ease-in-out;
     }
 
     .container {
@@ -38,7 +40,7 @@
       cursor: pointer;
       background-color: #4ade80;
       color: #000;
-      transition: transform 0.2s, background-color 0.2s;
+      transition: transform 0.3s, background-color 0.3s;
     }
 
     .button:hover {
@@ -46,8 +48,14 @@
       transform: scale(1.1);
     }
 
-    #question-text {
+    #swedish-sentence {
       font-size: 1.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    #spanish-sentence {
+      font-size: 1.8rem;
       margin: 20px 0;
     }
 
@@ -60,18 +68,25 @@
       border-radius: 5px;
       background: #ffffff;
       color: #000;
-      margin-top: 10px;
+      text-align: center;
     }
 
     #feedback {
       font-size: 1.2rem;
       margin-top: 15px;
       font-weight: bold;
+      animation: fadeIn 1s ease-in-out;
     }
 
-    #restart-button, #next-question {
-      margin-top: 20px;
-      display: none;
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
@@ -85,51 +100,42 @@
   </div>
 
   <div class="container" id="game-container" style="display: none;">
-    <p id="question-text">Laddar fråga...</p>
-    <input type="text" id="answer-input" placeholder="Skriv ditt svar här" />
+    <p id="swedish-sentence">Laddar fråga...</p>
+    <p id="spanish-sentence"></p>
+    <input type="text" id="answer-input" placeholder="Fyll i det saknade ordet" />
     <button class="button" id="submit-answer">Skicka</button>
     <p id="feedback"></p>
-    <button class="button" id="next-question">Nästa fråga</button>
   </div>
 
   <div class="container" id="result-container" style="display: none;">
     <h2 id="result-text">Resultat</h2>
     <p id="score-text"></p>
+    <p id="grade-text"></p>
     <button class="button" id="restart-button">Spela igen</button>
   </div>
 
   <script>
     const questions = {
       easy: [
-        { question: "Jag heter [___].", answer: "me llamo" },
-        { question: "Jag bor i [___].", answer: "vivo" },
-        { question: "Hur mår du? ¿[___] estás?", answer: "cómo" },
-        { question: "Kan du hjälpa mig? ¿Puedes [___] hjälp?", answer: "darme" },
-        { question: "Jag vill ha en kaffe. Quiero [___] café.", answer: "un" }
+        { swedish: "Jag heter Alex.", spanish: " ___ Alex", answer: "me llamo" },
+        { swedish: "Jag bor i en stad.", spanish: "vivo en una ___", answer: "ciudad" },
+        { swedish: "Hur mår du?", spanish: "¿___ estás?", answer: "cómo" },
+        { swedish: "Det är kallt idag.", spanish: "Hoy hace ___", answer: "frío" },
+        { swedish: "Jag vill ha kaffe.", spanish: "Quiero ___ café.", answer: "un" }
       ],
       medium: [
-        { question: "Jag äter ett äpple. Yo [___] una manzana.", answer: "como" },
-        { question: "Det är kallt idag. Hoy hace [___].", answer: "frío" },
-        { question: "Han är glad. Él está [___].", answer: "feliz" },
-        { question: "Huset är blått. La casa es [___].", answer: "azul" },
-        { question: "Jag ser dig. Yo te [___].", answer: "veo" },
-        { question: "Jag tycker om hundar. Me [___] los perros.", answer: "gustan" },
-        { question: "Vad vill du ha? ¿Qué [___] quieres?", answer: "deseas" },
-        { question: "Hon dricker vatten. Ella [___] agua.", answer: "bebe" },
-        { question: "Vi bor i Sverige. Nosotros [___] en Suecia.", answer: "vivimos" },
-        { question: "Jag har en bok. Yo [___] un libro.", answer: "tengo" }
+        { swedish: "Han är glad.", spanish: "Él está ___", answer: "feliz" },
+        { swedish: "De dricker vatten.", spanish: "Ellos beben ___", answer: "agua" },
+        { swedish: "Huset är blått.", spanish: "La casa es ___", answer: "azul" },
+        { swedish: "Jag ser dig.", spanish: "Yo te ___", answer: "veo" },
+        { swedish: "Vi bor i Sverige.", spanish: "Nosotros vivimos en ___", answer: "Suecia" }
       ],
       hard: [
-        { question: "Jag ska resa imorgon. Yo voy a [___] mañana.", answer: "viajar" },
-        { question: "Vi förstår allt. Nosotros [___] todo.", answer: "entendemos" },
-        { question: "Det är varmt idag. Hoy hace [___].", answer: "calor" },
-        { question: "Vi skriver en bok. Nosotros [___] un libro.", answer: "escribimos" },
-        { question: "Jag sjunger en sång. Yo [___] una canción.", answer: "canto" },
-        { question: "Han talar snabbt. Él [___] rápido.", answer: "habla" },
-        { question: "De äter lunch. Ellos [___] el almuerzo.", answer: "comen" },
-        { question: "Katten sover. El gato [___].", answer: "duerme" },
-        { question: "Vädret är fint. El tiempo está [___].", answer: "bonito" },
-        { question: "De arbetar hårt. Ellos [___] mucho.", answer: "trabajan" }
+        { swedish: "Vi förstår allt.", spanish: "Nosotros ___ todo.", answer: "entendemos" },
+        { swedish: "Det är varmt idag.", spanish: "Hoy hace ___", answer: "calor" },
+        { swedish: "Han talar snabbt.", spanish: "Él ___ rápido.", answer: "habla" },
+        { swedish: "Katten sover.", spanish: "El gato ___", answer: "duerme" },
+        { swedish: "De arbetar hårt.", spanish: "Ellos ___ mucho.", answer: "trabajan" }
       ]
     };
 
@@ -141,11 +147,10 @@
     const gameContainer = document.getElementById("game-container");
     const resultContainer = document.getElementById("result-container");
 
-    const questionText = document.getElementById("question-text");
+    const swedishSentence = document.getElementById("swedish-sentence");
+    const spanishSentence = document.getElementById("spanish-sentence");
     const answerInput = document.getElementById("answer-input");
     const feedback = document.getElementById("feedback");
-    const nextQuestionButton = document.getElementById("next-question");
-    const restartButton = document.getElementById("restart-button");
 
     function selectDifficulty(difficulty) {
       currentQuestions = questions[difficulty];
@@ -163,10 +168,10 @@
     function loadQuestion() {
       if (currentQuestionIndex < currentQuestions.length) {
         const currentQuestion = currentQuestions[currentQuestionIndex];
-        questionText.textContent = currentQuestion.question;
-        answerInput.value = "";
+        swedishSentence.textContent = currentQuestion.swedish;
+        spanishSentence.innerHTML = currentQuestion.spanish.replace("___", "<span>___</span>");
         feedback.textContent = "";
-        nextQuestionButton.style.display = "none";
+        answerInput.value = "";
       } else {
         endGame();
       }
@@ -176,7 +181,10 @@
       const userAnswer = answerInput.value.trim().toLowerCase();
       const correctAnswer = currentQuestions[currentQuestionIndex].answer.toLowerCase();
 
-      if (userAnswer === correctAnswer) {
+      const normalizedUserAnswer = userAnswer.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const normalizedCorrectAnswer = correctAnswer.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+      if (normalizedUserAnswer === normalizedCorrectAnswer) {
         score++;
         feedback.textContent = "Rätt svar!";
         feedback.style.color = "green";
@@ -185,24 +193,29 @@
         feedback.style.color = "red";
       }
 
-      nextQuestionButton.style.display = "inline-block";
+      currentQuestionIndex++;
+      setTimeout(loadQuestion, 1500);
     }
 
     function endGame() {
       gameContainer.style.display = "none";
       resultContainer.style.display = "block";
-      const percentage = (score / currentQuestions.length) * 100;
-      let grade;
 
-      if (percentage >= 90) grade = "A";
-      else if (percentage >= 80) grade = "B";
-      else if (percentage >= 70) grade = "C";
-      else if (percentage >= 60) grade = "D";
-      else if (percentage >= 50) grade = "E";
-      else grade = "F";
-
+      const grade = calculateGrade(score, currentQuestions.length);
       document.getElementById("result-text").textContent = `Du fick ${score} av ${currentQuestions.length} rätt!`;
-      document.getElementById("score-text").textContent = `Betyg: ${grade}`;
+      document.getElementById("score-text").textContent = `Ditt resultat: ${score} rätt`;
+      document.getElementById("grade-text").textContent = `Betyg: ${grade}`;
+    }
+
+    function calculateGrade(score, total) {
+      const percentage = (score / total) * 100;
+
+      if (percentage >= 90) return "A";
+      if (percentage >= 75) return "B";
+      if (percentage >= 60) return "C";
+      if (percentage >= 45) return "D";
+      if (percentage >= 30) return "E";
+      return "F";
     }
 
     function restartGame() {
@@ -215,12 +228,7 @@
     });
 
     document.getElementById("submit-answer").addEventListener("click", checkAnswer);
-    nextQuestionButton.addEventListener("click", () => {
-      currentQuestionIndex++;
-      loadQuestion();
-    });
-
-    restartButton.addEventListener("click", restartGame);
+    document.getElementById("restart-button").addEventListener("click", restartGame);
   </script>
 </body>
 </html>
