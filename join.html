@@ -152,7 +152,7 @@
     <p>Förbered dig för quizet!</p>
   </div>
 
-  <script>
+<script>
     const apiUrl = "https://challew.pythonanywhere.com";
     const form = document.getElementById("join-form");
     const message = document.getElementById("message");
@@ -186,7 +186,7 @@
           popupLobbyCode.textContent = `Lobbykod: ${lobbyCode}`;
           popupStudentName.textContent = `Namn: ${studentName}`;
           popup.style.display = "flex";
-          await waitForStartSignal(); // Vänta på startsignal
+          waitForStartSignal(); // Start checking for lobby status
         }
       } catch (error) {
         message.textContent = "Ett fel inträffade. Försök igen.";
@@ -195,21 +195,21 @@
     });
 
     async function waitForStartSignal() {
-      while (true) {
+      const interval = setInterval(async () => {
         try {
           const response = await fetch(`${apiUrl}/get_lobbystartstatus/${lobbyCode}`);
           const data = await response.json();
+
           if (data.started) {
+            clearInterval(interval); // Stop checking once the lobby has started
             popup.style.display = "none";
             startPopup.style.display = "flex";
-            break; // Avsluta loopen när spelet börjar
           }
         } catch (error) {
           console.error("Fel vid hämtning av startstatus:", error);
         }
-        await new Promise(resolve => setTimeout(resolve, 3000)); // Vänta i 3 sekunder
-      }
+      }, 3000); // Check every 3 seconds
     }
-  </script>
+</script>
 </body>
 </html>
