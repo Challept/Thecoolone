@@ -236,6 +236,20 @@ function togglePopup(show) {
   overlay.style.display = show ? "block" : "none"; // Visa/dölj överlagringen
   popupActive = show; // Håll reda på om popupen är aktiv
   gameActive = !show; // Pausa spelet när popupen visas
+
+  if (show) {
+    // Lägg till beforeunload för att förhindra uppdatering
+    window.addEventListener("beforeunload", preventRefresh);
+  } else {
+    // Ta bort beforeunload när popupen är stängd
+    window.removeEventListener("beforeunload", preventRefresh);
+  }
+}
+
+// Förhindra uppdatering
+function preventRefresh(event) {
+  event.preventDefault();
+  event.returnValue = ""; // Nödvändigt för vissa webbläsare
 }
 
 codeInput.addEventListener("input", () => {
@@ -259,7 +273,7 @@ function handleVisibilityChange() {
 
 document.addEventListener("visibilitychange", handleVisibilityChange);
 
-// CSS för överlagringen
+// CSS för överlagringen och popupen
 const style = document.createElement("style");
 style.textContent = `
   #overlay {
@@ -269,13 +283,26 @@ style.textContent = `
     left: 0;
     width: 100%;
     height: 100%;
-    background: #add8e6; /* Ljusblå bakgrund */
+    background: rgba(173, 216, 230, 0.9); /* Semi-transparent ljusblå */
     animation: fadeInOverlay 0.5s ease-out; /* Animation vid visning */
     z-index: 999; /* Ligger bakom popupen */
   }
   #popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     z-index: 1000; /* Popup är alltid över overlay */
     animation: popupBounce 0.5s ease-out; /* Animation för popupen */
+  }
+  #popup input, #popup button {
+    display: block;
+    margin: 10px auto;
   }
   @keyframes fadeInOverlay {
     from {
