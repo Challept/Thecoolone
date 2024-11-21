@@ -220,7 +220,7 @@
     };
 
 const popup = document.getElementById("popup");
-const overlay = document.createElement("div"); // Skapa en överlagring för att blockera interaktion
+const overlay = document.createElement("div"); // Skapa en överlagring
 overlay.id = "overlay";
 document.body.appendChild(overlay);
 
@@ -238,10 +238,8 @@ function togglePopup(show) {
   gameActive = !show; // Pausa spelet när popupen visas
 
   if (show) {
-    // Lägg till beforeunload för att förhindra uppdatering
-    window.addEventListener("beforeunload", preventRefresh);
+    window.addEventListener("beforeunload", preventRefresh); // Förhindra laddning
   } else {
-    // Ta bort beforeunload när popupen är stängd
     window.removeEventListener("beforeunload", preventRefresh);
   }
 }
@@ -249,31 +247,34 @@ function togglePopup(show) {
 // Förhindra uppdatering
 function preventRefresh(event) {
   event.preventDefault();
-  event.returnValue = ""; // Nödvändigt för vissa webbläsare
+  event.returnValue = ""; // Krävs för vissa webbläsare
 }
 
+// Återställ felmeddelande när användaren skriver
 codeInput.addEventListener("input", () => {
-  errorMessage.style.display = "none"; // Döljer felmeddelande när användaren skriver
+  errorMessage.style.display = "none";
 });
 
+// Hantera kodinmatning
 document.getElementById("submit-code").addEventListener("click", () => {
   if (codeInput.value === correctCode) {
     togglePopup(false);
     codeInput.value = ""; // Töm inmatningsfältet
   } else {
-    errorMessage.style.display = "block";
+    errorMessage.style.display = "block"; // Visa felmeddelande
   }
 });
 
+// Hantera när användaren lämnar fliken
 function handleVisibilityChange() {
   if (document.hidden && gameActive && !popupActive) {
-    togglePopup(true); // Visa popupen om spelet är aktivt och användaren lämnar fliken
+    togglePopup(true); // Visa popupen om användaren lämnar fliken
   }
 }
 
 document.addEventListener("visibilitychange", handleVisibilityChange);
 
-// CSS för överlagringen och popupen
+// Lägg till CSS för popup och overlay
 const style = document.createElement("style");
 style.textContent = `
   #overlay {
@@ -283,9 +284,9 @@ style.textContent = `
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(173, 216, 230, 0.9); /* Semi-transparent ljusblå */
-    animation: fadeInOverlay 0.5s ease-out; /* Animation vid visning */
-    z-index: 999; /* Ligger bakom popupen */
+    background: rgba(0, 123, 255, 0.8); /* Mjuk blå bakgrund */
+    animation: fadeInOverlay 0.5s ease-out;
+    z-index: 999; /* Bakom popup */
   }
   #popup {
     display: none;
@@ -293,16 +294,50 @@ style.textContent = `
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #f8f9fa;
+    background: #ffffff;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    z-index: 1000; /* Popup är alltid över overlay */
-    animation: popupBounce 0.5s ease-out; /* Animation för popupen */
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* Popup alltid över overlay */
+    animation: popupBounce 0.5s ease-out;
+    text-align: center;
+    width: 300px;
   }
-  #popup input, #popup button {
-    display: block;
-    margin: 10px auto;
+  #popup h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  #popup p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 15px;
+  }
+  #popup input {
+    padding: 10px;
+    width: 80%;
+    margin-bottom: 10px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  #popup button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background: #4ade80;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #000;
+    transition: background 0.3s ease;
+  }
+  #popup button:hover {
+    background: #22c55e;
+  }
+  #popup #error-message {
+    color: red;
+    font-size: 0.9rem;
+    display: none;
   }
   @keyframes fadeInOverlay {
     from {
@@ -314,11 +349,11 @@ style.textContent = `
   }
   @keyframes popupBounce {
     from {
-      transform: scale(0.8);
+      transform: translate(-50%, -50%) scale(0.8);
       opacity: 0;
     }
     to {
-      transform: scale(1);
+      transform: translate(-50%, -50%) scale(1);
       opacity: 1;
     }
   }
