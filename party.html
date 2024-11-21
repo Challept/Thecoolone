@@ -20,72 +20,72 @@
 
     #lobby-code {
       font-size: 1.8rem;
-      color: #ffd700;
+      color: #ffd700; /* Gold color for the code */
       margin-bottom: 15px;
     }
 
-    .card-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-
-    .card {
-      background: #1e40af;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    .student-list {
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: transform 0.3s;
+      margin-top: 20px;
+      gap: 10px;
     }
 
-    .card:hover {
-      transform: scale(1.05);
-    }
-
-    .card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-    }
-
-    .card p {
-      margin: 5px 0;
-      font-size: 1rem;
-      color: #d1d5db;
-    }
-
-    .card button {
-      background-color: #e11d48;
-      color: white;
-      border: none;
+    .student {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e40af;
       padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 10px;
+      border-radius: 10px;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.5s ease-in-out;
     }
 
-    .card button:hover {
-      background-color: #b91c1c;
+    .student-name {
+      font-size: 1.2rem;
+    }
+
+    .status {
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+    }
+
+    .active {
+      background-color: #4ade80; /* Green for active */
+    }
+
+    .inactive {
+      background-color: #e11d48; /* Red for inactive */
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 <body>
   <h1>Lobby</h1>
-  <p id="status-message">Genererar lobbykod...</p>
-  <h2 id="lobby-code"></h2>
-  <div class="card-container" id="student-list"></div>
+  <h2 id="lobby-code">Genererar...</h2>
+  <div class="student-list" id="student-list"></div>
 
   <script>
     const studentList = document.getElementById("student-list");
     const lobbyCodeElement = document.getElementById("lobby-code");
-    const statusMessage = document.getElementById("status-message");
 
     let lobbyCode = null;
 
+    // Fetch the lobby code
     async function createLobby() {
       try {
         const response = await fetch("https://ff0e-83-250-213-73.ngrok-free.app/create_lobby", {
@@ -95,77 +95,60 @@
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
-
         if (data.lobby_code) {
           lobbyCode = data.lobby_code;
           lobbyCodeElement.textContent = `Kod: ${lobbyCode}`;
-          statusMessage.textContent = "Lobbykod genererad!";
-          fetchLobby();
+          fetchLobby(); // Start fetching the lobby data
         } else {
           throw new Error(data.error || "Kunde inte generera lobbykod.");
         }
       } catch (error) {
-        statusMessage.textContent = "Fel vid generering av lobbykod.";
+        lobbyCodeElement.textContent = "Fel vid generering av lobbykod.";
         console.error("Error creating lobby:", error);
       }
     }
 
+    // Fetch the list of students in the lobby
     async function fetchLobby() {
       if (!lobbyCode) return;
 
       try {
-        const response = await fetch(`https://ff0e-83-250-213-73.ngrok-free.app/get_lobby/{lobbyCode}`);
+        const response = await fetch(`https://ff0e-83-250-213-73.ngrok-free.app/get_lobby/${lobbyCode}`);
 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
 
+        if (!Array.isArray(data)) {
+          console.error("Invalid response format:", data);
+          return;
+        }
+
         studentList.innerHTML = ""; // Clear the list
         data.forEach(student => {
-          const card = document.createElement("div");
-          card.className = "card";
+          const studentDiv = document.createElement("div");
+          studentDiv.className = "student";
 
-          const name = document.createElement("h3");
-          name.textContent = student.name;
+          const nameDiv = document.createElement("div");
+          nameDiv.className = "student-name";
+          nameDiv.textContent = student.name;
 
-          const id = document.createElement("p");
-          id.textContent = `ID: ${student.id}`;
+          const statusDiv = document.createElement("div");
+          statusDiv.className = `status ${student.status === "active" ? "active" : "inactive"}`;
 
-          const status = document.createElement("p");
-          status.textContent = `Status: ${student.status}`;
-
-          const kickButton = document.createElement("button");
-          kickButton.textContent = "Avvisa";
-          kickButton.onclick = () => kickStudent(student.id);
-
-          card.appendChild(name);
-          card.appendChild(id);
-          card.appendChild(status);
-          card.appendChild(kickButton);
-
-          studentList.appendChild(card);
+          studentDiv.appendChild(nameDiv);
+          studentDiv.appendChild(statusDiv);
+          studentList.appendChild(studentDiv);
         });
       } catch (error) {
         console.error("Error fetching lobby data:", error);
-        statusMessage.textContent = "Error fetching lobby data.";
       }
     }
 
-    async function kickStudent(studentId) {
-      try {
-        const response = await fetch(`https://ff0e-83-250-213-73.ngrok-free.app/kick_student/{studentId}`, {
-          method: "POST",
-        });
-
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-        fetchLobby(); // Refresh the list after kicking
-      } catch (error) {
-        console.error("Error kicking student:", error);
-      }
-    }
-
+    // Create the lobby on page load
     createLobby();
+
+    // Refresh the lobby data every 5 seconds
     setInterval(fetchLobby, 5000);
   </script>
 </body>
