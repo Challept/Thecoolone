@@ -40,21 +40,32 @@
       text-align: center;
       width: 150px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .student-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
     }
 
     .student-card.active {
-      border: 2px solid #22c55e; /* Grönt för aktiv */
+      border: 2px solid #22c55e;
     }
 
     .student-card.inactive {
-      border: 2px solid #ef4444; /* Rött för inaktiv */
+      border: 2px solid #ef4444;
+    }
+
+    #start-button {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1.5rem;
+      background-color: #4ade80;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    #start-button:hover {
+      background-color: #22c55e;
+      transform: scale(1.05);
     }
   </style>
 </head>
@@ -63,12 +74,12 @@
   <p id="status-message">Genererar lobbykod...</p>
   <h2 id="lobby-code"></h2>
   <div id="student-list"></div>
+  <button id="start-button" onclick="startLobby()">Starta</button>
 
   <script>
     const apiUrl = "https://challew.pythonanywhere.com";
     let lobbyCode = null;
 
-    // Skapa en lobby och hämta lobbykoden
     async function createLobby() {
       try {
         const response = await fetch(`${apiUrl}/create_lobby`, { method: "POST" });
@@ -76,7 +87,7 @@
         if (data.lobby_code) {
           lobbyCode = data.lobby_code;
           document.getElementById("lobby-code").textContent = `Kod: ${lobbyCode}`;
-          fetchLobby(); // Starta hämtning av elever
+          fetchLobby(); // Starta hämtning av lobbyn
         } else {
           throw new Error("Kunde inte skapa lobby.");
         }
@@ -86,10 +97,7 @@
       }
     }
 
-    // Hämta alla elever i lobbyn
     async function fetchLobby() {
-      if (!lobbyCode) return;
-
       try {
         const response = await fetch(`${apiUrl}/get_lobby/${lobbyCode}`);
         if (!response.ok) throw new Error("Misslyckades med att hämta lobbyn.");
@@ -105,28 +113,30 @@
             <p><strong>${student.name}</strong></p>
             <p>ID: ${student.id}</p>
           `;
-          card.onclick = () => kickStudent(student.id); // Kicka elev vid klick
           studentList.appendChild(card);
         });
+
+        // Visa "Starta"-knappen om det finns elever
+        const startButton = document.getElementById("start-button");
+        startButton.style.display = data.length > 0 ? "block" : "none";
       } catch (error) {
         console.error("Fel vid hämtning av lobbydata:", error);
         document.getElementById("status-message").textContent = "Fel vid hämtning av lobbydata.";
       }
     }
 
-    // Kicka en elev från lobbyn
-    async function kickStudent(studentId) {
+    async function startLobby() {
       try {
-        const response = await fetch(`${apiUrl}/kick_student/${studentId}`, { method: "POST" });
-        if (!response.ok) throw new Error("Misslyckades med att kicka elev.");
-        console.log(`Elev med ID ${studentId} blev avvisad.`);
-        fetchLobby(); // Uppdatera listan
+        const response = await fetch(`${apiUrl}/start_lobby/${lobbyCode}`, { method: "POST" });
+        if (!response.ok) throw new Error("Misslyckades med att starta lobbyn.");
+        alert("Lobbyn är startad! Eleverna omdirigeras.");
       } catch (error) {
-        console.error("Fel vid kick av elev:", error);
+        console.error("Fel vid start av lobbyn:", error);
+        alert("Ett fel inträffade vid start av lobbyn.");
       }
     }
 
-    setInterval(fetchLobby, 5000); // Uppdatera elevlistan var 5:e sekund
+    setInterval(fetchLobby, 5000); // Uppdatera var 5:e sekund
     createLobby(); // Skapa lobby vid sidladdning
   </script>
 </body>
