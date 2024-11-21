@@ -82,7 +82,7 @@
       height: 10px;
       background: #ffd700;
       opacity: 0.8;
-      animation: fall 2s infinite ease-in-out;
+      animation: fall 3s ease-in-out;
     }
 
     @keyframes fadeIn {
@@ -111,7 +111,7 @@
         opacity: 1;
       }
       to {
-        transform: translateY(50vh) rotate(360deg);
+        transform: translateY(100vh) rotate(360deg);
         opacity: 0;
       }
     }
@@ -178,7 +178,7 @@
         const confetti = document.createElement("div");
         confetti.className = "confetti";
         confetti.style.left = `${Math.random() * 100}%`;
-        confetti.style.top = `${Math.random() * 100}%`;
+        confetti.style.top = `${Math.random() * -50}%`; // Startar högre upp
         confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
         popup.appendChild(confetti);
         setTimeout(() => confetti.remove(), 3000); // Ta bort efter 3 sekunder
