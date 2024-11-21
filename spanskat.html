@@ -232,105 +232,45 @@
 
 // Generera ett unikt elev-ID
 const studentId = `ID-${Math.floor(10000 + Math.random() * 90000)}`;
-document.getElementById("unique-id").textContent = studentId;
+document.getElementById("student-id").textContent = studentId;
 
-// Elevdata
-const studentData = {
-  id: studentId,
-  hasCheated: false,
-  approved: false,
-  kicked: false,
-};
-
-// Registrera eleven hos backend
+// Skicka elev-ID till backend
 async function registerStudent() {
   try {
-    await fetch("/add_student", {
+    const response = await fetch("/add_student", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(studentData),
+      body: JSON.stringify({ id: studentId }),
     });
-    console.log(`Elev med ID ${studentId} registrerad.`);
-  } catch (error) {
-    console.error("Kunde inte registrera elev:", error);
-  }
-}
 
-// Meddela admin om ändringar
-async function notifyAdmin(action) {
-  try {
-    await fetch("/update-student", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action, studentData }),
-    });
-    console.log(`Admin meddelad om åtgärd: ${action}`);
-  } catch (error) {
-    console.error("Kunde inte meddela admin:", error);
-  }
-}
-
-// Visa popup och paus
-function showPopup() {
-  const popup = document.getElementById("popup");
-  const overlay = document.getElementById("overlay");
-  popup.style.display = "flex";
-  overlay.style.display = "block";
-  checkApproval(); // Kontrollera om eleven har blivit godkänd
-}
-
-// Dölj popup
-function hidePopup() {
-  const popup = document.getElementById("popup");
-  const overlay = document.getElementById("overlay");
-  popup.style.display = "none";
-  overlay.style.display = "none";
-}
-
-// Kontrollera om eleven har blivit godkänd
-async function checkApproval() {
-  try {
-    const response = await fetch(`/get_students`);
-    const data = await response.json();
-
-    if (data[studentId]?.approved) {
-      hidePopup(); // Dölj popup om eleven är godkänd
+    if (response.ok) {
+      console.log(`Elev-ID ${studentId} skickades till servern.`);
     } else {
-      setTimeout(checkApproval, 2000); // Kontrollera igen efter 2 sekunder
+      console.error("Kunde inte skicka elev-ID:", await response.text());
     }
   } catch (error) {
-    console.error("Fel vid kontroll av godkännande:", error);
+    console.error("Fel vid registrering av elev:", error);
   }
 }
 
-// Kontrollera om eleven har blivit avvisad
-async function handleKick() {
-  try {
-    const response = await fetch(`/get_students`);
-    const data = await response.json();
-
-    if (data[studentId]?.kicked) {
-      alert("Du har blivit avstängd!");
-      window.location.href = "/kicked.html"; // Skicka eleven till avstängd-sidan
-    }
-  } catch (error) {
-    console.error("Fel vid kontroll av avvisning:", error);
-  }
+// Visa ett meddelande vid fusk
+function handleCheat() {
+  alert("Du gick utanför fliken! Läraren är notifierad.");
+  fetch("/notify_cheat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: studentId }),
+  });
 }
 
-// Lägg till event för flikändring
+// Lägg till en eventlyssnare för att upptäcka om eleven lämnar fliken
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
-    studentData.hasCheated = true; // Markera som fusk
-    notifyAdmin("cheat"); // Informera admin
-    showPopup(); // Visa popup
+    handleCheat();
   }
 });
 
-// Kontinuerligt kontrollera status
-setInterval(handleKick, 3000);
-
-// Initiera elevregistrering
+// Registrera eleven när sidan laddas
 registerStudent();
 
 const popup = document.getElementById("popup");
