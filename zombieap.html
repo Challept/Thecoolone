@@ -10,39 +10,14 @@
       font-family: Arial, sans-serif;
       background-color: #1e293b;
       color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       height: 100vh;
       overflow: hidden;
     }
 
-    h1, h2 {
-      text-align: center;
-      z-index: 10;
-    }
-
     #map {
-      width: 90%;
-      height: 70vh;
-      border: 2px solid #ffffff;
-      border-radius: 10px;
+      width: 100%;
+      height: 100vh;
       transition: all 1.5s ease-in-out;
-    }
-
-    #start-button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 1.2rem;
-      background-color: #4ade80;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #start-button:hover {
-      background-color: #38b46c;
     }
 
     .popup {
@@ -73,10 +48,7 @@
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
-  <h1>Zombie Apokalyps</h1>
-  <h2>Välj ett land att överleva i!</h2>
   <div id="map"></div>
-  <button id="start-button">Starta Apokalypsen</button>
 
   <script>
     const map = L.map('map').setView([20, 0], 2);
@@ -125,7 +97,7 @@
         geojsonLayer.addTo(map);
 
         // Starta apokalypsen
-        document.getElementById('start-button').addEventListener('click', function () {
+        document.body.addEventListener('click', function () {
           if (!selectedCountry) {
             alertPopup("Välj ett land först!");
             return;
@@ -135,9 +107,9 @@
           alertPopup(`Zombieapokalypsen börjar i ${zombieStart}!`);
 
           // Fullscreen-effekt
-          document.getElementById('map').style.width = "100%";
-          document.getElementById('map').style.height = "100vh";
-          document.body.style.flexDirection = "row";
+          document.getElementById('map').style.position = "absolute";
+          document.getElementById('map').style.top = "0";
+          document.getElementById('map').style.left = "0";
 
           spreadInfection(data.features, zombieStart);
         });
@@ -159,7 +131,7 @@
         infectedCountries.forEach(country => {
           const neighbors = getNeighboringCountries(features, country);
           neighbors.forEach(neighbor => {
-            if (!infectedCountries.includes(neighbor) && Math.random() < 0.8) { // 80% chans att spridas
+            if (!infectedCountries.includes(neighbor) && Math.random() < 0.5) { // 50% chans att spridas
               newlyInfected.push(neighbor);
               graduallyInfect(neighbor);
             }
@@ -175,10 +147,10 @@
         }
 
         // Sluta om det inte finns fler länder att infektera
-        if (infectedCountries.length >= features.length * 0.7) {
+        if (infectedCountries.length >= features.length * 0.5) {
           clearInterval(timer);
         }
-      }, 5000);
+      }, 10000); // Spridning var 10:e sekund
     }
 
     // Funktion för att infektera ett land gradvis
@@ -187,7 +159,7 @@
         if (layer.feature.properties.ADMIN === countryName) {
           let opacity = 0.3;
           const interval = setInterval(() => {
-            opacity += 0.1;
+            opacity += 0.05;
             layer.setStyle({
               fillColor: "#ff0000",
               fillOpacity: opacity
@@ -196,7 +168,7 @@
             if (opacity >= 0.7) {
               clearInterval(interval);
             }
-          }, 1000); // Gradvis ökning var 1 sekund
+          }, 2000); // Gradvis ökning var 2:a sekund
         }
       });
     }
