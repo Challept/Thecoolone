@@ -110,7 +110,18 @@
         animation: fadeIn 1s ease-in-out;
     }
 
-    /* Popup styling */
+      #student-id {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 0.8rem;
+      color: #ffffff;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+  /* Popup styling */
     #popup {
         display: none;
         position: fixed;
@@ -166,6 +177,7 @@
 <body>
   <h1>Ordfyllnadsspel - Spanska</h1>
   <div class="container" id="difficulty-container">
+    <div id="student-id">ID: <span id="unique-id"></span></div>
     <h2>Välj svårighetsgrad</h2>
     <button class="button" data-difficulty="easy">Lätt (5 frågor)</button>
     <button class="button" data-difficulty="medium">Medel (10 frågor)</button>
@@ -218,6 +230,41 @@
         { swedish: "De arbetar hårt.", spanish: "Ellos ___ mucho.", answer: "trabajan" }
       ]
     };
+
+    const studentId = `ID-${Math.floor(10000 + Math.random() * 90000)}`; // Genererar unikt ID
+    document.getElementById('unique-id').textContent = studentId;
+
+    const studentData = {
+      id: studentId,
+      hasCheated: false,
+      kicked: false,
+    };
+
+    function notifyAdmin(action) {
+      fetch('/update-student', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, studentData }),
+      });
+    }
+
+    // Simulera fusk
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        studentData.hasCheated = true;
+        notifyAdmin('update');
+      }
+    });
+
+    // Kontrollerar om eleven är avstängd
+    setInterval(async () => {
+      const response = await fetch(`/check-status/${studentId}`);
+      const { kicked } = await response.json();
+      if (kicked) {
+        alert('Du har blivit avstängd!');
+        location.href = '/kicked.html'; // Skickar eleven till en annan sida
+      }
+    }, 3000);    
 
 const popup = document.getElementById("popup");
 const overlay = document.createElement("div"); // Skapa en överlagring
