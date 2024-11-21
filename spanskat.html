@@ -177,7 +177,6 @@
 <body>
   <h1>Ordfyllnadsspel - Spanska</h1>
   <div class="container" id="difficulty-container">
-    <div id="student-id">ID: <span id="unique-id"></span></div>
     <h2>Välj svårighetsgrad</h2>
     <button class="button" data-difficulty="easy">Lätt (5 frågor)</button>
     <button class="button" data-difficulty="medium">Medel (10 frågor)</button>
@@ -199,12 +198,12 @@
     <button class="button" id="restart-button">Spela igen</button>
   </div>
 
-  <div id="popup">
-    <p>Du gick ut och fuskat! Få en kod från läraren.</p>
-    <input type="text" id="code-input" placeholder="Ange kod" />
-    <button id="submit-code">Skicka</button>
-    <p id="error-message" style="color: red; display: none;">Fel kod, försök igen!</p>
-  </div>
+<div id="popup">
+    <div id="student-id">Ditt ID: <span id="unique-id"></span></div>
+    <p>Du har lämnat fliken och måste vänta på lärarens godkännande för att fortsätta.</p>
+    <p id="status-message" style="color: yellow; display: none;">Väntar på godkännande...</p>
+    <p id="error-message" style="color: red; display: none;">Du har blivit avvisad av läraren!</p>
+</div>
 
   <script>
     const questions = {
@@ -231,40 +230,88 @@
       ]
     };
 
-    const studentId = `ID-${Math.floor(10000 + Math.random() * 90000)}`; // Genererar unikt ID
-    document.getElementById('unique-id').textContent = studentId;
+const studentId = `ID-${Math.floor(10000 + Math.random() * 90000)}`; // Generera unikt ID
+document.getElementById("unique-id").textContent = studentId;
 
-    const studentData = {
-      id: studentId,
-      hasCheated: false,
-      kicked: false,
-    };
+const studentData = {
+  id: studentId,
+  hasCheated: false,
+  approved: false,
+  kicked: false,
+};
 
-    function notifyAdmin(action) {
-      fetch('/update-student', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, studentData }),
-      });
-    }
+// Registrera eleven hos backend
+async function registerStudent() {
+  await fetch("/add_student", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(studentData),
+  });
+}
 
-    // Simulera fusk
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        studentData.hasCheated = true;
-        notifyAdmin('update');
-      }
-    });
+// Meddela admin om ändringar
+async function notifyAdmin(action) {
+  await fetch("/update-student", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action, studentData }),
+  });
+}
 
-    // Kontrollerar om eleven är avstängd
-    setInterval(async () => {
-      const response = await fetch(`/check-status/${studentId}`);
-      const { kicked } = await response.json();
-      if (kicked) {
-        alert('Du har blivit avstängd!');
-        location.href = '/kicked.html'; // Skickar eleven till en annan sida
-      }
-    }, 3000);    
+// Visa popup och paus
+function showPopup() {
+  const popup = document.getElementById("popup");
+  const overlay = document.getElementById("overlay");
+  popup.style.display = "block";
+  overlay.style.display = "block";
+  checkApproval(); // Kontrollera om eleven har blivit godkänd
+}
+
+// Dölj popup
+function hidePopup() {
+  const popup = document.getElementById("popup");
+  const overlay = document.getElementById("overlay");
+  popup.style.display = "none";
+  overlay.style.display = "none";
+}
+
+// Kontrollera om eleven har blivit godkänd
+async function checkApproval() {
+  const response = await fetch(`/get_students`);
+  const data = await response.json();
+
+  if (data[studentId]?.approved) {
+    hidePopup(); // Dölj popup om eleven är godkänd
+  } else {
+    setTimeout(checkApproval, 2000); // Kontrollera igen efter 2 sekunder
+  }
+}
+
+// Kontrollera om eleven har blivit avvisad
+async function handleKick() {
+  const response = await fetch(`/get_students`);
+  const data = await response.json();
+
+  if (data[studentId]?.kicked) {
+    alert("Du har blivit avstängd!");
+    window.location.href = "/kicked.html"; // Skicka eleven till avstängd-sidan
+  }
+}
+
+// Lägg till event för flikändring
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    studentData.hasCheated = true; // Markera som fusk
+    notifyAdmin("cheat"); // Informera admin
+    showPopup(); // Visa popup
+  }
+});
+
+// Kontinuerligt kontrollera status
+setInterval(handleKick, 3000);
+
+// Initiera elevregistrering
+registerStudent();
 
 const popup = document.getElementById("popup");
 const overlay = document.createElement("div"); // Skapa en överlagring
