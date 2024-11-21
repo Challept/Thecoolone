@@ -8,7 +8,7 @@
     body {
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #1e3a8a, #2563eb);
-      color: #ffffff;
+      color: white;
       text-align: center;
       padding: 20px;
     }
@@ -20,7 +20,7 @@
 
     #lobby-code {
       font-size: 1.8rem;
-      color: #ffd700; /* Gold color for lobby code */
+      color: gold;
       margin-bottom: 15px;
     }
 
@@ -34,70 +34,54 @@
 
     .student-card {
       background: #1e40af;
-      padding: 15px;
-      border-radius: 8px;
-      width: 150px;
+      color: white;
+      border-radius: 10px;
+      padding: 20px;
       text-align: center;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-      animation: fadeIn 0.5s ease-in-out;
+      width: 150px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    .student-card.green {
-      border: 2px solid #22c55e; /* Green for active */
+    .student-card.active {
+      border: 2px solid #22c55e;
     }
 
-    .student-card.red {
-      border: 2px solid #ef4444; /* Red for inactive */
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .student-card.inactive {
+      border: 2px solid #ef4444;
     }
   </style>
 </head>
 <body>
   <h1>Lobby</h1>
+  <p id="status-message">Genererar lobbykod...</p>
   <h2 id="lobby-code"></h2>
   <div id="student-list"></div>
 
   <script>
-    const apiUrl = "https://ff0e-83-250-213-73.ngrok-free.app";
+    const apiUrl = "https://2553-83-250-213-73.ngrok-free.app";
     let lobbyCode = null;
 
-    // Skapa lobby och visa koden
     async function createLobby() {
       try {
-        const response = await fetch(`${apiUrl}/create_lobby`, {
-          method: "POST",
-        });
+        const response = await fetch(`${apiUrl}/create_lobby`, { method: "POST" });
         const data = await response.json();
-
         if (data.lobby_code) {
           lobbyCode = data.lobby_code;
           document.getElementById("lobby-code").textContent = `Kod: ${lobbyCode}`;
-          fetchLobby(); // Börja hämta lobbydata
+          fetchLobby(); // Starta hämtning av lobbyn
         } else {
-          throw new Error("Kunde inte skapa lobbyn.");
+          throw new Error("Kunde inte skapa lobby.");
         }
       } catch (error) {
-        console.error("Error creating lobby:", error);
+        console.error("Fel vid skapande av lobby:", error);
+        document.getElementById("status-message").textContent = "Fel vid skapande av lobby.";
       }
     }
 
-    // Hämta elever i lobbyn
     async function fetchLobby() {
-      if (!lobbyCode) return;
-
       try {
         const response = await fetch(`${apiUrl}/get_lobby/${lobbyCode}`);
-        if (!response.ok) throw new Error(`Server responded with status ${response.status}`);
+        if (!response.ok) throw new Error("Misslyckades med att hämta lobbyn.");
         const data = await response.json();
 
         const studentList = document.getElementById("student-list");
@@ -105,7 +89,7 @@
 
         data.forEach((student) => {
           const card = document.createElement("div");
-          card.className = `student-card ${student.status === "active" ? "green" : "red"}`;
+          card.className = `student-card ${student.status === "active" ? "active" : "inactive"}`;
           card.innerHTML = `
             <p><strong>${student.name}</strong></p>
             <p>ID: ${student.id}</p>
@@ -113,15 +97,13 @@
           studentList.appendChild(card);
         });
       } catch (error) {
-        console.error("Error fetching lobby data:", error);
+        console.error("Fel vid hämtning av lobbydata:", error);
+        document.getElementById("status-message").textContent = "Fel vid hämtning av lobbydata.";
       }
     }
 
-    // Uppdatera lobbyn varje 5 sekunder
-    setInterval(fetchLobby, 5000);
-
-    // Initiera lobby
-    createLobby();
+    setInterval(fetchLobby, 5000); // Uppdatera var 5:e sekund
+    createLobby(); // Skapa lobby vid sidladdning
   </script>
 </body>
 </html>
