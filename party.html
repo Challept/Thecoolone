@@ -88,18 +88,21 @@
 
     async function createLobby() {
       try {
-        const response = await fetch("https://3890-83-250-213-73.ngrok-free.app/create_lobby", {
+        const response = await fetch("https://ff0e-83-250-213-73.ngrok-free.app/create_lobby", {
           method: "POST",
         });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
         const data = await response.json();
 
-        if (response.ok && data.lobby_code) {
+        if (data.lobby_code) {
           lobbyCode = data.lobby_code;
           lobbyCodeElement.textContent = `Kod: ${lobbyCode}`;
           statusMessage.textContent = "Lobbykod genererad!";
-          fetchLobby(); // Start fetching lobby data
+          fetchLobby();
         } else {
-          throw new Error(data.error || "Could not generate lobby code");
+          throw new Error(data.error || "Kunde inte generera lobbykod.");
         }
       } catch (error) {
         statusMessage.textContent = "Fel vid generering av lobbykod.";
@@ -111,7 +114,8 @@
       if (!lobbyCode) return;
 
       try {
-        const response = await fetch(`https://3890-83-250-213-73.ngrok-free.app/get_lobby/${lobbyCode}`);
+        const response = await fetch(`https://ff0e-83-250-213-73.ngrok-free.app/get_lobby/${lobbyCode}`);
+
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
@@ -142,16 +146,17 @@
           studentList.appendChild(card);
         });
       } catch (error) {
-        console.error("Error fetching lobby:", error);
+        console.error("Error fetching lobby data:", error);
         statusMessage.textContent = "Error fetching lobby data.";
       }
     }
 
     async function kickStudent(studentId) {
       try {
-        const response = await fetch(`https://3890-83-250-213-73.ngrok-free.app/kick_student/${studentId}`, {
+        const response = await fetch(`https://ff0e-83-250-213-73.ngrok-free.app/kick_student/${studentId}`, {
           method: "POST",
         });
+
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         fetchLobby(); // Refresh the list after kicking
