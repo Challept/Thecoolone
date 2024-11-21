@@ -219,34 +219,40 @@
       ]
     };
 
-        const popup = document.getElementById("popup");
-    const codeInput = document.getElementById("code-input");
-    const errorMessage = document.getElementById("error-message");
-    const correctCode = "19317";
+ const popup = document.getElementById("popup");
+const codeInput = document.getElementById("code-input");
+const errorMessage = document.getElementById("error-message");
+const correctCode = "19317";
 
-    function togglePopup(show) {
-      popup.style.display = show ? "block" : "none";
-    }
+let gameActive = true; // Spelarens spelstatus
+let popupActive = false; // Förhindrar flera popup-fönster samtidigt
 
-    codeInput.addEventListener("input", () => errorMessage.style.display = "none");
+function togglePopup(show) {
+  popup.style.display = show ? "block" : "none";
+  popupActive = show; // Håll reda på om popupen är aktiv
+  gameActive = !show; // Pausa spelet när popupen visas
+}
 
-    document.getElementById("submit-code").addEventListener("click", () => {
-      if (codeInput.value === correctCode) {
-        togglePopup(false);
-      } else {
-        errorMessage.style.display = "block";
-      }
-    });
+codeInput.addEventListener("input", () => {
+  errorMessage.style.display = "none"; // Döljer felmeddelande när användaren skriver
+});
 
-    let gameActive = false;
+document.getElementById("submit-code").addEventListener("click", () => {
+  if (codeInput.value === correctCode) {
+    togglePopup(false);
+    codeInput.value = ""; // Töm inmatningsfältet
+  } else {
+    errorMessage.style.display = "block";
+  }
+});
 
-    function handleVisibilityChange() {
-      if (document.hidden && gameActive) {
-        togglePopup(true);
-      }
-    }
+function handleVisibilityChange() {
+  if (document.hidden && gameActive && !popupActive) {
+    togglePopup(true); // Visa popupen om spelet är aktivt och användaren lämnar fliken
+  }
+}
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+document.addEventListener("visibilitychange", handleVisibilityChange);
     
     let currentQuestions = [];
     let currentQuestionIndex = 0;
