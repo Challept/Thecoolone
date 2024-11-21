@@ -8,7 +8,7 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background: linear-gradient(135deg, #2563eb, #1e40af);
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
       color: #ffffff;
       display: flex;
       flex-direction: column;
@@ -18,14 +18,15 @@
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 3rem;
       margin-bottom: 20px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
     }
 
-    #difficulty-container, #game-container, #result-container {
-      display: none;
+    .container {
       text-align: center;
+      width: 90%;
+      max-width: 600px;
     }
 
     .button {
@@ -41,8 +42,8 @@
     }
 
     .button:hover {
-      background-color: #38b46c;
-      transform: scale(1.05);
+      background-color: #22c55e;
+      transform: scale(1.1);
     }
 
     #question-text {
@@ -59,6 +60,7 @@
       border-radius: 5px;
       background: #ffffff;
       color: #000;
+      margin-top: 10px;
     }
 
     #feedback {
@@ -75,17 +77,14 @@
 </head>
 <body>
   <h1>Ordfyllnadsspel - Spanska</h1>
-
-  <!-- Svårighetsgrad -->
-  <div id="difficulty-container">
+  <div class="container" id="difficulty-container">
     <h2>Välj svårighetsgrad</h2>
     <button class="button" data-difficulty="easy">Lätt (5 frågor)</button>
     <button class="button" data-difficulty="medium">Medel (10 frågor)</button>
     <button class="button" data-difficulty="hard">Svår (15 frågor)</button>
   </div>
 
-  <!-- Spel -->
-  <div id="game-container">
+  <div class="container" id="game-container" style="display: none;">
     <p id="question-text">Laddar fråga...</p>
     <input type="text" id="answer-input" placeholder="Skriv ditt svar här" />
     <button class="button" id="submit-answer">Skicka</button>
@@ -93,9 +92,9 @@
     <button class="button" id="next-question">Nästa fråga</button>
   </div>
 
-  <!-- Resultat -->
-  <div id="result-container">
+  <div class="container" id="result-container" style="display: none;">
     <h2 id="result-text">Resultat</h2>
+    <p id="score-text"></p>
     <button class="button" id="restart-button">Spela igen</button>
   </div>
 
@@ -104,38 +103,33 @@
       easy: [
         { question: "Jag heter [___].", answer: "me llamo" },
         { question: "Jag bor i [___].", answer: "vivo" },
-        { question: "Jag vill ha en kaffe. Quiero [___] café.", answer: "un" },
         { question: "Hur mår du? ¿[___] estás?", answer: "cómo" },
-        { question: "Kan du hjälpa mig? ¿Puedes [___] ayuda?", answer: "darme" }
+        { question: "Kan du hjälpa mig? ¿Puedes [___] hjälp?", answer: "darme" },
+        { question: "Jag vill ha en kaffe. Quiero [___] café.", answer: "un" }
       ],
       medium: [
         { question: "Jag äter ett äpple. Yo [___] una manzana.", answer: "como" },
-        { question: "Jag har en bok. Yo [___] un libro.", answer: "tengo" },
         { question: "Det är kallt idag. Hoy hace [___].", answer: "frío" },
-        { question: "Vi bor i Sverige. Nosotros [___] en Suecia.", answer: "vivimos" },
         { question: "Han är glad. Él está [___].", answer: "feliz" },
-        { question: "Vad vill du ha? ¿Qué [___] quieres?", answer: "deseas" },
-        { question: "Hon dricker vatten. Ella [___] agua.", answer: "bebe" },
         { question: "Huset är blått. La casa es [___].", answer: "azul" },
         { question: "Jag ser dig. Yo te [___].", answer: "veo" },
-        { question: "Jag tycker om hundar. Me [___] los perros.", answer: "gustan" }
+        { question: "Jag tycker om hundar. Me [___] los perros.", answer: "gustan" },
+        { question: "Vad vill du ha? ¿Qué [___] quieres?", answer: "deseas" },
+        { question: "Hon dricker vatten. Ella [___] agua.", answer: "bebe" },
+        { question: "Vi bor i Sverige. Nosotros [___] en Suecia.", answer: "vivimos" },
+        { question: "Jag har en bok. Yo [___] un libro.", answer: "tengo" }
       ],
       hard: [
         { question: "Jag ska resa imorgon. Yo voy a [___] mañana.", answer: "viajar" },
-        { question: "De går till skolan. Ellos [___] a la escuela.", answer: "van" },
-        { question: "Vi vill lära oss. Nosotros queremos [___].", answer: "aprender" },
-        { question: "Boken är intressant. El libro es [___].", answer: "interesante" },
-        { question: "Jag behöver hjälp. Yo [___] ayuda.", answer: "necesito" },
-        { question: "De arbetar hårt. Ellos [___] mucho.", answer: "trabajan" },
-        { question: "Katten sover. El gato [___].", answer: "duerme" },
-        { question: "Var ligger Sverige? ¿Dónde [___] Suecia?", answer: "está" },
-        { question: "Jag sjunger en sång. Yo [___] una canción.", answer: "canto" },
-        { question: "Vädret är fint. El tiempo está [___].", answer: "bonito" },
-        { question: "De äter lunch. Ellos [___] el almuerzo.", answer: "comen" },
         { question: "Vi förstår allt. Nosotros [___] todo.", answer: "entendemos" },
         { question: "Det är varmt idag. Hoy hace [___].", answer: "calor" },
+        { question: "Vi skriver en bok. Nosotros [___] un libro.", answer: "escribimos" },
+        { question: "Jag sjunger en sång. Yo [___] una canción.", answer: "canto" },
         { question: "Han talar snabbt. Él [___] rápido.", answer: "habla" },
-        { question: "Vi skriver en bok. Nosotros [___] un libro.", answer: "escribimos" }
+        { question: "De äter lunch. Ellos [___] el almuerzo.", answer: "comen" },
+        { question: "Katten sover. El gato [___].", answer: "duerme" },
+        { question: "Vädret är fint. El tiempo está [___].", answer: "bonito" },
+        { question: "De arbetar hårt. Ellos [___] mucho.", answer: "trabajan" }
       ]
     };
 
@@ -197,7 +191,18 @@
     function endGame() {
       gameContainer.style.display = "none";
       resultContainer.style.display = "block";
+      const percentage = (score / currentQuestions.length) * 100;
+      let grade;
+
+      if (percentage >= 90) grade = "A";
+      else if (percentage >= 80) grade = "B";
+      else if (percentage >= 70) grade = "C";
+      else if (percentage >= 60) grade = "D";
+      else if (percentage >= 50) grade = "E";
+      else grade = "F";
+
       document.getElementById("result-text").textContent = `Du fick ${score} av ${currentQuestions.length} rätt!`;
+      document.getElementById("score-text").textContent = `Betyg: ${grade}`;
     }
 
     function restartGame() {
