@@ -255,7 +255,6 @@ async function registerStudent() {
 
 // Hantera fusk
 async function handleCheat() {
-  alert("Du gick utanför fliken! Läraren är notifierad.");
   try {
     const response = await fetch("https://227a-83-250-213-73.ngrok-free.app/notify_cheat", {
       method: "POST",
@@ -273,21 +272,12 @@ async function handleCheat() {
   }
 }
 
-// Lägg till en eventlyssnare för att upptäcka om eleven lämnar fliken
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
-    handleCheat();
-  }
-});
-
-// Registrera eleven när sidan laddas
-registerStudent();
-
-const popup = document.getElementById("popup");
-const overlay = document.createElement("div"); // Skapa en överlagring
+// Skapa en överlagring för att blockera interaktion
+const overlay = document.createElement("div");
 overlay.id = "overlay";
 document.body.appendChild(overlay);
 
+const popup = document.getElementById("popup");
 const codeInput = document.getElementById("code-input");
 const errorMessage = document.getElementById("error-message");
 const correctCode = "19317";
@@ -295,23 +285,24 @@ const correctCode = "19317";
 let gameActive = true; // Spelarens spelstatus
 let popupActive = false; // Förhindrar flera popup-fönster samtidigt
 
+// Visa eller dölj popup och överlagring
 function togglePopup(show) {
   popup.style.display = show ? "block" : "none";
-  overlay.style.display = show ? "block" : "none"; // Visa/dölj överlagringen
+  overlay.style.display = show ? "block" : "none"; // Blockera interaktion med överlagringen
   popupActive = show; // Håll reda på om popupen är aktiv
   gameActive = !show; // Pausa spelet när popupen visas
 
   if (show) {
-    window.addEventListener("beforeunload", preventRefresh); // Förhindra laddning
+    window.addEventListener("beforeunload", preventRefresh); // Förhindra att sidan laddas om
   } else {
     window.removeEventListener("beforeunload", preventRefresh);
   }
 }
 
-// Förhindra uppdatering
+// Förhindra uppdatering av sidan
 function preventRefresh(event) {
   event.preventDefault();
-  event.returnValue = ""; // Krävs för vissa webbläsare
+  event.returnValue = ""; // Krävs för att blockera sidan från att laddas om
 }
 
 // Återställ felmeddelande när användaren skriver
@@ -332,11 +323,15 @@ document.getElementById("submit-code").addEventListener("click", () => {
 // Hantera när användaren lämnar fliken
 function handleVisibilityChange() {
   if (document.hidden && gameActive && !popupActive) {
+    handleCheat();
     togglePopup(true); // Visa popupen om användaren lämnar fliken
   }
 }
 
 document.addEventListener("visibilitychange", handleVisibilityChange);
+
+// Registrera eleven när sidan laddas
+registerStudent();
 
 // Lägg till CSS för popup och overlay
 const style = document.createElement("style");
@@ -348,82 +343,75 @@ style.textContent = `
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 123, 255, 0.8); /* Mjuk blå bakgrund */
+    background: rgba(0, 0, 0, 0.8); /* Mörkare och genomskinlig svart bakgrund */
     animation: fadeInOverlay 0.5s ease-out;
     z-index: 999; /* Bakom popup */
   }
-#popup {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #1a1a2e; /* Mörkare bakgrund */
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); /* Starkare skugga */
-  z-index: 1000; /* Popup alltid över overlay */
-  animation: popupBounce 0.5s ease-out;
-  text-align: center;
-  width: 300px;
-  color: #ffffff; /* Vit text */
-}
 
-#popup h2 {
-  font-size: 1.5rem;
-  color: #ffffff; /* Vit text */
-  margin-bottom: 15px;
-}
-
-#popup p {
-  font-size: 1rem;
-  color: #d1d5db; /* Ljussare vit text */
-  margin-bottom: 15px;
-}
-
-#popup input {
-  padding: 10px;
-  width: 80%;
-  margin-bottom: 10px;
-  border: 2px solid #3b82f6; /* Mörkare blå kant */
-  border-radius: 8px;
-  font-size: 1rem;
-  background: #121212; /* Mörk bakgrund */
-  color: #ffffff; /* Vit text */
-}
-
-#popup button {
-  padding: 10px 20px;
-  font-size: 1rem;
-  background: #4ade80; /* Grönt för synlighet */
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #000000; /* Svart text */
-  transition: background 0.3s ease, transform 0.3s;
-}
-
-#popup button:hover {
-  background: #22c55e; /* Mörkare grönt */
-  transform: scale(1.05); /* Lite zoom vid hover */
-}
-
-#popup #error-message {
-  color: #ff4d4f; /* Röd text för fel */
-  font-size: 0.9rem;
-  display: none;
-}
-
-/* Animation för popupen */
-@keyframes popupBounce {
-  from {
-    transform: translate(-50%, -50%) scale(0.8);
-    opacity: 0;
+  #popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #20232a; /* Mörk bakgrund */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9); /* Starkare skugga */
+    z-index: 1000; /* Popup alltid över overlay */
+    animation: popupBounce 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncig animation */
+    text-align: center;
+    width: 320px;
+    color: #f9fafb; /* Ljusare vit text */
   }
-  to {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
+
+  #popup h2 {
+    font-size: 1.8rem;
+    color: #ffffff; /* Vit text */
+    margin-bottom: 20px;
   }
+
+  #popup p {
+    font-size: 1.2rem;
+    color: #e5e7eb; /* Ljussare vit text */
+    margin-bottom: 20px;
+  }
+
+  #popup input {
+    padding: 12px;
+    width: 85%;
+    margin-bottom: 15px;
+    border: 2px solid #3b82f6; /* Klarblå kant */
+    border-radius: 10px;
+    font-size: 1rem;
+    background: #1a1a1a; /* Mycket mörk bakgrund */
+    color: #f9fafb; /* Vit text */
+  }
+
+  #popup button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    background: #10b981; /* Starkare grönt */
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #ffffff; /* Vit text */
+    transition: background 0.3s ease, transform 0.3s;
+  }
+
+  #popup button:hover {
+    background: #0f766e; /* Mörkare grönt */
+    transform: scale(1.1); /* Zoom vid hover */
+  }
+
+  #popup #error-message {
+    color: #f87171; /* Ljusare röd färg för fel */
+    font-size: 0.95rem;
+    margin-top: 10px;
+    display: none;
+  }
+
+  /* Animationer för overlay och popup */
   @keyframes fadeInOverlay {
     from {
       opacity: 0;
@@ -432,14 +420,18 @@ style.textContent = `
       opacity: 1;
     }
   }
+
   @keyframes popupBounce {
-    from {
+    0% {
       transform: translate(-50%, -50%) scale(0.8);
       opacity: 0;
     }
-    to {
-      transform: translate(-50%, -50%) scale(1);
+    60% {
+      transform: translate(-50%, -50%) scale(1.1);
       opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1);
     }
   }
 `;
