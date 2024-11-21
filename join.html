@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anslut till Lobby</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: white;
+    }
+
+    form {
+      margin-top: 50px;
+    }
+
+    input {
+      padding: 10px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background: green;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Anslut till Lobby</h1>
+  <form id="join-form">
+    <input type="text" id="lobby-code" placeholder="Lobbyns kod" required>
+    <input type="text" id="student-name" placeholder="Ditt namn" required>
+    <button type="submit">Anslut</button>
+  </form>
+
+  <script>
+    document.getElementById("join-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const code = document.getElementById("lobby-code").value;
+      const name = document.getElementById("student-name").value;
+
+      const response = await fetch("http://127.0.0.1:5000/join_lobby", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, name }),
+      });
+
+      if (response.ok) {
+        alert("Du har anslutit till lobbyn!");
+      } else {
+        alert("Kunde inte ansluta. Kontrollera koden.");
+      }
+    });
+  </script>
+</body>
+</html>
