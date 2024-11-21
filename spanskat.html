@@ -288,56 +288,77 @@ style.textContent = `
     animation: fadeInOverlay 0.5s ease-out;
     z-index: 999; /* Bakom popup */
   }
-  #popup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    z-index: 1000; /* Popup alltid över overlay */
-    animation: popupBounce 0.5s ease-out;
-    text-align: center;
-    width: 300px;
+#popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1a1a2e; /* Mörkare bakgrund */
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); /* Starkare skugga */
+  z-index: 1000; /* Popup alltid över overlay */
+  animation: popupBounce 0.5s ease-out;
+  text-align: center;
+  width: 300px;
+  color: #ffffff; /* Vit text */
+}
+
+#popup h2 {
+  font-size: 1.5rem;
+  color: #ffffff; /* Vit text */
+  margin-bottom: 15px;
+}
+
+#popup p {
+  font-size: 1rem;
+  color: #d1d5db; /* Ljussare vit text */
+  margin-bottom: 15px;
+}
+
+#popup input {
+  padding: 10px;
+  width: 80%;
+  margin-bottom: 10px;
+  border: 2px solid #3b82f6; /* Mörkare blå kant */
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #121212; /* Mörk bakgrund */
+  color: #ffffff; /* Vit text */
+}
+
+#popup button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background: #4ade80; /* Grönt för synlighet */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #000000; /* Svart text */
+  transition: background 0.3s ease, transform 0.3s;
+}
+
+#popup button:hover {
+  background: #22c55e; /* Mörkare grönt */
+  transform: scale(1.05); /* Lite zoom vid hover */
+}
+
+#popup #error-message {
+  color: #ff4d4f; /* Röd text för fel */
+  font-size: 0.9rem;
+  display: none;
+}
+
+/* Animation för popupen */
+@keyframes popupBounce {
+  from {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
   }
-  #popup h2 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 15px;
-  }
-  #popup p {
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 15px;
-  }
-  #popup input {
-    padding: 10px;
-    width: 80%;
-    margin-bottom: 10px;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-  }
-  #popup button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    background: #4ade80;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    color: #000;
-    transition: background 0.3s ease;
-  }
-  #popup button:hover {
-    background: #22c55e;
-  }
-  #popup #error-message {
-    color: red;
-    font-size: 0.9rem;
-    display: none;
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
   }
   @keyframes fadeInOverlay {
     from {
