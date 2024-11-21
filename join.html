@@ -162,6 +162,7 @@
     const startPopup = document.getElementById("start-popup");
 
     let lobbyCode = null;
+    let polling = false; // Kontrollera om polling redan körs
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -186,7 +187,7 @@
           popupLobbyCode.textContent = `Lobbykod: ${lobbyCode}`;
           popupStudentName.textContent = `Namn: ${studentName}`;
           popup.style.display = "flex";
-          waitForStartSignal(); // Start checking for lobby status
+          startPolling(); // Starta polling efter anslutning
         }
       } catch (error) {
         message.textContent = "Ett fel inträffade. Försök igen.";
@@ -194,24 +195,28 @@
       }
     });
 
-    async function waitForStartSignal() {
-      const interval = setInterval(async () => {
+    function startPolling() {
+      if (polling) return; // Förhindra att flera polling-processer startar
+      polling = true;
+
+      setInterval(async () => {
+        if (!lobbyCode) return; // Kontrollera att användaren är ansluten till en lobby
+
         try {
           const response = await fetch(`${apiUrl}/get_lobbystartstatus/${lobbyCode}`);
           const data = await response.json();
 
           if (data.started) {
-            clearInterval(interval); // Stop checking once the lobby has started
-            popup.style.display = "none";
-            startPopup.style.display = "flex";
+            popup.style.display = "none"; // Dölj vänteläge
+            startPopup.style.display = "flex"; // Visa popup när spelet startar
           } else {
-            popup.style.display = "flex"; // Show waiting popup if not started
-            startPopup.style.display = "none";
+            popup.style.display = "flex"; // Visa väntande popup
+            startPopup.style.display = "none"; // Dölj start-popup
           }
         } catch (error) {
           console.error("Fel vid hämtning av startstatus:", error);
         }
-      }, 1000); // Check every second
+      }, 1000); // Kontrollera status varje sekund
     }
   </script>
 </body>
