@@ -20,13 +20,13 @@
 
     #lobby-code {
       font-size: 1.8rem;
-      color: #ffd700; /* Guldtext för kod */
+      color: #ffd700; /* Gold color for the code */
       margin-bottom: 15px;
     }
 
     #status-message {
       font-size: 1rem;
-      color: #ff6f61; /* Röd-orange för status */
+      color: #ff6f61; /* Reddish-orange for status */
       margin-bottom: 15px;
     }
 
@@ -80,6 +80,7 @@
 
     let lobbyCode = null;
 
+    // Fetch and display the lobby code
     async function createLobby() {
       try {
         const response = await fetch("https://4b50-83-250-213-73.ngrok-free.app/create_lobby", {
@@ -101,6 +102,7 @@
       }
     }
 
+    // Fetch the list of students in the lobby
     async function fetchLobby() {
       if (!lobbyCode) return;
 
@@ -129,6 +131,7 @@
       }
     }
 
+    // Kick a student from the lobby
     async function kickStudent(studentId) {
       try {
         await fetch(`https://4b50-83-250-213-73.ngrok-free.app/kick_student/${studentId}`, {
