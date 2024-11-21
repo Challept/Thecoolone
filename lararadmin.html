@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+-<!DOCTYPE html>
 <html lang="sv">
 <head>
   <meta charset="UTF-8">
@@ -7,137 +7,50 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
       background: linear-gradient(135deg, #1e3a8a, #2563eb);
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      overflow-x: hidden;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
     }
 
-    h1 {
-      font-size: 2.5rem;
-      margin: 20px;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    }
-
-    #student-list {
+    ul {
       list-style: none;
       padding: 0;
-      margin: 20px 0;
-      width: 90%;
-      max-width: 600px;
     }
 
     li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-      transition: transform 0.2s ease, background 0.2s ease;
-    }
-
-    li:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.02);
-    }
-
-    button {
-      background: #4ade80;
-      color: #000;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 15px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
-    }
-
-    button:hover {
-      background: #22c55e;
-      transform: scale(1.1);
-    }
-
-    button.kick {
-      background: #f87171;
-      color: #fff;
-    }
-
-    button.kick:hover {
-      background: #dc2626;
-    }
-
-    footer {
-      margin-top: auto;
+      background: #1e40af;
+      margin: 10px 0;
       padding: 10px;
-      background: rgba(0, 0, 0, 0.5);
-      width: 100%;
-      text-align: center;
-      font-size: 0.9rem;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
   <h1>Lärarens Adminpanel</h1>
-  <ul id="student-list">
-    <li>Laddar elever...</li>
-  </ul>
-
-  <footer>
-    &copy; 2024 Lärarens Verktyg
-  </footer>
+  <ul id="student-list"></ul>
 
   <script>
     const studentList = document.getElementById("student-list");
 
-    function fetchStudents() {
-      fetch("/get_students")
-        .then((response) => response.json())
-        .then((data) => {
-          studentList.innerHTML = ""; // Rensa listan
-          for (const [id, info] of Object.entries(data)) {
-            const li = document.createElement("li");
-            li.textContent = `Elev-ID: ${id} | Godkänd: ${info.approved ? "Ja" : "Nej"} | Fuskat: ${info.hasCheated ? "Ja" : "Nej"}`;
+    async function fetchStudents() {
+      try {
+        const response = await fetch("/get_students");
+        const data = await response.json();
 
-            // Skapa Godkänn-knapp
-            const approveButton = document.createElement("button");
-            approveButton.textContent = "Godkänn";
-            approveButton.onclick = () => approveStudent(id);
-
-            // Skapa Avvisa-knapp
-            const kickButton = document.createElement("button");
-            kickButton.textContent = "Avvisa";
-            kickButton.classList.add("kick");
-            kickButton.onclick = () => kickStudent(id);
-
-            li.appendChild(approveButton);
-            li.appendChild(kickButton);
-            studentList.appendChild(li);
-          }
-        });
+        studentList.innerHTML = ""; // Rensa listan
+        for (const [id, info] of Object.entries(data)) {
+          const li = document.createElement("li");
+          li.textContent = `${id} - Godkänd: ${info.approved ? "Ja" : "Nej"}`;
+          studentList.appendChild(li);
+        }
+      } catch (error) {
+        console.error("Fel vid hämtning av elever:", error);
+      }
     }
 
-    function approveStudent(id) {
-      fetch(`/approve_student/${id}`, { method: "POST" }).then(fetchStudents);
-    }
-
-    function kickStudent(id) {
-      fetch(`/kick_student/${id}`, { method: "POST" }).then(fetchStudents);
-    }
-
-    // Uppdatera listan var tredje sekund
+    // Uppdatera listan var 3:e sekund
     setInterval(fetchStudents, 3000);
-
-    // Initiera hämtning av elever
-    fetchStudents();
   </script>
 </body>
 </html>
