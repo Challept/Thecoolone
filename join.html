@@ -162,7 +162,6 @@
     const startPopup = document.getElementById("start-popup");
 
     let lobbyCode = null;
-    let studentId = null;
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -184,7 +183,6 @@
         if (data.error) {
           message.textContent = data.error;
         } else {
-          studentId = data.student_id; // Spara studentens ID
           popupLobbyCode.textContent = `Lobbykod: ${lobbyCode}`;
           popupStudentName.textContent = `Namn: ${studentName}`;
           popup.style.display = "flex";
@@ -199,10 +197,9 @@
     async function waitForStartSignal() {
       while (true) {
         try {
-          const response = await fetch(`${apiUrl}/get_lobby/${lobbyCode}`);
+          const response = await fetch(`${apiUrl}/get_lobbystartstatus/${lobbyCode}`);
           const data = await response.json();
-          const student = data.find((s) => s.id === studentId && s.status === "started");
-          if (student) {
+          if (data.started) {
             popup.style.display = "none";
             startPopup.style.display = "flex";
             break; // Avsluta loopen när spelet börjar
