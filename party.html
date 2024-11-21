@@ -59,7 +59,7 @@
     let lobbyCode = "";
 
     async function createLobby() {
-      const response = await fetch("http://127.0.0.1:5000/create_lobby", { method: "POST" });
+      const response = await fetch("https://a7b8-83-250-213-73.ngrok-free.app/create_lobby", { method: "POST" });
       const data = await response.json();
       lobbyCode = data.lobby_code;
       document.getElementById("lobby-code").textContent = lobbyCode;
@@ -67,7 +67,7 @@
     }
 
     async function fetchStudents() {
-      const response = await fetch(`http://127.0.0.1:5000/get_lobby/${lobbyCode}`);
+      const response = await fetch(`https://a7b8-83-250-213-73.ngrok-free.app/get_lobby/${lobbyCode}`);
       const data = await response.json();
 
       const studentList = document.getElementById("student-list");
@@ -86,7 +86,7 @@
     }
 
     async function kickStudent(studentId) {
-      await fetch(`http://127.0.0.1:5000/kick_student/${studentId}`, { method: "POST" });
+      await fetch(`https://a7b8-83-250-213-73.ngrok-free.app/kick_student/${studentId}`, { method: "POST" });
       fetchStudents();
     }
 
