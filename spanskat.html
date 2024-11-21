@@ -4,89 +4,162 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ordfyllnadsspel - Spanska</title>
-  <style>
+<style>
+    /* Body styling */
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: linear-gradient(135deg, #1d4ed8, #2563eb);
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      overflow: hidden;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        overflow: hidden;
+        animation: smoothBackground 10s infinite alternate;
     }
 
+    /* Background animation */
+    @keyframes smoothBackground {
+        0% { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
+        50% { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+        100% { background: linear-gradient(135deg, #1e40af, #1d4ed8); }
+    }
+
+    /* Title animation */
     h1 {
-      font-size: 3rem;
-      text-align: center;
-      margin-bottom: 20px;
-      animation: fadeIn 2s ease-in-out;
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 20px;
+        animation: fadeIn 2s ease-in-out;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
     }
 
+    /* Container styling */
     .container {
-      text-align: center;
-      width: 90%;
-      max-width: 600px;
+        text-align: center;
+        width: 90%;
+        max-width: 600px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        animation: fadeInContainer 1.5s ease-in-out;
     }
 
+    @keyframes fadeInContainer {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Button styling */
     .button {
-      padding: 10px 20px;
-      font-size: 1.2rem;
-      margin: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      background-color: #4ade80;
-      color: #000;
-      transition: transform 0.3s, background-color 0.3s;
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background: linear-gradient(90deg, #4ade80, #22c55e);
+        color: #000;
+        transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .button:hover {
-      background-color: #22c55e;
-      transform: scale(1.1);
+        transform: scale(1.1);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     }
 
-    #swedish-sentence {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+    /* Sentence styling */
+    #swedish-sentence, #spanish-sentence {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+        animation: fadeIn 1s ease-in-out;
     }
 
     #spanish-sentence {
-      font-size: 1.8rem;
-      margin: 20px 0;
+        font-size: 1.8rem;
     }
 
+    /* Input styling */
     #answer-input {
-      width: 80%;
-      max-width: 400px;
-      padding: 10px;
-      font-size: 1.2rem;
-      border: 2px solid #ffffff;
-      border-radius: 5px;
-      background: #ffffff;
-      color: #000;
-      text-align: center;
+        width: 80%;
+        max-width: 400px;
+        padding: 12px;
+        font-size: 1.2rem;
+        border: 2px solid #ffffff;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #000;
+        text-align: center;
+        transition: transform 0.2s, box-shadow 0.2s;
     }
 
+    #answer-input:focus {
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Feedback styling */
     #feedback {
-      font-size: 1.2rem;
-      margin-top: 15px;
-      font-weight: bold;
-      animation: fadeIn 1s ease-in-out;
+        font-size: 1.2rem;
+        margin-top: 15px;
+        font-weight: bold;
+        animation: fadeIn 1s ease-in-out;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    /* Popup styling */
+    #popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #f87171, #ef4444);
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        animation: popupIn 0.5s ease-in-out;
+    }
+
+    #popup p {
+        color: #ffffff;
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+
+    #popup input {
+        padding: 10px;
+        font-size: 1rem;
+        margin-top: 10px;
+        border-radius: 5px;
+        border: none;
+        width: 70%;
+        text-align: center;
+    }
+
+    #popup button {
+        padding: 10px 15px;
+        margin-top: 15px;
+        font-size: 1.2rem;
+        background: #22c55e;
+        color: #000;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    #popup button:hover {
+        background: #16a34a;
+    }
+
+    @keyframes popupIn {
+        from { transform: scale(0.8); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
@@ -114,6 +187,13 @@
     <button class="button" id="restart-button">Spela igen</button>
   </div>
 
+  <div id="popup">
+    <p>Du gick ut och fuskat! Få en kod från läraren.</p>
+    <input type="text" id="code-input" placeholder="Ange kod" />
+    <button id="submit-code">Skicka</button>
+    <p id="error-message" style="color: red; display: none;">Fel kod, försök igen!</p>
+  </div>
+
   <script>
     const questions = {
       easy: [
@@ -139,6 +219,35 @@
       ]
     };
 
+        const popup = document.getElementById("popup");
+    const codeInput = document.getElementById("code-input");
+    const errorMessage = document.getElementById("error-message");
+    const correctCode = "19317";
+
+    function togglePopup(show) {
+      popup.style.display = show ? "block" : "none";
+    }
+
+    codeInput.addEventListener("input", () => errorMessage.style.display = "none");
+
+    document.getElementById("submit-code").addEventListener("click", () => {
+      if (codeInput.value === correctCode) {
+        togglePopup(false);
+      } else {
+        errorMessage.style.display = "block";
+      }
+    });
+
+    let gameActive = false;
+
+    function handleVisibilityChange() {
+      if (document.hidden && gameActive) {
+        togglePopup(true);
+      }
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    
     let currentQuestions = [];
     let currentQuestionIndex = 0;
     let score = 0;
