@@ -7,8 +7,8 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #1e3a8a, #2563eb);
-      color: #ffffff;
+      background: linear-gradient(135deg, #1d3557, #457b9d);
+      color: white;
       text-align: center;
       padding: 20px;
       overflow: hidden;
@@ -20,33 +20,35 @@
     }
 
     input {
-      padding: 10px;
+      padding: 15px;
       margin: 10px;
-      border-radius: 5px;
+      border-radius: 8px;
       border: none;
       width: 80%;
-      max-width: 300px;
+      max-width: 350px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
     button {
-      background-color: #4ade80;
-      color: black;
+      background-color: #2a9d8f;
+      color: white;
       border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
+      padding: 15px 20px;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 1.2rem;
       transition: transform 0.3s ease, background-color 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
     button:hover {
-      background-color: #22c55e;
+      background-color: #21867a;
       transform: scale(1.1);
     }
 
     #message {
-      font-size: 1rem;
-      color: #ff6f61;
+      font-size: 1.2rem;
+      color: #e63946;
       margin-top: 20px;
     }
 
@@ -58,31 +60,54 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: #1e293b; /* Solid bakgrund */
+      background: #1d3557;
       color: white;
-      text-align: center;
       z-index: 1000;
       animation: fadeIn 0.5s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     #popup h2 {
       font-size: 3rem;
-      margin-top: 50px;
       animation: zoomIn 0.5s ease-in-out;
+      margin-bottom: 10px;
     }
 
     #popup p {
       font-size: 1.5rem;
-      margin: 20px 0;
+      margin: 10px 0;
+      animation: fadeIn 1.5s ease-in-out;
     }
 
-    #popup .confetti {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: #ffd700;
-      opacity: 0.8;
-      animation: fall 3s ease-in-out;
+    .start-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .start-popup h2 {
+      font-size: 3rem;
+      animation: zoomIn 0.5s ease-in-out;
+      color: gold;
+    }
+
+    .start-popup p {
+      font-size: 1.5rem;
+      margin-top: 20px;
     }
 
     @keyframes fadeIn {
@@ -104,17 +129,6 @@
         opacity: 1;
       }
     }
-
-    @keyframes fall {
-      from {
-        transform: translateY(-50vh) rotate(0);
-        opacity: 1;
-      }
-      to {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-      }
-    }
   </style>
 </head>
 <body>
@@ -134,23 +148,34 @@
     <p>Vänta på att spelet börjar!</p>
   </div>
 
+  <!-- Start Quiz Popup -->
+  <div class="start-popup" id="start-popup">
+    <h2>Spelet börjar nu!</h2>
+    <p>Förbered dig för quizet!</p>
+  </div>
+
   <script>
+    const apiUrl = "https://challew.pythonanywhere.com";
     const form = document.getElementById("join-form");
     const message = document.getElementById("message");
     const popup = document.getElementById("popup");
     const popupLobbyCode = document.getElementById("popup-lobby-code");
     const popupStudentName = document.getElementById("popup-student-name");
+    const startPopup = document.getElementById("start-popup");
+
+    let lobbyCode = null;
+    let studentId = null;
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const lobbyCode = document.getElementById("lobby-code").value.trim();
+      lobbyCode = document.getElementById("lobby-code").value.trim();
       const studentName = document.getElementById("student-name").value.trim();
 
       message.textContent = "Försöker gå med i lobbyn...";
 
       try {
-        const response = await fetch("https://challew.pythonanywhere.com/join_lobby", {
+        const response = await fetch(`${apiUrl}/join_lobby`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ code: lobbyCode, name: studentName }),
@@ -161,10 +186,11 @@
         if (data.error) {
           message.textContent = data.error;
         } else {
+          studentId = data.student_id; // Spara studentens ID
           popupLobbyCode.textContent = `Lobbykod: ${lobbyCode}`;
           popupStudentName.textContent = `Namn: ${studentName}`;
-          popup.style.display = "block";
-          generateConfetti(); // Skapa konfetti i popup
+          popup.style.display = "flex";
+          checkStartSignal();
         }
       } catch (error) {
         message.textContent = "Ett fel inträffade. Försök igen.";
@@ -172,17 +198,19 @@
       }
     });
 
-    // Skapa konfetti i popupen
-    function generateConfetti() {
-      for (let i = 0; i < 100; i++) {
-        const confetti = document.createElement("div");
-        confetti.className = "confetti";
-        confetti.style.left = `${Math.random() * 100}%`;
-        confetti.style.top = `${Math.random() * -50}%`; // Startar högre upp
-        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
-        popup.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 4500); // Ta bort efter 4.5 sekunder
-      }
+    async function checkStartSignal() {
+      setInterval(async () => {
+        try {
+          const response = await fetch(`${apiUrl}/get_lobby/${lobbyCode}`);
+          const data = await response.json();
+          const student = data.find((s) => s.id === studentId && s.status === "started");
+          if (student) {
+            startPopup.style.display = "flex";
+          }
+        } catch (error) {
+          console.error("Fel vid hämtning av startstatus:", error);
+        }
+      }, 3000);
     }
   </script>
 </body>
