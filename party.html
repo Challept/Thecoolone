@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lobby</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: white;
+    }
+
+    h1 {
+      margin-top: 50px;
+    }
+
+    .code {
+      font-size: 2rem;
+      margin: 20px 0;
+      padding: 10px;
+      border: 2px dashed white;
+      display: inline-block;
+    }
+
+    .student-list {
+      margin-top: 30px;
+    }
+
+    .student {
+      margin: 10px 0;
+      background: #1e40af;
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    button {
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lärarens Lobby</h1>
+  <div>
+    <p>Lobbyns Kod:</p>
+    <div class="code" id="lobby-code">Genererar...</div>
+  </div>
+  <div class="student-list" id="student-list"></div>
+
+  <script>
+    let lobbyCode = "";
+
+    async function createLobby() {
+      const response = await fetch("http://127.0.0.1:5000/create_lobby", { method: "POST" });
+      const data = await response.json();
+      lobbyCode = data.lobby_code;
+      document.getElementById("lobby-code").textContent = lobbyCode;
+      fetchStudents();
+    }
+
+    async function fetchStudents() {
+      const response = await fetch(`http://127.0.0.1:5000/get_lobby/${lobbyCode}`);
+      const data = await response.json();
+
+      const studentList = document.getElementById("student-list");
+      studentList.innerHTML = "";
+      data.forEach(student => {
+        const div = document.createElement("div");
+        div.className = "student";
+        div.innerHTML = `
+          ${student.name} (${student.id}) - ${student.status}
+          <button onclick="kickStudent('${student.id}')">Kicka</button>
+        `;
+        studentList.appendChild(div);
+      });
+
+      setTimeout(fetchStudents, 3000); // Uppdatera varje 3 sekunder
+    }
+
+    async function kickStudent(studentId) {
+      await fetch(`http://127.0.0.1:5000/kick_student/${studentId}`, { method: "POST" });
+      fetchStudents();
+    }
+
+    createLobby();
+  </script>
+</body>
+</html>
