@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lärarens Adminpanel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #1f2937;
+      color: #ffffff;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .student-list {
+      margin: 20px 0;
+    }
+
+    .student {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background: #374151;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+
+    .student-id {
+      font-size: 1rem;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 5px 10px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn.kick {
+      background: #ef4444;
+      color: #ffffff;
+    }
+
+    .btn.restore {
+      background: #4ade80;
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+  <h1>Adminpanel</h1>
+  <div class="student-list" id="student-list">
+    <p>Laddar elever...</p>
+  </div>
+
+  <script>
+    async function fetchStudents() {
+      const response = await fetch('/get-students');
+      const students = await response.json();
+      const studentList = document.getElementById('student-list');
+
+      studentList.innerHTML = ''; // Töm listan
+
+      students.forEach((student) => {
+        const studentDiv = document.createElement('div');
+        studentDiv.className = 'student';
+
+        const studentId = document.createElement('span');
+        studentId.className = 'student-id';
+        studentId.textContent = `${student.id} - Fusk: ${student.hasCheated ? 'Ja' : 'Nej'}`;
+
+        const controls = document.createElement('div');
+        controls.className = 'controls';
+
+        const restoreBtn = document.createElement('button');
+        restoreBtn.className = 'btn restore';
+        restoreBtn.textContent = 'Återställ';
+        restoreBtn.onclick = () => handleAction(student.id, 'restore');
+
+        const kickBtn = document.createElement('button');
+        kickBtn.className = 'btn kick';
+        kickBtn.textContent = 'Kicka';
+        kickBtn.onclick = () => handleAction(student.id, 'kick');
+
+        controls.appendChild(restoreBtn);
+        controls.appendChild(kickBtn);
+
+        studentDiv.appendChild(studentId);
+        studentDiv.appendChild(controls);
+
+        studentList.appendChild(studentDiv);
+      });
+    }
+
+    async function handleAction(studentId, action) {
+      await fetch('/update-student', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, studentId }),
+      });
+      fetchStudents(); // Uppdatera listan efter åtgärd
+    }
+
+    // Uppdatera listan kontinuerligt
+    setInterval(fetchStudents, 3000);
+    fetchStudents();
+  </script>
+</body>
+</html>
