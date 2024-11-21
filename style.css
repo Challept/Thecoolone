@@ -100,6 +100,48 @@ footer {
   color: #333;
 }
 
+/* Om oss - Styling */
+#about-us {
+  background: linear-gradient(135deg, #ffecd2, #fcb69f);
+  padding: 50px 20px;
+  text-align: center;
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  animation: fadeInSection 1.5s ease-in-out;
+}
+
+.about-content h2 {
+  font-size: 2rem;
+  color: #4a4e69;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  animation: slideInLeft 1s ease-out;
+}
+
+.about-content p {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 15px 0;
+  line-height: 1.8;
+  animation: slideInRight 1.2s ease-out;
+}
+
+/* Animationer */
+@keyframes fadeInSection {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
 /* Button styling */
 .btn {
   display: inline-block;
