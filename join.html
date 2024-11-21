@@ -164,6 +164,20 @@
     let lobbyCode = null;
     let polling = false;
 
+    // Kontrollera om det finns en hash (#false)
+    window.addEventListener("load", () => {
+      const hash = window.location.hash;
+      if (hash === "#false") {
+        disablePopup(); // Om hash är #false, stäng av popup
+      }
+    });
+
+    function disablePopup() {
+      popup.style.display = "none"; // Dölj väntande popup
+      startPopup.style.display = "none"; // Dölj start-popup
+      polling = false; // Stoppa eventuella pollingprocesser
+    }
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -200,18 +214,16 @@
       polling = true;
 
       setInterval(async () => {
-        const endpoint = lobbyCode
-          ? `${apiUrl}/get_lobbystartstatus/${lobbyCode}`
-          : `${apiUrl}/default_false`;
+        if (!lobbyCode) return;
 
         try {
-          const response = await fetch(endpoint);
+          const response = await fetch(`${apiUrl}/get_lobbystartstatus/${lobbyCode}`);
           const data = await response.json();
 
           if (data.started) {
             popup.style.display = "none";
             startPopup.style.display = "flex";
-          } else if (lobbyCode) {
+          } else {
             popup.style.display = "flex";
             startPopup.style.display = "none";
           }
