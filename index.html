@@ -9,9 +9,9 @@
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(270deg, #87cefa, #ffffff, #d3d3d3);
-            background-size: 600% 600%;
-            animation: gradientAnimation 10s ease infinite;
+            background: linear-gradient(135deg, #87cefa, #1e90ff);
+            background-size: 400% 400%;
+            animation: gradientAnimation 8s ease infinite;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -29,7 +29,7 @@
         /* Header */
         header {
             width: 100%;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             padding: 20px 0;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -37,7 +37,7 @@
 
         header h1 {
             font-size: 36px;
-            color: #4a90e2;
+            color: #1e90ff;
             margin: 0;
         }
 
@@ -50,7 +50,8 @@
         .container {
             margin: 20px 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
         }
 
         /* Card Styling */
@@ -63,7 +64,6 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -78,21 +78,39 @@
             text-align: center;
         }
 
+        /* Copy Button */
+        .copy-btn {
+            margin-top: 10px;
+            background: #1e90ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #1c7ed6;
+        }
+
         /* Instructions Section */
         .instructions {
             margin-top: 20px;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
             padding: 20px;
             max-width: 600px;
             width: 90%;
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
             text-align: left;
+            animation: fadeIn 1.2s ease;
         }
 
         .instructions h2 {
             font-size: 24px;
-            color: #4a90e2;
+            color: #1e90ff;
             text-align: center;
         }
 
@@ -107,54 +125,6 @@
             margin-bottom: 10px;
         }
 
-        /* Popup */
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .popup.active {
-            display: flex;
-        }
-
-        .popup h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #4a90e2;
-        }
-
-        .popup button {
-            background: #4a90e2;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s ease;
-        }
-
-        .popup button:hover {
-            background: #3b7eb3;
-        }
-
-        .close-btn {
-            margin-top: 10px;
-            background: #d9534f;
-            color: white;
-        }
-
         /* Footer */
         footer {
             width: 100%;
@@ -166,7 +136,7 @@
         }
 
         footer a {
-            color: #4a90e2;
+            color: #1e90ff;
             text-decoration: none;
         }
 
@@ -190,30 +160,24 @@
 
     <!-- Single Card -->
     <div class="container">
-        <div class="card" onclick="showPopup()">
+        <div class="card">
             <h3>Blooket Cheat</h3>
         </div>
+        <button class="copy-btn" onclick="copyCode()">Copy Code</button>
     </div>
 
     <!-- Instructions Section -->
     <div class="instructions">
         <h2>Väntas och instruktioner</h2>
         <ol>
-            <li>Klicka på kortet "Blooket Cheat".</li>
-            <li>Ett popup-fönster visas med två knappar.</li>
-            <li>Klicka på "Copy Code" för att kopiera koden.</li>
-            <li>Öppna Blooket och tryck <strong>Ctrl + Shift + I</strong>.</li>
+            <li>Klicka på knappen "Copy Code" under kortet.</li>
+            <li>Koden kopieras automatiskt till ditt urklipp.</li>
+            <li>Öppna Blooket och gå med i ett game.</li>
+            <li>Tryck <strong>Ctrl + Shift + I</strong>.</li>
             <li>Gå till fliken <strong>Console</strong>.</li>
             <li>Skriv <code>allow pasting</code> och tryck Enter.</li>
-            <li>Klistra in koden och ha kul!</li>
+            <li>Klistra in koden i konsolen och njut!</li>
         </ol>
-    </div>
-
-    <!-- Popup -->
-    <div class="popup" id="popup">
-        <h2>Blooket Cheat</h2>
-        <button onclick="copyCode()">Copy Code</button>
-        <button class="close-btn" onclick="closePopup()">Close</button>
     </div>
 
     <!-- Footer -->
@@ -222,16 +186,6 @@
     </footer>
 
     <script>
-        // Show popup
-        function showPopup() {
-            document.getElementById('popup').classList.add('active');
-        }
-
-        // Close popup
-        function closePopup() {
-            document.getElementById('popup').classList.remove('active');
-        }
-
         // Copy code
         function copyCode() {
             const cheatCode = "/**
