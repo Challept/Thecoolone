@@ -89,10 +89,32 @@
             cursor: pointer;
             font-size: 16px;
             transition: background 0.3s ease;
+            position: relative;
         }
 
         .copy-btn:hover {
             background: #1c7ed6;
+        }
+
+        .copy-btn:after {
+            content: "Copied!";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translate(-50%, 10px);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .copy-btn.copied:after {
+            opacity: 1;
+            transform: translate(-50%, 0);
         }
 
         /* Instructions Section */
@@ -163,22 +185,22 @@
         <div class="card">
             <h3>Blooket Cheat</h3>
         </div>
-        <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+        <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
     </div>
 
-    <!-- Instructions Section -->
-    <div class="instructions">
-        <h2>Väntas och instruktioner</h2>
-        <ol>
-            <li>Klicka på knappen "Copy Code" under kortet.</li>
-            <li>Koden kopieras automatiskt till ditt urklipp.</li>
-            <li>Öppna Blooket och gå med i ett game.</li>
-            <li>Tryck <strong>Ctrl + Shift + I</strong>.</li>
-            <li>Gå till fliken <strong>Console</strong>.</li>
-            <li>Skriv <code>allow pasting</code> och tryck Enter.</li>
-            <li>Klistra in koden i konsolen och njut!</li>
-        </ol>
-    </div>
+<!-- Instructions Section -->
+<div class="instructions">
+<h2>Väntas och instruktioner</h2>
+<ol>
+<li>Klicka på knappen "Copy Code" under kortet.</li>
+<li>Koden kopieras automatiskt till ditt urklipp.</li>
+<li>Öppna Blooket och gå med i ett game.</li>
+<li>Tryck <strong>Ctrl + Shift + I</strong>.</li>
+<li>Gå till fliken <strong>Console</strong>.</li>
+<li>Skriv <code>allow pasting</code> och tryck Enter.</li>
+<li>Klistra in koden i konsolen och njut!</li>
+</ol>
+</div>
 
     <!-- Footer -->
     <footer>
@@ -186,8 +208,8 @@
     </footer>
 
     <script>
-        // Copy code
-        function copyCode() {
+        // Copy code with feedback
+        function copyCode(button) {
             const cheatCode = "/**
  * @license AGPL-3.0
  * Blooket Cheats
@@ -3607,7 +3629,10 @@
     }
 })();";
             navigator.clipboard.writeText(cheatCode).then(() => {
-                alert("Code copied to clipboard!");
+                button.classList.add("copied");
+                setTimeout(() => {
+                    button.classList.remove("copied");
+                }, 2000); // Reset after 2 seconds
             });
         }
     </script>
