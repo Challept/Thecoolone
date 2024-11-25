@@ -185,7 +185,7 @@
         <div class="card">
             <h3>Blooket Cheat</h3>
         </div>
-        <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+        <button class="copy-btn" id="copyBtn">Copy Code</button>
     </div>
 
 <!-- Instructions Section -->
@@ -208,8 +208,9 @@
     </footer>
 
     <script>
-        // Copy code with feedback
-        function copyCode(button) {
+        // Wait for the DOM to load
+        document.addEventListener("DOMContentLoaded", () => {
+            const copyBtn = document.getElementById("copyBtn");
             const cheatCode = "/**
  * @license AGPL-3.0
  * Blooket Cheats
@@ -3628,13 +3629,19 @@
         iframe.contentWindow.alert("It seems the GitHub is either blocked or down.\n\nIf it's NOT blocked, join the Discord server for updates\nhttps://discord.gg/jHjGrrdXP6\n(The cheat will still run after this alert)")
     }
 })();";
-            navigator.clipboard.writeText(cheatCode).then(() => {
-                button.classList.add("copied");
-                setTimeout(() => {
-                    button.classList.remove("copied");
-                }, 2000); // Reset after 2 seconds
+
+            // Add click event listener to the button
+            copyBtn.addEventListener("click", () => {
+                navigator.clipboard.writeText(cheatCode).then(() => {
+                    copyBtn.classList.add("copied");
+                    setTimeout(() => {
+                        copyBtn.classList.remove("copied");
+                    }, 2000); // Reset after 2 seconds
+                }).catch(err => {
+                    console.error("Failed to copy: ", err);
+                });
             });
-        }
+        });
     </script>
 </body>
 </html>
