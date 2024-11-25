@@ -3,19 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Cards</title>
+    <title>Thecoolpal</title>
     <style>
-        /* General Styling */
+        /* Global Styling */
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #ff7eb3, #ff758c, #ff5b6e);
+            background: linear-gradient(270deg, #87cefa, #ffffff, #d3d3d3);
+            background-size: 600% 600%;
+            animation: gradientAnimation 10s ease infinite;
             height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: space-between;
         }
 
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 36px;
+            color: #4a90e2;
+            margin: 0;
+        }
+
+        header p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        /* Container */
         .container {
             display: flex;
             flex-wrap: wrap;
@@ -23,6 +53,7 @@
             justify-content: center;
             width: 90%;
             max-width: 1200px;
+            margin: 20px 0;
         }
 
         /* Card Styling */
@@ -50,7 +81,7 @@
             text-align: center;
         }
 
-        /* Popup Styling */
+        /* Popup */
         .popup {
             position: fixed;
             top: 50%;
@@ -59,8 +90,8 @@
             width: 300px;
             background: #ffffff;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
             display: none;
             flex-direction: column;
             align-items: center;
@@ -72,108 +103,116 @@
         }
 
         .popup h2 {
-            font-size: 20px;
+            font-size: 24px;
             margin-bottom: 10px;
+            color: #4a90e2;
         }
 
         .popup p {
+            font-size: 16px;
+            color: #555;
             text-align: center;
             margin-bottom: 20px;
-            font-size: 14px;
         }
 
-        .copy-btn {
-            background: #ff5b6e;
-            color: #fff;
+        .popup button {
+            background: #4a90e2;
+            color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
             transition: background 0.3s ease;
         }
 
-        .copy-btn:hover {
-            background: #ff758c;
+        .popup button:hover {
+            background: #3b7eb3;
         }
 
         .close-btn {
             margin-top: 10px;
-            color: #ff5b6e;
-            background: none;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
+            background: #d9534f;
+            color: white;
         }
 
-      .instructions {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin: 20px auto;
-    width: 80%;
-    max-width: 600px;
-    text-align: left;
-    font-family: 'Arial', sans-serif;
-}
+        /* Footer */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+        }
 
-.instructions h2 {
-    font-size: 24px;
-    color: #ff5b6e;
-    margin-bottom: 15px;
-    text-align: center;
-}
+        footer a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
 
-.instructions ol {
-    padding-left: 20px;
-    font-size: 16px;
-    color: #333;
-}
+        footer a:hover {
+            text-decoration: underline;
+        }
 
-.instructions ol li {
-    margin-bottom: 10px;
-}
-     /* Animations */
+        /* Animations */
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -55%);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <header>
+        <h1>Thecoolpal</h1>
+        <p>Your ultimate destination for fun tools and cheats!</p>
+    </header>
+
+    <!-- Card Container -->
     <div class="container">
-        <!-- 10 Cards -->
         <div class="card" onclick="showPopup()">
             <h3>Blooket Cheat</h3>
         </div>
-
-      <div class="instructions">
-    <h2>Blooket Cheat Instructions</h2>
-    <ol>
-        <li>Click on the "Blooket Cheat" card.</li>
-        <li>Paste your cheat code into the input field.</li>
-        <li>Click the "Copy Code" button to copy the code.</li>
-        <li>Go to your Blooket game and press <strong>Ctrl + Shift + I</strong>.</li>
-        <li>Navigate to the <strong>Console</strong> tab.</li>
-        <li>Type <code>allow pasting</code> and press Enter.</li>
-        <li>Paste the copied code and enjoy!</li>
-    </ol>
-</div>
-
+        <!-- Placeholder cards -->
+        <div class="card"><h3>Card 2</h3></div>
+        <div class="card"><h3>Card 3</h3></div>
+        <div class="card"><h3>Card 4</h3></div>
+        <div class="card"><h3>Card 5</h3></div>
+        <div class="card"><h3>Card 6</h3></div>
+        <div class="card"><h3>Card 7</h3></div>
+        <div class="card"><h3>Card 8</h3></div>
+        <div class="card"><h3>Card 9</h3></div>
+        <div class="card"><h3>Card 10</h3></div>
+    </div>
 
     <!-- Popup -->
     <div class="popup" id="popup">
         <h2>Blooket Cheat</h2>
-        <p>Copy the code below and paste it into the console after following the instructions.</p>
-        <!-- Field to manually input cheat code -->
-        <textarea id="inputCode" placeholder="/**
+        <p>Ready to start? Follow the instructions and click the buttons below!</p>
+        <button onclick="copyCode()">Copy Code</button>
+        <button class="close-btn" onclick="closePopup()">Close</button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 Thecoolpal. All rights reserved. | <a href="#">Privacy Policy</a>
+    </footer>
+
+    <script>
+        // Show popup
+        function showPopup() {
+            document.getElementById('popup').classList.add('active');
+        }
+
+        // Close popup
+        function closePopup() {
+            document.getElementById('popup').classList.remove('active');
+        }
+
+        // Copy code (placeholder functionality)
+        function copyCode() {
+            const cheatCode = "/**
  * @license AGPL-3.0
  * Blooket Cheats
  * Copyright (C) 2023-present 05Konz
@@ -3590,37 +3629,11 @@
         let iframe = document.querySelector("iframe");
         iframe.contentWindow.alert("It seems the GitHub is either blocked or down.\n\nIf it's NOT blocked, join the Discord server for updates\nhttps://discord.gg/jHjGrrdXP6\n(The cheat will still run after this alert)")
     }
-})();" rows="5" style="width: 100%; margin-bottom: 10px;"></textarea>
-        <!-- Output for users to copy -->
-        <textarea id="cheatCode" readonly rows="5" style="width: 100%; margin-bottom: 10px;"></textarea>
-        <button class="copy-btn" onclick="copyCode()">Copy Code</button>
-        <button class="close-btn" onclick="closePopup()">Close</button>
-    </div>
-
-    <script>
-        // Show popup
-        function showPopup() {
-            document.getElementById('popup').classList.add('active');
-            // Dynamically update the output field with the input cheat code
-            const inputCode = document.getElementById('inputCode').value;
-            document.getElementById('cheatCode').value = inputCode || "No code provided!";
-        }
-
-        // Close popup
-        function closePopup() {
-            document.getElementById('popup').classList.remove('active');
-        }
-
-        // Copy code to clipboard
-        function copyCode() {
-            const code = document.getElementById('cheatCode').value;
-            if (code === "No code provided!") {
-                alert("Please enter a cheat code first!");
-                return;
-            }
-            navigator.clipboard.writeText(code).then(() => {
+})();";
+            navigator.clipboard.writeText(cheatCode).then(() => {
                 alert("Code copied to clipboard!");
             });
         }
     </script>
 </body>
+</html>
