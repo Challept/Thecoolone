@@ -55,19 +55,34 @@
             margin: 20px 0;
         }
 
-        .iframe-container {
-            width: 100%;
-            height: 500px;
-            border-radius: 10px;
-            overflow: hidden;
+        .button-container {
             margin-top: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
-        .iframe-container iframe {
-            width: 100%;
-            height: 100%;
+        .button-container button {
+            background: #1e90ff;
+            color: #fff;
             border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .button-container button:hover {
+            background: #0072ff;
+        }
+
+        .button-container svg {
+            width: 20px;
+            height: 20px;
+            fill: #fff;
         }
 
         /* Instructions Section */
@@ -129,11 +144,18 @@
     <!-- Main Content -->
     <div class="container">
         <h2>Blooket Cheat</h2>
-        <p>Use the cheat below directly from our embedded tool.</p>
+        <p>Access the cheat by clicking the button below.</p>
 
-        <!-- Iframe -->
-        <div class="iframe-container">
-            <iframe src="https://gitlab.com/blooket/blooket-cheats/-/blob/main/cheats/gui.js" title="Blooket Cheat Tool"></iframe>
+        <!-- Button Section -->
+        <div class="button-container">
+            <a href="https://gitlab.com/blooket/blooket-cheats/-/blob/main/cheats/gui.js" target="_blank">
+                <button aria-label="Go to cheat" title="Go to cheat">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M9 2a7 7 0 00-7 7v5h2V9a5 5 0 015-5h5V2H9zm7 4a7 7 0 00-7 7v5h2v-5a5 5 0 015-5h5V6h-5zM7 16v2h10v-2H7zm-2 4v2h14v-2H5z"></path>
+                    </svg>
+                    Visit Cheat
+                </button>
+            </a>
         </div>
     </div>
 
@@ -141,15 +163,14 @@
     <div class="instructions">
         <h2>Instructions</h2>
         <ol>
-            <li>Open the tool in the embedded iframe above.</li>
-            <li>Follow the instructions in the tool to use the cheat effectively.</li>
-            <li>To use the cheat:
-                <ul>
-                    <li>Find the PIN for the Blooket game you want to join.</li>
-                    <li>Paste the PIN into the tool and follow the on-screen steps.</li>
-                </ul>
-            </li>
-            <li>Enjoy using the cheat responsibly!</li>
+            <li>Click the "Visit Cheat" button above to open the cheat tool.</li>
+            <li>Then you want to copy the code from the button link.<li>
+            <li>After that you go to https://blooket.com/play<li>
+            <li>Then you click ctrl + shift + i and go to console.<li>
+            <li>Write allow pasting in the console and click enter.<li>
+            <li>then copy in the file that you pasted with ctrl + v.<li>
+            <li>It will open a cheat window inside blooket and you can hite it with ctrl + e.</li>
+            <li>Ensure you understand the risks and use the tool responsibly.</li>
         </ol>
     </div>
 
