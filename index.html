@@ -10,15 +10,15 @@
             margin: 0;
             padding: 0;
             font-family: 'Arial', sans-serif;
-            background: #333;
-            color: #f5f5f5;
+            background: linear-gradient(to bottom, #add8e6, #e0ffff); /* Ljusblå bakgrund */
+            color: #333;
             overflow-x: hidden;
         }
 
         header {
             text-align: center;
-            background-color: rgba(30, 144, 255, 0.9);
-            color: white;
+            background-color: rgba(173, 216, 230, 0.9); /* Ljusblå header */
+            color: #333;
             padding: 20px 10px;
             position: sticky;
             top: 0;
@@ -46,7 +46,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1;
+            z-index: 2; /* Bakom sektionerna men framför bakgrunden */
         }
 
         .snow div {
@@ -71,7 +71,7 @@
                 transform: translateX(0);
             }
             50% {
-                transform: translateX(20px);
+                transform: translateX(15px);
             }
         }
 
@@ -80,12 +80,11 @@
             padding: 20px;
             margin: 20px auto;
             max-width: 900px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-            z-index: 2;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 3; /* Ovanpå snön */
             position: relative;
-            backdrop-filter: blur(10px);
             animation: slideIn 1.5s ease-in-out;
         }
 
@@ -93,11 +92,13 @@
             font-size: 2rem;
             text-align: center;
             margin-bottom: 15px;
+            color: #1e90ff; /* Ljusblå rubrik */
         }
 
         p {
             font-size: 1.2rem;
             line-height: 1.8;
+            color: #333;
         }
 
         /* Button */
@@ -109,7 +110,7 @@
         .button-container a {
             display: inline-block;
             padding: 10px 20px;
-            background: rgba(30, 144, 255, 0.9);
+            background: #1e90ff; /* Ljusare blå */
             color: white;
             text-decoration: none;
             font-size: 1.2rem;
@@ -119,7 +120,7 @@
         }
 
         .button-container a:hover {
-            background: rgba(28, 134, 238, 0.9);
+            background: #87cefa; /* Ännu ljusare blå vid hover */
             transform: translateY(-3px);
         }
 
@@ -127,8 +128,8 @@
         footer {
             text-align: center;
             padding: 10px;
-            background: rgba(30, 144, 255, 0.9);
-            color: white;
+            background: rgba(173, 216, 230, 0.9);
+            color: #333;
             position: relative;
             bottom: 0;
             margin-top: 20px;
