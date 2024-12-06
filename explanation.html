@@ -118,6 +118,78 @@
             color: #1e90ff;
         }
 
+        /* General Section */
+#equation-popup-section {
+    text-align: center;
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(240, 248, 255, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.button-container button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    color: white;
+    background: #1e90ff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.button-container button:hover {
+    background: #4682b4;
+}
+
+/* Popup Container */
+#popup-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+}
+
+.popup-content {
+    background: white;
+    max-width: 800px;
+    max-height: 80%;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+#close-popup {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+#close-popup:hover {
+    color: #1e90ff;
+}
+
+.equation-content {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
         /* Treatment Details Section */
 #treatment-details {
     margin: 40px auto;
@@ -217,6 +289,64 @@
         LifeExtender 2030 is a revolutionary solution using advanced nanotechnology to repair cellular damage, reverse aging, and enhance immune systems. Each treatment uses billions of nanobots to optimize health and extend life expectancy.
     </p>
 </section>
+
+    <section id="equation-popup-section">
+    <div class="button-container">
+        <button id="open-popup">View Full Equations</button>
+    </div>
+</section>
+
+<!-- Popup -->
+<div id="popup-container">
+    <div class="popup-content">
+        <span id="close-popup">&times;</span>
+        <div class="equation-content">
+            <!-- Placeholder for 100+ lines of equations -->
+            \( F = \frac{\left( \Sigma_{i=1}^n \left( \frac{C_n \cdot N + \frac{C_{AI}}{P} + \frac{C_{CT}}{P}}{\eta \cdot R} \right) \cdot T \cdot E \right)}{L} + \left( \int_{0}^{T} \left( \frac{dC}{dt} + k \cdot e^{-at} \right) dt \right) \)
+            <br>
+            \( V = \frac{4}{3} \pi r^3 \quad E = h \nu \quad \lambda_{min} = \frac{hc}{eV} \quad \mu = i \vec{A} \)
+            <br>
+            \( N = N_0 e^{-\lambda t} \quad V = l \times w \times h \quad Ep = \frac{1}{4 \pi \epsilon_0} \frac{q_1 q_2}{r^2} \)
+            <br>
+            \( x(t) = A \sin(\omega t - \phi) \quad P = P_0 \sin(\omega t) \quad \int_{a}^{b} f(x)dx \)
+            <br>
+            \( V = \sqrt{\frac{2GM}{R}} \quad dN/dt = -\lambda N \quad F = ma \quad \gamma = \frac{1}{\sqrt{1 - \frac{v^2}{c^2}}} \)
+            <br>
+            \( \text{lim}_{x \to \infty} f(x) = 0 \quad \int_{0}^{T} e^{-at} dt = \frac{1 - e^{-aT}}{a} \quad P_1 = P_0 \sin(\omega_1 t) \)
+            <br>
+            \( Q = mc\Delta T \quad W = Fd \cos(\theta) \quad \text{lim}_{x \to 0} \frac{\sin(x)}{x} = 1 \quad f(x) = x^2 \)
+            <br>
+            \( \oint \vec{E} \cdot d\vec{A} = \frac{Q}{\epsilon_0} \quad \nabla \cdot \vec{B} = 0 \quad \nabla \times \vec{E} = -\frac{\partial \vec{B}}{\partial t} \)
+            <br>
+            <!-- Repeat for additional lines -->
+            ...
+            <!-- Placeholder for 100 total lines -->
+        </div>
+    </div>
+</div>
+
+<script>
+    const openPopup = document.getElementById("open-popup");
+    const closePopup = document.getElementById("close-popup");
+    const popupContainer = document.getElementById("popup-container");
+
+    // Open popup
+    openPopup.addEventListener("click", () => {
+        popupContainer.style.display = "block";
+    });
+
+    // Close popup
+    closePopup.addEventListener("click", () => {
+        popupContainer.style.display = "none";
+    });
+
+    // Close popup if clicked outside
+    window.addEventListener("click", (e) => {
+        if (e.target === popupContainer) {
+            popupContainer.style.display = "none";
+        }
+    });
+</script>
 
 <section>
     <h2>The Science</h2>
