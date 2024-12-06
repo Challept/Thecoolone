@@ -5,27 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LifeExtender 2030</title>
     <style>
-        /* General Styles */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to bottom, #add8e6, #e0ffff); /* Ljusblå bakgrund */
-            color: #333;
-            overflow-x: hidden;
-        }
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #add8e6, #e0ffff); /* Ljusblå bakgrund */
+    color: #333;
+    overflow-x: hidden;
+    scroll-behavior: smooth; /* Smidig scrollning */
+}
 
 /* General Header Styles */
 header {
-    text-align: center;
-    background-color: rgba(173, 216, 230, 0.9); /* Ljusblå header */
-    color: #333;
-    padding: 20px 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: fadeInDown 1.5s ease-in-out;
-    position: sticky;
+    position: static; /* Header stannar högst upp */
     top: 0;
     z-index: 1000;
+    background-color: rgba(173, 216, 230, 0.95); /* Ljusblå header */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 10px 0;
 }
 
 /* Navbar Styles */
@@ -35,14 +34,13 @@ header {
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 10px 20px;
+    padding: 0 20px;
 }
 
 .logo {
     font-size: 1.8rem;
     font-weight: bold;
     color: #1e90ff;
-    margin: 0;
 }
 
 .nav-links {
@@ -71,186 +69,117 @@ header {
 
 /* Tagline Styles */
 .tagline {
-    font-size: 1rem;
-    margin: 10px 0 0;
+    font-size: 1.2rem;
     color: #555;
+    margin-top: 5px;
 }
 
-/* Animations */
-@keyframes fadeInDown {
+/* Snow Effect */
+.snow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.snow div {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: fall linear infinite, sway 5s ease-in-out infinite;
+}
+
+@keyframes fall {
     0% {
-        transform: translateY(-50px);
-        opacity: 0;
+        transform: translateY(-100%);
     }
     100% {
-        transform: translateY(0);
-        opacity: 1;
+        transform: translateY(100%);
     }
-        /* Snow Effect */
-        .snow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2; /* Bakom sektionerna men framför bakgrunden */
-        }
+}
 
-        .snow div {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
-            animation: fall linear infinite, sway 5s ease-in-out infinite;
-        }
+@keyframes sway {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(15px);
+    }
+}
 
-        @keyframes fall {
-            0% {
-                transform: translateY(-100%);
-            }
-            100% {
-                transform: translateY(100%);
-            }
-        }
-
-        @keyframes sway {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            50% {
-                transform: translateX(15px);
-            }
-        }
-
-        /* Sections */
-        section {
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 900px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 3; /* Ovanpå snön */
-            position: relative;
-            animation: slideIn 1.5s ease-in-out;
-        }
-
-        h2 {
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 15px;
-            color: #1e90ff; /* Ljusblå rubrik */
-        }
-
-        p {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: #333;
-        }
-
-        /* Button */
-        .button-container {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .button-container a {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #1e90ff; /* Ljusare blå */
-            color: white;
-            text-decoration: none;
-            font-size: 1.2rem;
-            border-radius: 5px;
-            transition: transform 0.3s, background 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .button-container a:hover {
-            background: #87cefa; /* Ännu ljusare blå vid hover */
-            transform: translateY(-3px);
-        }
-
-        /* Eligibility Section */
-#eligibility-check {
+/* Sections */
+section {
     padding: 20px;
     margin: 20px auto;
-    max-width: 600px;
-    background: rgba(255, 255, 255, 0.9);
+    max-width: 900px;
+    background: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 3;
     animation: fadeIn 1.5s ease-in-out;
 }
 
-#eligibility-check h2 {
+h2 {
     font-size: 2rem;
-    color: #1e90ff;
     text-align: center;
     margin-bottom: 15px;
+    color: #1e90ff;
 }
 
-#eligibility-check p {
+p {
     font-size: 1.2rem;
     line-height: 1.8;
     color: #333;
+    text-align: justify;
+}
+
+/* Button */
+.button-container {
     text-align: center;
+    margin: 20px 0;
 }
 
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 5px;
-    color: #555;
-}
-
-input[type="text"],
-input[type="number"],
-select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-}
-
-.checkbox-group input[type="checkbox"] {
-    margin-right: 10px;
-}
-
-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    font-size: 1.2rem;
-    color: white;
+.button-container a {
+    display: inline-block;
+    padding: 10px 20px;
     background: #1e90ff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-button:hover {
-    background: #4682b4;
-}
-
-.result {
-    margin-top: 20px;
-    padding: 10px;
+    color: white;
+    text-decoration: none;
     font-size: 1.2rem;
-    text-align: center;
-    color: #333;
     border-radius: 5px;
-    border: 1px solid #ccc;
-    background: rgba(240, 248, 255, 0.9);
+    transition: transform 0.3s, background 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.button-container a:hover {
+    background: #87cefa;
+    transform: translateY(-3px);
+}
+
+/* Video */
+video {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px;
+    background: rgba(173, 216, 230, 0.9);
+    color: #333;
+    margin-top: 20px;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Animations */
 @keyframes fadeIn {
     0% {
         opacity: 0;
@@ -260,51 +189,8 @@ button:hover {
         opacity: 1;
         transform: translateY(0);
     }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 10px;
-            background: rgba(173, 216, 230, 0.9);
-            color: #333;
-            position: relative;
-            bottom: 0;
-            margin-top: 20px;
-            animation: fadeIn 2s ease-in-out;
-        }
-
-        footer p {
-            margin: 0;
-        }
-
-        /* Video */
-        video {
-            width: 100%;
-            border-radius: 10px;
-            animation: fadeIn 2s ease-in-out;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideIn {
-            0% {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-    </style>
+}
+</style>
 </head>
 <body>
     <div class="snow" id="snow-container"></div>
