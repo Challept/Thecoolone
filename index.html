@@ -9,7 +9,7 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background: #333;
             color: #f5f5f5;
             overflow-x: hidden;
@@ -17,22 +17,25 @@
 
         header {
             text-align: center;
-            background-color: #1e90ff;
+            background-color: rgba(30, 144, 255, 0.9);
             color: white;
             padding: 20px 10px;
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         header h1 {
             font-size: 2.5rem;
             margin: 0;
+            animation: fadeIn 2s ease-in-out;
         }
 
         header p {
             margin: 0;
             font-size: 1rem;
+            animation: fadeIn 3s ease-in-out;
         }
 
         /* Snow Effect */
@@ -51,7 +54,7 @@
             background: white;
             border-radius: 50%;
             opacity: 0.8;
-            animation: fall linear infinite;
+            animation: fall linear infinite, sway 5s ease-in-out infinite;
         }
 
         @keyframes fall {
@@ -63,16 +66,27 @@
             }
         }
 
-        /* About Section */
+        @keyframes sway {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(20px);
+            }
+        }
+
+        /* Sections */
         section {
             padding: 20px;
             margin: 20px auto;
             max-width: 900px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
             z-index: 2;
             position: relative;
+            backdrop-filter: blur(10px);
+            animation: slideIn 1.5s ease-in-out;
         }
 
         h2 {
@@ -86,15 +100,39 @@
             line-height: 1.8;
         }
 
+        /* Button */
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .button-container a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(30, 144, 255, 0.9);
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-container a:hover {
+            background: rgba(28, 134, 238, 0.9);
+            transform: translateY(-3px);
+        }
+
         /* Footer */
         footer {
             text-align: center;
             padding: 10px;
-            background: #1e90ff;
+            background: rgba(30, 144, 255, 0.9);
             color: white;
             position: relative;
             bottom: 0;
             margin-top: 20px;
+            animation: fadeIn 2s ease-in-out;
         }
 
         footer p {
@@ -105,6 +143,28 @@
         video {
             width: 100%;
             border-radius: 10px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -114,45 +174,30 @@
         <h1>LifeExtender 2030</h1>
         <p>A Revolutionary Cure for a Longer Life</p>
     </header>
-    <video src="LifeExtender.mp4" autoplay loop muted></video>
+    <video src="topvideo.mp4" autoplay loop muted></video>
     <section>
         <h2>About Us</h2>
         <p>
-            Welcome to the future of health and wellness. "LifeExtender 2030" is the pinnacle of scientific advancement, designed to extend human life by addressing cellular decay and boosting immunity through advanced nanotechnology. Our team of world-renowned scientists has worked tirelessly to develop this groundbreaking cure.
+            Welcome to the future of health and wellness. "LifeExtender 2030" is the pinnacle of scientific advancement, designed to extend human life by addressing cellular decay and boosting immunity through advanced nanotechnology.
         </p>
     </section>
-    <section>
-        <h2>The Problem</h2>
-        <p>
-            Aging has always been seen as inevitable, but at its core, it’s a biological process caused by cellular damage and the inability of our bodies to regenerate effectively. With diseases such as Alzheimer’s, heart conditions, and cancer often accompanying age, a solution was critical.
-        </p>
-    </section>
-    <section>
-        <h2>The Solution</h2>
-        <p>
-            LifeExtender 2030 employs targeted nanotechnology to repair damaged cells, prevent disease, and enhance cellular longevity. This cure will be available for public use starting January 2030, revolutionizing healthcare and life expectancy.
-        </p>
-    </section>
-    <section>
-        <h2>Release and Accessibility</h2>
-        <p>
-            LifeExtender 2030 will first be introduced in major cities across the globe with a goal to reach rural areas within the same year. Through subsidies and global partnerships, this cure will be affordable and accessible to everyone.
-        </p>
-    </section>
+    <div class="button-container">
+        <a href="explanation.html">Learn More</a>
+    </div>
     <footer>
         <p>© 2024 LifeExtender 2030 - All Rights Reserved</p>
     </footer>
     <script>
         // Snow Effect
         const snowContainer = document.getElementById('snow-container');
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 200; i++) {
             const snowflake = document.createElement('div');
             const size = Math.random() * 5 + 2;
             snowflake.style.width = `${size}px`;
             snowflake.style.height = `${size}px`;
             snowflake.style.left = `${Math.random() * 100}%`;
-            snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
-            snowflake.style.animationDelay = `${Math.random() * 2}s`;
+            snowflake.style.animationDuration = `${Math.random() * 5 + 3}s`;
+            snowflake.style.animationDelay = `${Math.random() * 3}s`;
             snowflake.style.top = `${-Math.random() * 100}px`;
             snowContainer.appendChild(snowflake);
         }
