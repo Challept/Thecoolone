@@ -4,261 +4,224 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How LifeExtender Works</title>
-<style>
-    /* General Styles */
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Arial', sans-serif;
-        background: linear-gradient(to bottom, #f0f8ff, #e6f7ff); /* Ljusare blå bakgrund */
-        color: #333;
-        overflow-x: hidden;
-    }
-
-/* General Header Styles */
-header {
-    text-align: center;
-    background-color: rgba(173, 216, 230, 0.9); /* Ljusblå header */
-    color: #333;
-    padding: 20px 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: fadeInDown 1.5s ease-in-out;
-    position: static;
-    top: 0;
-    z-index: 1000;
-}
-
-/* Navbar Styles */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 10px 20px;
-}
-
-.logo {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #1e90ff;
-    margin: 0;
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-}
-
-.nav-links li {
-    margin: 0;
-}
-
-.nav-links a {
-    text-decoration: none;
-    font-size: 1.2rem;
-    color: #333;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: background 0.3s ease, color 0.3s ease;
-}
-
-.nav-links a:hover {
-    background: #1e90ff;
-    color: white;
-}
-
-/* Tagline Styles */
-.tagline {
-    font-size: 1rem;
-    margin: 10px 0 0;
-    color: #555;
-}
-
-/* Animations */
-@keyframes fadeInDown {
-    0% {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-    /* Sections */
-    section {
-        padding: 20px;
-        margin: 20px auto;
-        max-width: 900px;
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        animation: slideIn 1.5s ease-in-out;
-    }
-
-    h2 {
-        font-size: 2rem;
-        text-align: center;
-        margin-bottom: 15px;
-        color: #1e90ff;
-    }
-
-    p {
-        font-size: 1.2rem;
-        line-height: 1.8;
-        color: #333;
-        text-align: justify;
-    }
-
-    ul {
-        margin-left: 20px;
-        font-size: 1.2rem;
-        color: #555;
-    }
-
-    /* Specific Styles for Text-Only Section */
-    .text-only {
-        background: rgba(240, 248, 255, 0.95); /* Ljusare ton för text-only sektionen */
-        padding: 30px;
-        text-align: justify;
-        border-left: 5px solid #87ceeb;
-    }
-
-    /* Footer */
-    footer {
-        text-align: center;
-        padding: 10px;
-        background: rgba(173, 216, 230, 0.9);
-        color: #333;
-        margin-top: 20px;
-    }
-
-    footer p {
-        margin: 0;
-    }
-
-    /* Animations */
-    @keyframes fadeInDown {
-        0% {
-            transform: translateY(-50px);
-            opacity: 0;
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #f0f8ff, #e6f7ff);
+            color: #333;
+            overflow-x: hidden;
         }
-        100% {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
 
-    @keyframes slideIn {
-        0% {
-            transform: translateY(50px);
-            opacity: 0;
+        /* Header Styles */
+        header {
+            text-align: center;
+            background-color: rgba(173, 216, 230, 0.9);
+            color: #333;
+            padding: 20px 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        100% {
-            transform: translateY(0);
-            opacity: 1;
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
-    }
-</style>
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e90ff;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-size: 1rem;
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: #1e90ff;
+            color: white;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            margin-top: 5px;
+            color: #555;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #1e90ff;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #4682b4;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            margin-left: 20px;
+            padding-left: 20px;
+            list-style: disc;
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .equation {
+            font-family: 'Courier New', Courier, monospace;
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1.1rem;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #1e90ff;
+        }
+
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(173, 216, 230, 0.9);
+            color: #333;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+    </style>
 </head>
 <body>
 <header>
     <nav class="navbar">
-        <div class="container">
-            <h1 class="logo">LifeExtender 2030</h1>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="explanation.html">Explanation</a></li>
-            </ul>
-        </div>
+        <h1 class="logo">LifeExtender 2030</h1>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="explanation.html">Explanation</a></li>
+        </ul>
     </nav>
     <p class="tagline">A Revolutionary Cure for a Longer Life</p>
 </header>
+
 <section>
     <h2>Introduction</h2>
     <p>
-        LifeExtender 2030 is a groundbreaking solution that uses nanotechnology to repair cells, reverse aging, and boost the immune system. By injecting billions of microscopic robots into the bloodstream, we can slow down or even halt aging processes. Each treatment lasts 6 months, and a person typically needs two treatments per year. Over a lifetime, this revolutionary technology can significantly extend life expectancy while maintaining excellent health.
+        LifeExtender 2030 is a revolutionary solution using advanced nanotechnology to repair cellular damage, reverse aging, and enhance immune systems. Each treatment uses billions of nanobots to optimize health and extend life expectancy.
     </p>
 </section>
 
-<section class="text-only">
-    <h2>About LifeExtender 2030</h2>
-    <p>
-        LifeExtender 2030 is a revolutionary project aimed at extending human life expectancy and improving overall health. 
-        Using advanced nanotechnology, this treatment repairs cellular damage, enhances the immune system, and slows down aging processes. 
-        Each treatment is simple, involving the injection of billions of microscopic nanobots into the bloodstream. These nanobots 
-        work tirelessly for up to 6 months, repairing cells and boosting overall body function. 
-        With consistent treatments, individuals can maintain optimal health and potentially live decades longer.
-    </p>
-</section>
-    
-<section class="science-math">
-    <h2>The Science Behind LifeExtender</h2>
-    <p>
-        Here’s how the technology works in scientific and mathematical terms:
-    </p>
+<section>
+    <h2>The Science</h2>
+    <h3>1. Energy Requirement</h3>
+    <p>Nanobots utilize glucose as energy, calculated as:</p>
+    <div class="equation">E = N × e</div>
+    <ul>
+        <li>E = Total energy (Joules)</li>
+        <li>N = Number of nanobots (1,000,000,000)</li>
+        <li>e = Energy per nanobot (1.5 × 10<sup>-6</sup> J)</li>
+    </ul>
+    <div class="equation">E = 1,000,000,000 × 1.5 × 10<sup>-6</sup> = 1,500 J</div>
 
-    <h3>1. Energy Required for Nanobots</h3>
+    <h3>2. Efficiency</h3>
+    <p>Efficiency is measured by repaired cells:</p>
+    <div class="equation">η = (Repaired ÷ Total) × 100</div>
+    <p>For 10 million repaired out of 100 million cells:</p>
+    <div class="equation">η = (10,000,000 ÷ 100,000,000) × 100 = 10%</div>
+</section>
+
+<section>
+    <h2>Test Results</h2>
     <p>
-        Each nanobot uses glucose from the bloodstream to function. The total energy required for 1 billion nanobots is calculated as:
+        Initial trials were conducted on lab rats. After 3 months of nanobot treatments:
+    </p>
+    <ul>
+        <li>Cellular damage was reduced by <span class="highlight">40%</span>.</li>
+        <li>Life expectancy increased by <span class="highlight">30%</span>.</li>
+        <li>Overall health improved significantly, with no observed side effects.</li>
+    </ul>
+    <p class="highlight">Results indicate strong potential for human applications.</p>
+</section>
+
+<section>
+    <h2>Total Cost</h2>
+    <p>
+        The final cost per treatment is calculated as:
     </p>
     <div class="equation">
-        \( E = N \times e \)
+        C = (C_n × N) + (C_AI ÷ P) + (C_CT ÷ P)
     </div>
-    <p>Where:</p>
     <ul>
-        <li>\( E \) = Total energy needed (in Joules)</li>
-        <li>\( N \) = Number of nanobots (1,000,000,000)</li>
-        <li>\( e \) = Energy per nanobot (\( 1.5 \times 10^{-6} \, \text{J} \))</li>
+        <li>C_n = $0.002 (cost per nanobot)</li>
+        <li>N = 1,000,000,000 (nanobots)</li>
+        <li>C_AI = $25,000,000 (AI development cost)</li>
+        <li>C_CT = $15,000,000 (clinical trial cost)</li>
+        <li>P = 10,000 (treatments)</li>
     </ul>
     <div class="equation">
-        \( E = 1,000,000,000 \times 1.5 \times 10^{-6} \, \text{J} = 1,500 \, \text{J} \)
-    </div>
-
-    <h3>2. Repair Efficiency</h3>
-    <p>
-        The nanobots repair damaged cells using the formula:
-    </p>
-    <div class="equation">
-        \( \eta = \left( \frac{\text{Repaired Cells}}{\text{Total Cells}} \right) \times 100 \)
+        C = (0.002 × 1,000,000,000) + (25,000,000 ÷ 10,000) + (15,000,000 ÷ 10,000) = $2,004
     </div>
     <p>
-        For example, if 10 million cells are repaired out of 100 million:
-    </p>
-    <div class="equation">
-        \( \eta = \left( \frac{10,000,000}{100,000,000} \right) \times 100 = 10\% \)
-    </div>
-
-    <h3>3. Cost of Treatment</h3>
-    <p>
-        The cost for one treatment is calculated as:
-    </p>
-    <div class="equation">
-        \( C = (C_n \times N) + \frac{C_{AI}}{P} + \frac{C_{CT}}{P} \)
-    </div>
-    <p>Where:</p>
-    <ul>
-        <li>\( C_n \) = Cost per nanobot (\$0.002)</li>
-        <li>\( N \) = Number of nanobots (1,000,000,000)</li>
-        <li>\( C_{AI} \) = AI development cost (\$25,000,000)</li>
-        <li>\( C_{CT} \) = Clinical trial cost (\$15,000,000)</li>
-        <li>\( P \) = Number of treatments (10,000)</li>
-    </ul>
-    <div class="equation">
-        \( C = (0.002 \times 1,000,000,000) + \frac{25,000,000}{10,000} + \frac{15,000,000}{10,000} \)
-        <br>
-        \( C = 2,000,000 + 2,500 + 1,500 = 2,004,000 \)
-    </div>
-    <p>
-        Total cost per treatment: <strong>$2,004</strong>.
-    </p>
-    <p>
-        A person would need <strong>two treatments per year</strong>, resulting in an annual cost of $4,008. Over a 50-year lifetime, the total cost would be approximately <strong>$200,400</strong>.
+        <strong>Final cost:</strong> $2,004 per treatment, with two treatments per year recommended.
     </p>
 </section>
-    <footer>
-        <p>© 2024 LifeExtender 2030 - All Rights Reserved</p>
-    </footer>
+
+<footer>
+    <p>© 2024 LifeExtender 2030 - All Rights Reserved</p>
+</footer>
 </body>
 </html>
