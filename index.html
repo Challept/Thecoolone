@@ -124,6 +124,95 @@
             transform: translateY(-3px);
         }
 
+        /* Eligibility Section */
+#eligibility-check {
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+#eligibility-check h2 {
+    font-size: 2rem;
+    color: #1e90ff;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#eligibility-check p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #333;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 1.2rem;
+    color: white;
+    background: #1e90ff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #4682b4;
+}
+
+.result {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 1.2rem;
+    text-align: center;
+    color: #333;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: rgba(240, 248, 255, 0.9);
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
         /* Footer */
         footer {
             text-align: center;
@@ -185,6 +274,74 @@
     <div class="button-container">
         <a href="explanation.html">Learn More</a>
     </div>
+
+    <section id="eligibility-check">
+    <h2>Eligibility Check</h2>
+    <p>Fill out the form below to check if LifeExtender is suitable for you:</p>
+    <form id="eligibility-form">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" min="18" max="120" required>
+        </div>
+        <div class="form-group">
+            <label for="country">Country:</label>
+            <input type="text" id="country" name="country" required>
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="issues">Have you experienced any of the following?</label>
+            <div class="checkbox-group">
+                <input type="checkbox" id="alcohol" name="issues" value="alcohol">
+                <label for="alcohol">Alcohol problems</label><br>
+                <input type="checkbox" id="drugs" name="issues" value="drugs">
+                <label for="drugs">Drug use</label><br>
+                <input type="checkbox" id="nicotine" name="issues" value="nicotine">
+                <label for="nicotine">Nicotine use</label><br>
+                <input type="checkbox" id="none" name="issues" value="none">
+                <label for="none">None of the above</label>
+            </div>
+        </div>
+        <button type="button" id="check-eligibility">Check Eligibility</button>
+    </form>
+    <div id="result" class="result"></div>
+</section>
+
+<script>
+    document.getElementById("check-eligibility").addEventListener("click", function() {
+        const name = document.getElementById("name").value.trim();
+        const age = parseInt(document.getElementById("age").value);
+        const country = document.getElementById("country").value.trim();
+        const gender = document.getElementById("gender").value;
+        const issues = Array.from(document.querySelectorAll("input[name='issues']:checked")).map(checkbox => checkbox.value);
+
+        let resultMessage = "";
+
+        if (!name || !age || !country || !gender || issues.length === 0) {
+            resultMessage = "Please fill in all fields.";
+        } else if (age < 18) {
+            resultMessage = "You must be at least 18 years old to use LifeExtender.";
+        } else if (issues.includes("drugs") || issues.includes("alcohol")) {
+            resultMessage = `Sorry, ${name}, based on your history, LifeExtender may not be suitable for you. Please consult a medical professional.`;
+        } else {
+            resultMessage = `Congratulations, ${name}! Based on your inputs, LifeExtender is a suitable option for you.`;
+        }
+
+        document.getElementById("result").innerText = resultMessage;
+    });
+</script>
+
     <footer>
         <p>© 2024 LifeExtender 2030 - All Rights Reserved</p>
     </footer>
