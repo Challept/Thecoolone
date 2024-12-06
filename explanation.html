@@ -15,20 +15,77 @@
         overflow-x: hidden;
     }
 
-    header {
-        text-align: center;
-        background-color: rgba(173, 216, 230, 0.9); /* Ljusblå header */
-        color: #333;
-        padding: 20px 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        animation: fadeInDown 1.5s ease-in-out;
-    }
+/* General Header Styles */
+header {
+    text-align: center;
+    background-color: rgba(173, 216, 230, 0.9); /* Ljusblå header */
+    color: #333;
+    padding: 20px 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeInDown 1.5s ease-in-out;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
-    header h1 {
-        font-size: 2.5rem;
-        margin: 0;
-    }
+/* Navbar Styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px;
+}
 
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1e90ff;
+    margin: 0;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li {
+    margin: 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.nav-links a:hover {
+    background: #1e90ff;
+    color: white;
+}
+
+/* Tagline Styles */
+.tagline {
+    font-size: 1rem;
+    margin: 10px 0 0;
+    color: #555;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    0% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
     /* Sections */
     section {
         padding: 20px;
@@ -106,9 +163,18 @@
 </style>
 </head>
 <body>
-    <header>
-        <h1>LifeExtender 2030: The Science</h1>
-    </header>
+<header>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">LifeExtender 2030</h1>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="explanation.html">Explanation</a></li>
+            </ul>
+        </div>
+    </nav>
+    <p class="tagline">A Revolutionary Cure for a Longer Life</p>
+</header>
 <section>
     <h2>Introduction</h2>
     <p>
