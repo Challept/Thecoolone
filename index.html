@@ -169,6 +169,70 @@ video {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Eligibility Check Section */
+#eligibility-check {
+    margin: 40px auto;
+    padding: 20px;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 1s ease-in-out;
+}
+
+h2 {
+    text-align: center;
+    color: #1e90ff;
+    margin-bottom: 15px;
+}
+
+p {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+.checkbox-group label {
+    font-weight: normal;
+}
+
+.result {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    text-align: center;
+    color: #333;
+    min-height: 50px;
+}
+        
 /* Footer */
 footer {
     text-align: center;
@@ -217,7 +281,7 @@ footer {
         <a href="explanation.html">Learn More</a>
     </div>
 
-    <section id="eligibility-check">
+<section id="eligibility-check">
     <h2>Eligibility Check</h2>
     <p>Fill out the form below to check if LifeExtender is suitable for you:</p>
     <form id="eligibility-form">
@@ -227,7 +291,7 @@ footer {
         </div>
         <div class="form-group">
             <label for="age">Age:</label>
-            <input type="number" id="age" name="age" min="18" max="120" required>
+            <input type="number" id="age" name="age" min="1" max="120" required>
         </div>
         <div class="form-group">
             <label for="country">Country:</label>
@@ -255,27 +319,33 @@ footer {
                 <label for="none">None of the above</label>
             </div>
         </div>
-        <button type="button" id="check-eligibility">Check Eligibility</button>
     </form>
     <div id="result" class="result"></div>
 </section>
 
 <script>
-    document.getElementById("check-eligibility").addEventListener("click", function() {
+    const inputs = document.querySelectorAll('#eligibility-form input, #eligibility-form select');
+    const resultDiv = document.getElementById("result");
+
+    inputs.forEach(input => {
+        input.addEventListener("input", checkEligibility);
+    });
+
+    function checkEligibility() {
         const name = document.getElementById("name").value.trim();
-        const age = parseInt(document.getElementById("age").value);
+        const age = parseInt(document.getElementById("age").value) || 0;
         const country = document.getElementById("country").value.trim();
         const gender = document.getElementById("gender").value;
         const issues = Array.from(document.querySelectorAll("input[name='issues']:checked")).map(checkbox => checkbox.value);
 
-        const currentYear = new Date().getFullYear(); // Hämta nuvarande år
-        const targetYear = 2030; // Målet är att vara 18 år 2030
-        const ageIn2030 = age + (targetYear - currentYear); // Beräkna åldern år 2030
+        const currentYear = new Date().getFullYear();
+        const targetYear = 2030;
+        const ageIn2030 = age + (targetYear - currentYear);
 
         let resultMessage = "";
 
-        if (!name || !age || !country || !gender || issues.length === 0) {
-            resultMessage = "Please fill in all fields.";
+        if (!name || !age || !country || !gender) {
+            resultMessage = "Please fill in all fields to see eligibility.";
         } else if (ageIn2030 < 18) {
             resultMessage = `Sorry, ${name}, you must be at least 18 years old by 2030 to use LifeExtender.`;
         } else if (issues.includes("drugs") || issues.includes("alcohol")) {
@@ -284,8 +354,8 @@ footer {
             resultMessage = `Congratulations, ${name}! Based on your inputs, LifeExtender is a suitable option for you.`;
         }
 
-        document.getElementById("result").innerText = resultMessage;
-    });
+        resultDiv.innerText = resultMessage;
+    }
 </script>
 
     <footer>
