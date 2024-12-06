@@ -3,205 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CheatPal</title>
+    <title>LifeExtender 2030</title>
     <style>
-        /* Global Styling */
+        /* General Styles */
         body {
             margin: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #0072ff, #00c6ff);
-            background-size: 400% 400%;
-            animation: gradientAnimation 10s ease infinite;
-            color: #fff;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #333;
+            color: #f5f5f5;
+            overflow-x: hidden;
         }
 
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Header */
         header {
-            background: rgba(0, 0, 0, 0.8);
-            width: 100%;
-            padding: 20px 0;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: #1e90ff;
+            color: white;
+            padding: 20px 10px;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
 
         header h1 {
-            font-size: 36px;
+            font-size: 2.5rem;
             margin: 0;
-            color: #00c6ff;
-            animation: fadeIn 2s ease;
         }
 
         header p {
-            font-size: 16px;
-            color: #ddd;
-            margin: 10px 0 0;
+            margin: 0;
+            font-size: 1rem;
         }
 
-        /* Main Container */
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 30px 10px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .cheat-card {
-            background: rgba(0, 0, 0, 0.7);
+        /* Snow Effect */
+        .snow {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 900px;
-            margin: 20px 0;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .cheat-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        .snow div {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
         }
 
-        .cheat-card h2 {
-            font-size: 24px;
-            color: #00c6ff;
-        }
-
-        .cheat-card p {
-            font-size: 16px;
-            color: #ccc;
-            margin: 10px 0;
-        }
-
-        .cheat-card button {
-            margin-top: 10px;
-            background: #00c6ff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s ease;
-        }
-
-        .cheat-card button:hover {
-            background: #0072ff;
+        @keyframes fall {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100%);
+            }
         }
 
         /* About Section */
-        .about-section {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            text-align: center;
-            border-radius: 10px;
-            width: 100%;
+        section {
+            padding: 20px;
+            margin: 20px auto;
             max-width: 900px;
-            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+            position: relative;
         }
 
-        .about-section h2 {
-            font-size: 28px;
-            color: #000;
+        h2 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 15px;
         }
 
-        .about-section p {
-            font-size: 16px;
-            color: #ddd;
-            margin: 10px 0;
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
         }
 
         /* Footer */
         footer {
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
             text-align: center;
-            padding: 20px;
-            width: 100%;
+            padding: 10px;
+            background: #1e90ff;
+            color: white;
             position: relative;
             bottom: 0;
+            margin-top: 20px;
         }
 
-        footer a {
-            color: #00c6ff;
-            text-decoration: none;
+        footer p {
+            margin: 0;
         }
 
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Video */
+        video {
+            width: 100%;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <div class="snow" id="snow-container"></div>
     <header>
-        <h1>CheatPal</h1>
-        <p>Your ultimate cheat resource for fun and games!</p>
+        <h1>LifeExtender 2030</h1>
+        <p>A Revolutionary Cure for a Longer Life</p>
     </header>
-
-    <!-- Main Container -->
-    <div class="main-container">
-        <!-- Cheat Cards -->
-        <div class="cheat-card">
-            <h2>Blooket Cheat</h2>
-            <p>Unlock awesome hacks for Blooket!</p>
-            <button onclick="location.href='Blooketcheat.html'">Go to Cheat</button>
-        </div>
-
-        <div class="cheat-card">
-            <h2>Kahoot Cheat</h2>
-            <p>Unlock awesome hacks for Kahoot!</p>
-            <button onclick="location.href='kahoothack.html'">Go to Cheat</button>
-        </div>
-
-        <div class="cheat-card">
-            <h2>Coming Soon</h2>
-            <p>Stay tuned for our next exciting cheat!</p>
-            <button disabled>Coming Soon</button>
-        </div>
-
-        <div class="cheat-card">
-            <h2>Coming Soon</h2>
-            <p>Stay tuned for our next exciting cheat!</p>
-            <button disabled>Coming Soon</button>
-        </div>
-
-        <div class="cheat-card">
-            <h2>Coming Soon</h2>
-            <p>Stay tuned for our next exciting cheat!</p>
-            <button disabled>Coming Soon</button>
-        </div>
-
-        <!-- About Section -->
-        <div class="about-section">
-            <h2>About Us</h2>
-            <p>CheatPal is your go-to resource for game cheats, hacks, and tools. Please note: we do not take responsibility for what happens when you use these cheats. Use them at your own discretion.</p>
-        </div>
-    </div>
-
-    <!-- Footer -->
+    <video src="LifeExtender.mp4" autoplay loop muted></video>
+    <section>
+        <h2>About Us</h2>
+        <p>
+            Welcome to the future of health and wellness. "LifeExtender 2030" is the pinnacle of scientific advancement, designed to extend human life by addressing cellular decay and boosting immunity through advanced nanotechnology. Our team of world-renowned scientists has worked tirelessly to develop this groundbreaking cure.
+        </p>
+    </section>
+    <section>
+        <h2>The Problem</h2>
+        <p>
+            Aging has always been seen as inevitable, but at its core, it’s a biological process caused by cellular damage and the inability of our bodies to regenerate effectively. With diseases such as Alzheimer’s, heart conditions, and cancer often accompanying age, a solution was critical.
+        </p>
+    </section>
+    <section>
+        <h2>The Solution</h2>
+        <p>
+            LifeExtender 2030 employs targeted nanotechnology to repair damaged cells, prevent disease, and enhance cellular longevity. This cure will be available for public use starting January 2030, revolutionizing healthcare and life expectancy.
+        </p>
+    </section>
+    <section>
+        <h2>Release and Accessibility</h2>
+        <p>
+            LifeExtender 2030 will first be introduced in major cities across the globe with a goal to reach rural areas within the same year. Through subsidies and global partnerships, this cure will be affordable and accessible to everyone.
+        </p>
+    </section>
     <footer>
-        &copy; 2024 CheatPal. All rights reserved. | <a href="#">Terms of Use</a>
+        <p>© 2024 LifeExtender 2030 - All Rights Reserved</p>
     </footer>
+    <script>
+        // Snow Effect
+        const snowContainer = document.getElementById('snow-container');
+        for (let i = 0; i < 100; i++) {
+            const snowflake = document.createElement('div');
+            const size = Math.random() * 5 + 2;
+            snowflake.style.width = `${size}px`;
+            snowflake.style.height = `${size}px`;
+            snowflake.style.left = `${Math.random() * 100}%`;
+            snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            snowflake.style.animationDelay = `${Math.random() * 2}s`;
+            snowflake.style.top = `${-Math.random() * 100}px`;
+            snowContainer.appendChild(snowflake);
+        }
+    </script>
 </body>
 </html>
