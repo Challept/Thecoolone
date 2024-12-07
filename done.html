@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Confirmation</title>
+    <style>
+        /* General Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e90ff, #87ceeb, #c2e8ff);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin: 20px 0;
+        }
+
+        .desc {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        /* Fade-in Animation */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Confirmation Container -->
+    <div class="container">
+        <h1 id="title">Thank You for Your Purchase!</h1>
+        <p id="message">Your order details are shown below:</p>
+        <div id="price" class="price"></div>
+        <div id="description" class="desc"></div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        // Extract hash from URL
+        const hash = window.location.hash;
+
+        // DOM elements
+        const title = document.getElementById("title");
+        const message = document.getElementById("message");
+        const price = document.getElementById("price");
+        const description = document.getElementById("description");
+
+        // Logic based on hash
+        if (hash === "#60treatments") {
+            title.innerText = "Thank You for Choosing the Ultimate Package!";
+            message.innerText = "You have successfully purchased the 30-year plan (60 treatments).";
+            price.innerText = "Total Cost: $120,240";
+            description.innerHTML = `
+                This plan ensures you receive the LifeExtender treatment twice a year for the next 30 years. 
+                Your health and vitality are now secured, and you can expect rejuvenated cells and an extended lifespan.
+                <br><br>
+                You will be contacted shortly for further instructions on the next steps.
+            `;
+        } else if (hash === "#onetreatments") {
+            title.innerText = "Thank You for Choosing LifeExtender!";
+            message.innerText = "You have successfully purchased 1 treatment.";
+            price.innerText = "Total Cost: $2,004";
+            description.innerHTML = `
+                This single treatment will start repairing your damaged cells and boosting your immune system. 
+                For maximum benefits, consider additional treatments in the future.
+                <br><br>
+                You will be contacted shortly for scheduling your session and further guidance.
+            `;
+        } else {
+            title.innerText = "Invalid Purchase";
+            message.innerText = "No valid purchase information was found.";
+            price.innerText = "Please try again.";
+            description.innerText = "";
+        }
+    </script>
+</body>
+</html>
