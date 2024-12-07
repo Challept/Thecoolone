@@ -11,75 +11,108 @@
             margin: 0;
             padding: 0;
             font-family: 'Arial', sans-serif;
-            color: #333;
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb, #60a5fa);
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
         /* Header */
         header {
-            background-color: #1e90ff;
-            color: #fff;
+            background: rgba(0, 0, 0, 0.7);
             padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
         header h1 {
             margin: 0;
             font-size: 2.5rem;
+            color: #60a5fa;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
         }
 
         /* Product Section */
         .product-container {
             display: flex;
+            justify-content: center;
+            align-items: center;
             max-width: 1200px;
-            margin: 40px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin: 30px auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
         }
 
         .product-image {
             flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .product-image img {
-            max-width: 100%;
-            border-radius: 10px;
-            object-fit: contain;
+            width: 100%;
             height: auto;
         }
 
         .product-details {
             flex: 1;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            color: #333;
         }
 
-        .product-details h2 {
+        h2 {
             font-size: 2rem;
             margin-bottom: 10px;
+            color: #2563eb;
         }
 
-        .product-details p.price {
-            font-size: 1.5rem;
-            color: #28a745;
+        .price {
+            font-size: 1.8rem;
             font-weight: bold;
-            margin-bottom: 20px;
+            color: #10b981;
         }
 
+        /* Variant Selection */
+        .variant-select {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .calculation {
+            font-size: 1.2rem;
+            color: #333;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* Buttons */
         .buttons {
+            margin-top: 20px;
             display: flex;
             gap: 10px;
         }
 
-        .buttons button {
+        button {
             flex: 1;
             padding: 10px;
             font-size: 1.2rem;
@@ -87,56 +120,33 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
 
         .buy-button {
-            background-color: #28a745;
+            background-color: #10b981;
         }
 
         .buy-button:hover {
-            background-color: #218838;
+            background-color: #0d8e6d;
+            transform: translateY(-3px);
         }
 
         .interest-button {
-            background-color: #ffc107;
+            background-color: #f59e0b;
         }
 
         .interest-button:hover {
-            background-color: #e0a800;
-        }
-
-        /* Description Section */
-        .description {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .description h3 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        .description ul {
-            list-style-type: square;
-            padding-left: 20px;
-        }
-
-        .description ul li {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
+            background-color: #d97706;
+            transform: translateY(-3px);
         }
 
         /* Footer */
         footer {
             text-align: center;
             padding: 10px;
-            background: #1e90ff;
-            color: #fff;
+            background: rgba(0, 0, 0, 0.7);
+            color: #cbd5e1;
             margin-top: 20px;
         }
     </style>
@@ -152,42 +162,58 @@
     <div class="product-container">
         <!-- Product Image -->
         <div class="product-image">
-            <img src="https://via.placeholder.com/400x300.png?text=Product+Image" alt="Product Placeholder">
+            <img src="https://via.placeholder.com/400x300.png?text=Product+Image" alt="Product Image Placeholder">
         </div>
 
         <!-- Product Details -->
         <div class="product-details">
-            <h2>LifeExtender - Basic Package</h2>
-            <p class="price">Price: $2,004</p>
+            <h2>Choose Your Package</h2>
+            <p class="price">Price: Dynamic</p>
+
+            <!-- Variant Selection -->
+            <div class="variant-select">
+                <label for="variant">Select a Package:</label>
+                <select id="variant" onchange="calculatePrice()">
+                    <option value="1">1 Treatment - $2,004</option>
+                    <option value="30">Treatments for 30 Years</option>
+                </select>
+                <div id="price-result" class="calculation"></div>
+            </div>
+
+            <!-- Buttons -->
             <div class="buttons">
-                <button class="buy-button" onclick="alert('Payment is not available at this time!')">Buy Now</button>
-                <button class="interest-button" onclick="alert('We have recorded your interest!')">Interest</button>
+                <button class="buy-button" onclick="alert('Payment is currently unavailable!')">Buy Now</button>
+                <button class="interest-button" onclick="alert('Thank you for your interest!')">Interest</button>
             </div>
         </div>
-    </div>
-
-    <!-- Description Section -->
-    <div class="description">
-        <h3>Product Description</h3>
-        <p>LifeExtender 2030 is a groundbreaking treatment designed to extend life expectancy and maintain vitality. Below are some key details:</p>
-        <h3>Pros</h3>
-        <ul>
-            <li>Slows down aging significantly.</li>
-            <li>Enhances immune system efficiency.</li>
-            <li>Repairs damaged cells and rejuvenates tissues.</li>
-            <li>Tested with promising results in early trials.</li>
-        </ul>
-        <h3>Cons</h3>
-        <ul>
-            <li>Requires two treatments per year.</li>
-            <li>High initial cost.</li>
-            <li>Limited availability during the first years.</li>
-        </ul>
     </div>
 
     <!-- Footer -->
     <footer>
         <p>&copy; 2024 LifeExtender 2030 | A Glimpse into the Future</p>
     </footer>
+
+    <!-- Script for Price Calculation -->
+    <script>
+        function calculatePrice() {
+            const select = document.getElementById('variant');
+            const resultDiv = document.getElementById('price-result');
+
+            const basePrice = 2004;
+            let message = "";
+
+            if (select.value === "1") {
+                message = `You selected <strong>1 Treatment</strong>. Total Cost: <strong>$${basePrice}</strong>. Perfect for trying the treatment.`;
+            } else if (select.value === "30") {
+                const total = basePrice * 2 * 30;
+                message = `You selected <strong>Treatments for 30 Years</strong>. Total Cost: <strong>$${total}</strong>. Ensures optimal health and longevity.`;
+            }
+
+            resultDiv.innerHTML = message;
+        }
+
+        // Default value on load
+        calculatePrice();
+    </script>
 </body>
 </html>
