@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buy Now - LifeExtender 2030</title>
+    <title>LifeExtender 2030</title>
     <link rel="icon" type="image/png" href="favicon13.png">
     <style>
         /* General Styles */
@@ -11,151 +11,92 @@
             margin: 0;
             padding: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298, #a8c0ff);
-            color: #333;
+            background: linear-gradient(to bottom, #1e3c72, #4a5c88, #6d86b6);
+            color: #f0f0f0;
+            line-height: 1.8;
             overflow-x: hidden;
-            line-height: 1.6;
         }
 
         /* Header */
         header {
-            background: linear-gradient(to right, #004e92, #000428);
+            background: linear-gradient(to right, #003366, #004080);
             color: #fff;
             text-align: center;
-            padding: 25px 10px;
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         header h1 {
-            margin: 0;
             font-size: 2.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            margin: 0;
+            letter-spacing: 1px;
         }
 
         header p {
-            margin: 5px 0;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
+            color: #d0dfff;
         }
 
-        /* Product Section */
-        .product-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1100px;
+        /* Main Content */
+        .container {
+            max-width: 60%;
             margin: 50px auto;
-            background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-
-        .product-image {
-            flex: 1;
-            background: #eaf6ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .product-image img {
-            max-width: 100%;
-            border-radius: 10px;
-        }
-
-        .product-details {
-            flex: 1;
             padding: 30px;
-            text-align: left;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         h2 {
             font-size: 2.4rem;
-            color: #2c3e50;
+            color: #f8f8ff;
+            margin-bottom: 15px;
         }
 
-        .desc {
-            margin: 15px 0;
-            font-size: 1.2rem;
-            color: #555;
-        }
-
-        .price {
-            font-size: 1.8rem;
-            color: #27ae60;
-            font-weight: bold;
-            margin-top: 15px;
-        }
-
-        /* Dropdown and Buttons */
-        .variant-select {
-            margin-top: 25px;
-        }
-
-        select {
-            padding: 10px;
-            width: 100%;
+        .description {
             font-size: 1.1rem;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+            color: #dfe9ff;
+            margin-bottom: 30px;
         }
 
-        .calculation {
-            margin-top: 15px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #333;
+        /* Risks Section */
+        .risks {
+            text-align: left;
+            color: #f0f0f0;
         }
 
-        .buttons {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
+        .risks h3 {
+            font-size: 1.5rem;
+            color: #ff8c42;
+            margin-bottom: 10px;
         }
 
-        .buttons button {
-            flex: 1;
-            padding: 12px;
-            font-size: 1.2rem;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        .buy-button {
-            background-color: #3498db;
-        }
-
-        .buy-button:hover {
-            background-color: #2980b9;
-            transform: translateY(-3px);
-        }
-
-        .interest-button {
-            background-color: #ff8c42;
-        }
-
-        .interest-button:hover {
-            background-color: #e67734;
-            transform: translateY(-3px);
-        }
-
-        .disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+        .risks p {
+            margin-bottom: 15px;
         }
 
         /* Footer */
         footer {
             text-align: center;
             padding: 15px;
-            background: linear-gradient(to right, #004e92, #000428);
+            background: #003366;
             color: #d1e8ff;
-            margin-top: 30px;
+            margin-top: 40px;
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -163,91 +104,57 @@
     <!-- Header -->
     <header>
         <h1>LifeExtender 2030</h1>
-        <p>Choose the treatment that's right for you</p>
+        <p>Revolutionizing the Future of Longevity</p>
     </header>
 
-    <!-- Product Section -->
-        <div class="product-details">
-            <h2>LifeExtender Packages</h2>
-            <p class="desc">Choose between a single treatment or a 30-year plan (60 treatments). Limited availability ensures safety and efficiency.</p>
+    <!-- Main Content -->
+    <div class="container">
+        <h2>Choose Your Future</h2>
+        <p class="description">
+            LifeExtender 2030 offers advanced treatments designed to prolong life, boost cellular health, and enhance vitality. 
+            Each option is tailored to ensure optimal performance and safety.
+        </p>
 
-            <div class="variant-select">
-                <label for="variant">Select Package:</label>
-                <select id="variant" onchange="updateButton()">
-                    <option value="">-- Select an Option --</option>
-                    <option value="1">1 Treatment - $2,004</option>
-                    <option value="30">30 Years (60 Treatments) - $120,240</option>
-                </select>
-            </div>
+        <!-- Risks Section -->
+        <div class="risks">
+            <h3>Understanding the Risks</h3>
+            <p>
+                While LifeExtender treatments have shown remarkable results in biological trials, certain risks must be considered:
+            </p>
+            <ul>
+                <li>Minor side effects such as fatigue, headaches, and mild inflammation at the injection site.</li>
+                <li>Long-term usage may require careful monitoring to prevent unintended cellular overactivity.</li>
+                <li>Rare reactions have been observed in individuals with immune system disorders.</li>
+            </ul>
 
-            <div id="price-result" class="calculation">Please select a package.</div>
+            <h3>Who Should Consider LifeExtender?</h3>
+            <p>
+                Treatments are recommended for individuals seeking to slow down aging and improve overall health. 
+                However, it is not suitable for:
+            </p>
+            <ul>
+                <li>Individuals under 18 years old.</li>
+                <li>People with severe immune disorders or ongoing chronic illnesses.</li>
+                <li>Those unwilling to commit to long-term monitoring and consistent treatments.</li>
+            </ul>
 
-            <!-- Buttons -->
-            <div class="buttons">
-                <button id="buy-button" class="buy-button disabled" disabled>Buy Now</button>
-                <button class="interest-button" onclick="alert('Your interest has been recorded!')">I'm Interested</button>
-            </div>
+            <h3>How It Works</h3>
+            <p>
+                LifeExtender works by injecting nanobots that repair damaged cells, improve immune function, and regenerate tissue. 
+                A single treatment lasts for <strong>6 months</strong>, and continuous use can extend lifespan by up to 30-50 years while maintaining a younger biological age.
+            </p>
+
+            <h3>Why Choose LifeExtender?</h3>
+            <p>
+                LifeExtender is backed by decades of research and cutting-edge nanotechnology. It's the first step toward a healthier, longer life. 
+                With proven results in laboratory tests, the technology offers a safe, controlled, and scientifically sound solution to aging.
+            </p>
         </div>
     </div>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 LifeExtender 2030 | Unlock Your Future</p>
+        <p>&copy; 2024 LifeExtender 2030 | Pioneering Tomorrow's Health</p>
     </footer>
-
-<script>
-    const button = document.getElementById("buy-button");
-    const priceResult = document.getElementById("price-result");
-    const currentHash = window.location.hash.trim(); // Ta bort extra mellanslag och hämta hash
-
-    // Kontrollera om hashtagen är korrekt
-    const validHash = "#19417571";
-
-    function updateButton() {
-        const select = document.getElementById("variant").value;
-
-        if (currentHash === validHash) { // Kolla om hash är exakt
-            if (select === "1") {
-                priceResult.textContent = "You selected 1 Treatment for $2,004.";
-                button.disabled = false;
-                button.classList.remove("disabled");
-                button.onclick = () => redirectToPayment("1");
-            } else if (select === "30") {
-                priceResult.textContent = "You selected 30 Years (60 Treatments) for $120,240.";
-                button.disabled = false;
-                button.classList.remove("disabled");
-                button.onclick = () => redirectToPayment("30");
-            } else {
-                priceResult.textContent = "Please select a package.";
-                button.disabled = true;
-                button.classList.add("disabled");
-                button.onclick = null;
-            }
-        } else {
-            priceResult.textContent = "Access denied: Invalid access token.";
-            button.disabled = true;
-            button.classList.add("disabled");
-        }
-    }
-
-    function redirectToPayment(option) {
-        if (option === "1") {
-            window.location.href = "https://buy.stripe.com/28o8yr2uj5Fmfsc28e";
-        } else if (option === "30") {
-            window.location.href = "https://buy.stripe.com/28o9Cvc4TffWfsc4gn";
-        }
-    }
-
-    // Kontrollera hash när sidan laddas
-    document.addEventListener("DOMContentLoaded", () => {
-        if (currentHash !== validHash) {
-            priceResult.textContent = "Access denied: Invalid access token.";
-            button.disabled = true;
-            button.classList.add("disabled");
-        } else {
-            priceResult.textContent = "Please select a package.";
-        }
-    });
-</script>
 </body>
 </html>
