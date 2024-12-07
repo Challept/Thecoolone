@@ -38,7 +38,7 @@
             padding: 20px 10px;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
-            position: sticky;
+            position: static;
             top: 0;
             z-index: 1000;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -96,10 +96,19 @@
 </head>
 <body>
     <!-- Header -->
-    <header>
-        <h1>LifeExtender 2030</h1>
-        <p>The Revolutionary Path to a Longer Life</p>
-    </header>
+<header>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">LifeExtender 2030</h1>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="explanation.html">Explanation</a></li>
+                <li><a href="extext.html">Text</a></li>
+            </ul>
+        </div>
+    </nav>
+    <p class="tagline">A Revolutionary Cure for a Longer Life</p>
+</header>
 
     <!-- Main Content -->
     <main>
