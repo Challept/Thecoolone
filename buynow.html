@@ -11,100 +11,119 @@
             margin: 0;
             padding: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #f8f9fa, #c2e8ff, #f0f8ff);
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #a8c0ff);
             color: #333;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
         /* Header */
         header {
-            background: #2c3e50;
+            background: linear-gradient(to right, #004e92, #000428);
             color: #fff;
             text-align: center;
-            padding: 20px;
+            padding: 25px 10px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
         }
 
         header h1 {
             margin: 0;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         header p {
-            font-size: 1.2rem;
+            margin: 5px 0;
+            font-size: 1.3rem;
         }
 
-        /* Product Container */
+        /* Product Section */
         .product-container {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            max-width: 1000px;
-            margin: 40px auto;
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            max-width: 1100px;
+            margin: 50px auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
 
         .product-image {
             flex: 1;
-            background: #f0f8ff;
+            background: #eaf6ff;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .product-image img {
-            width: 100%;
-            object-fit: contain;
+            max-width: 100%;
+            border-radius: 10px;
         }
 
         .product-details {
             flex: 1;
             padding: 30px;
+            text-align: left;
         }
 
         h2 {
-            font-size: 2rem;
+            font-size: 2.4rem;
             color: #2c3e50;
         }
 
         .desc {
             margin: 15px 0;
+            font-size: 1.2rem;
+            color: #555;
         }
 
         .price {
             font-size: 1.8rem;
             color: #27ae60;
+            font-weight: bold;
+            margin-top: 15px;
         }
 
         /* Dropdown and Buttons */
         .variant-select {
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
         select {
             padding: 10px;
             width: 100%;
-            margin-bottom: 15px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
 
         .calculation {
+            margin-top: 15px;
             font-size: 1.2rem;
             font-weight: bold;
-            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
         }
 
         .buttons button {
-            width: 100%;
+            flex: 1;
             padding: 12px;
-            font-size: 1rem;
+            font-size: 1.2rem;
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
 
         .buy-button {
@@ -113,6 +132,16 @@
 
         .buy-button:hover {
             background-color: #2980b9;
+            transform: translateY(-3px);
+        }
+
+        .interest-button {
+            background-color: #ff8c42;
+        }
+
+        .interest-button:hover {
+            background-color: #e67734;
+            transform: translateY(-3px);
         }
 
         .disabled {
@@ -124,7 +153,7 @@
         footer {
             text-align: center;
             padding: 15px;
-            background: #2c3e50;
+            background: linear-gradient(to right, #004e92, #000428);
             color: #d1e8ff;
             margin-top: 30px;
         }
@@ -140,11 +169,11 @@
     <!-- Product Section -->
     <div class="product-container">
         <div class="product-image">
-            <img src="cure.png" alt="LifeExtender Product Image">
+            <img src="cure.jpg" alt="LifeExtender Product">
         </div>
         <div class="product-details">
             <h2>LifeExtender Packages</h2>
-            <p class="desc">Choose between a single treatment or a 30-year plan (60 treatments). Treatments are limited to ensure safety and maximum benefits.</p>
+            <p class="desc">Choose between a single treatment or a 30-year plan (60 treatments). Limited availability ensures safety and efficiency.</p>
 
             <div class="variant-select">
                 <label for="variant">Select Package:</label>
@@ -157,8 +186,11 @@
 
             <div id="price-result" class="calculation">Please select a package.</div>
 
-            <!-- Buy Button -->
-            <button id="buy-button" class="buy-button disabled" disabled>Buy Now</button>
+            <!-- Buttons -->
+            <div class="buttons">
+                <button id="buy-button" class="buy-button disabled" disabled>Buy Now</button>
+                <button class="interest-button" onclick="alert('Your interest has been recorded!')">I'm Interested</button>
+            </div>
         </div>
     </div>
 
