@@ -11,39 +11,37 @@
             margin: 0;
             padding: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1e3a8a, #2563eb, #60a5fa);
-            color: #fff;
-            line-height: 1.6;
+            background: linear-gradient(135deg, #f8f9fa, #c2e8ff, #f0f8ff);
+            color: #333;
             overflow-x: hidden;
         }
 
         /* Header */
         header {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px;
+            background: #2c3e50;
+            color: #fff;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
 
         header h1 {
             margin: 0;
             font-size: 2.5rem;
-            color: #60a5fa;
+            letter-spacing: 1px;
         }
 
         header p {
             font-size: 1.2rem;
-            color: #cbd5e1;
+            color: #d1e8ff;
         }
 
         /* Product Section */
         .product-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            max-width: 1200px;
-            margin: 30px auto;
-            background: rgba(255, 255, 255, 0.9);
+            max-width: 1000px;
+            margin: 40px auto;
+            background: #fff;
             border-radius: 15px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
             overflow: hidden;
@@ -51,41 +49,51 @@
 
         .product-image {
             flex: 1;
+            background: #f0f8ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .product-image img {
-            width: 100%;
-            height: auto;
+            max-width: 100%;
+            border-radius: 10px;
+            object-fit: contain;
         }
 
         .product-details {
             flex: 1;
-            padding: 20px;
+            padding: 30px;
             color: #333;
+            background: #f8f9fa;
         }
 
         h2 {
             font-size: 2rem;
             margin-bottom: 10px;
-            color: #2563eb;
+            color: #2c3e50;
+        }
+
+        .desc {
+            font-size: 1rem;
+            margin: 10px 0 20px;
+            color: #555;
         }
 
         .price {
             font-size: 1.8rem;
+            color: #27ae60;
             font-weight: bold;
-            color: #10b981;
+            margin-bottom: 20px;
         }
 
         /* Variant Selection */
         .variant-select {
             margin-top: 20px;
-            display: flex;
-            flex-direction: column;
         }
 
         label {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
+            font-size: 1rem;
             color: #333;
         }
 
@@ -94,15 +102,18 @@
             font-size: 1rem;
             border-radius: 5px;
             border: 1px solid #ccc;
-            margin-bottom: 15px;
+            margin-top: 5px;
+            width: 100%;
+            background: #e8f4ff;
+            color: #333;
             outline: none;
         }
 
         .calculation {
             font-size: 1.2rem;
-            color: #333;
-            margin-top: 10px;
+            margin-top: 15px;
             font-weight: bold;
+            color: #2c3e50;
         }
 
         /* Buttons */
@@ -114,40 +125,40 @@
 
         button {
             flex: 1;
-            padding: 10px;
-            font-size: 1.2rem;
+            padding: 12px;
+            font-size: 1rem;
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .buy-button {
-            background-color: #10b981;
+            background-color: #3498db;
         }
 
         .buy-button:hover {
-            background-color: #0d8e6d;
+            background-color: #2980b9;
             transform: translateY(-3px);
         }
 
         .interest-button {
-            background-color: #f59e0b;
+            background-color: #e67e22;
         }
 
         .interest-button:hover {
-            background-color: #d97706;
+            background-color: #d35400;
             transform: translateY(-3px);
         }
 
         /* Footer */
         footer {
             text-align: center;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: #cbd5e1;
-            margin-top: 20px;
+            padding: 15px;
+            background: #2c3e50;
+            color: #d1e8ff;
+            margin-top: 30px;
         }
     </style>
 </head>
@@ -162,57 +173,57 @@
     <div class="product-container">
         <!-- Product Image -->
         <div class="product-image">
-            <img src="https://via.placeholder.com/400x300.png?text=Product+Image" alt="Product Image Placeholder">
+            <img src="cure.jpg" alt="LifeExtender Product Image">
         </div>
 
         <!-- Product Details -->
         <div class="product-details">
-            <h2>Choose Your Package</h2>
-            <p class="price">Price: Dynamic</p>
+            <h2>LifeExtender - Ultimate Package</h2>
+            <p class="desc">
+                Choose between a single treatment or a package for 30 years. You are limited to a maximum of **60 treatments** to ensure safety and maximum benefits.
+            </p>
+            <p class="price">Starting at: $2,004</p>
 
             <!-- Variant Selection -->
             <div class="variant-select">
-                <label for="variant">Select a Package:</label>
+                <label for="variant">Select Package:</label>
                 <select id="variant" onchange="calculatePrice()">
                     <option value="1">1 Treatment - $2,004</option>
-                    <option value="30">Treatments for 30 Years</option>
+                    <option value="30">Treatments for 30 Years (60 treatments)</option>
                 </select>
                 <div id="price-result" class="calculation"></div>
             </div>
 
             <!-- Buttons -->
             <div class="buttons">
-                <button class="buy-button" onclick="alert('Payment is currently unavailable!')">Buy Now</button>
-                <button class="interest-button" onclick="alert('Thank you for your interest!')">Interest</button>
+                <button class="buy-button" onclick="alert('Payments are not available yet.')">Buy Now</button>
+                <button class="interest-button" onclick="alert('Thank you for your interest!')">Register Interest</button>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 LifeExtender 2030 | A Glimpse into the Future</p>
+        <p>&copy; 2024 LifeExtender 2030 | Unlock Your Future</p>
     </footer>
 
-    <!-- Script for Price Calculation -->
+    <!-- Script -->
     <script>
         function calculatePrice() {
             const select = document.getElementById('variant');
             const resultDiv = document.getElementById('price-result');
 
             const basePrice = 2004;
-            let message = "";
+            const totalPrice = basePrice * 2 * 30; // Price for 30 years
 
             if (select.value === "1") {
-                message = `You selected <strong>1 Treatment</strong>. Total Cost: <strong>$${basePrice}</strong>. Perfect for trying the treatment.`;
+                resultDiv.innerHTML = `You selected <strong>1 Treatment</strong>. Total Cost: <strong>$${basePrice}</strong>. Perfect for trying the treatment.`;
             } else if (select.value === "30") {
-                const total = basePrice * 2 * 30;
-                message = `You selected <strong>Treatments for 30 Years</strong>. Total Cost: <strong>$${total}</strong>. Ensures optimal health and longevity.`;
+                resultDiv.innerHTML = `You selected <strong>30 Years (60 Treatments)</strong>. Total Cost: <strong>$${totalPrice}</strong>. Ensures long-term health and vitality.`;
             }
-
-            resultDiv.innerHTML = message;
         }
 
-        // Default value on load
+        // Default selection
         calculatePrice();
     </script>
 </body>
