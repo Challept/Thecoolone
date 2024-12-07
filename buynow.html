@@ -167,10 +167,6 @@
     </header>
 
     <!-- Product Section -->
-    <div class="product-container">
-        <div class="product-image">
-            <img src="cure.jpg" alt="LifeExtender Product">
-        </div>
         <div class="product-details">
             <h2>LifeExtender Packages</h2>
             <p class="desc">Choose between a single treatment or a 30-year plan (60 treatments). Limited availability ensures safety and efficiency.</p>
@@ -199,15 +195,16 @@
         <p>&copy; 2024 LifeExtender 2030 | Unlock Your Future</p>
     </footer>
 
-    <!-- Script -->
-    <script>
-        const button = document.getElementById("buy-button");
-        const priceResult = document.getElementById("price-result");
-        const currentUrl = document.referrer;
+<script>
+    const button = document.getElementById("buy-button");
+    const priceResult = document.getElementById("price-result");
+    const currentHash = window.location.hash; // Hämta hash från URL
 
-        function updateButton() {
-            const select = document.getElementById("variant").value;
+    // Funktion som uppdaterar knappen baserat på valt paket
+    function updateButton() {
+        const select = document.getElementById("variant").value;
 
+        if (currentHash === "#19417571") { // Aktivera endast om hash är korrekt
             if (select === "1") {
                 priceResult.textContent = "You selected 1 Treatment for $2,004.";
                 button.disabled = false;
@@ -224,19 +221,30 @@
                 button.classList.add("disabled");
                 button.onclick = null;
             }
+        } else {
+            priceResult.textContent = "Access denied: Invalid access token.";
+            button.disabled = true;
+            button.classList.add("disabled");
         }
+    }
 
-        function redirectToPayment(option) {
-            if (currentUrl.includes("thecoolpal.com/buynow#19417571buypass")) {
-                if (option === "1") {
-                    window.location.href = "https://buy.stripe.com/28o8yr2uj5Fmfsc28e";
-                } else if (option === "30") {
-                    window.location.href = "https://buy.stripe.com/28o9Cvc4TffWfsc4gn";
-                }
-            } else {
-                alert("Access denied: You do not have permission to purchase this product.");
-            }
+    // Funktion för att omdirigera till betalning
+    function redirectToPayment(option) {
+        if (option === "1") {
+            window.location.href = "https://buy.stripe.com/28o8yr2uj5Fmfsc28e";
+        } else if (option === "30") {
+            window.location.href = "https://buy.stripe.com/28o9Cvc4TffWfsc4gn";
         }
-    </script>
+    }
+
+    // Initial kontroll när sidan laddas
+    document.addEventListener("DOMContentLoaded", () => {
+        if (currentHash !== "#19417571") {
+            priceResult.textContent = "Access denied: Invalid access token.";
+            button.disabled = true;
+            button.classList.add("disabled");
+        }
+    });
+</script>
 </body>
 </html>
