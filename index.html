@@ -232,6 +232,66 @@ input[type="checkbox"] {
     color: #333;
     min-height: 50px;
 }
+
+#age-simulator {
+    padding: 20px;
+    margin: 30px auto;
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+#age-simulator h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #1e90ff;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+input[type="range"] {
+    width: 80%;
+    margin: 10px 0;
+}
+
+.results {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 1rem;
+}
+
+th {
+    background-color: #1e90ff;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #e6f7ff;
+    transition: background 0.3s ease;
+}
         
 /* Footer */
 footer {
@@ -339,15 +399,15 @@ footer {
         const issues = Array.from(document.querySelectorAll("input[name='issues']:checked")).map(checkbox => checkbox.value);
 
         const currentYear = new Date().getFullYear();
-        const targetYear = 2030;
+        const targetYear = 2031;
         const ageIn2030 = age + (targetYear - currentYear);
 
         let resultMessage = "";
 
         if (!name || !age || !country || !gender) {
             resultMessage = "Please fill in all fields to see eligibility.";
-        } else if (ageIn2030 < 18) {
-            resultMessage = `Sorry, ${name}, you must be at least 18 years old by 2030 to use LifeExtender.`;
+        } else if (ageIn2031 < 18) {
+            resultMessage = `Sorry, ${name}, you must be at least 18 years old by 2031 to use LifeExtender.`;
         } else if (issues.includes("drugs") || issues.includes("alcohol")) {
             resultMessage = `Sorry, ${name}, based on your history, LifeExtender may not be suitable for you. Please consult a medical professional.`;
         } else {
@@ -358,6 +418,74 @@ footer {
     }
 </script>
 
+<section id="age-simulator">
+    <h2>LifeExtender Age Simulator</h2>
+    <p>Select the age you start taking LifeExtender treatments. The table below shows your real age, how old you will look, and how strong you will feel every 10 years:</p>
+
+    <!-- Slider för startålder -->
+    <div class="form-group">
+        <label for="start-age">Select Your Starting Age: <span id="age-value">30</span></label>
+        <input type="range" id="start-age" min="18" max="60" value="30">
+    </div>
+
+    <!-- Resultattabell -->
+    <div class="results">
+        <h3>Results Over Time</h3>
+        <table id="results-table">
+            <thead>
+                <tr>
+                    <th>Real Age</th>
+                    <th>How Old You Look</th>
+                    <th>Muscle Strength</th>
+                    <th>Energy Level</th>
+                </tr>
+            </thead>
+            <tbody id="results-body">
+                <!-- Resultat fylls i automatiskt -->
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<script>
+    const startAgeInput = document.getElementById("start-age");
+    const ageValueDisplay = document.getElementById("age-value");
+    const resultsBody = document.getElementById("results-body");
+
+    // Funktion för att beräkna resultat
+    function calculateResults(startAge) {
+        resultsBody.innerHTML = ""; // Rensa tidigare resultat
+        let realAge = startAge;
+
+        for (let i = 0; realAge <= 120; i += 10) {
+            const lookAge = Math.max(25, realAge - (realAge - startAge) / 2); // Hur gammal du ser ut
+            const muscleStrength = 100 - Math.min(75, (realAge - startAge) * 0.5); // Muskelstyrka i %
+            const energyLevel = 100 - Math.min(70, (realAge - startAge) * 0.4); // Energinivå i %
+
+            // Lägg till en ny rad i tabellen
+            resultsBody.innerHTML += `
+                <tr>
+                    <td>${realAge} years</td>
+                    <td>${Math.round(lookAge)} years</td>
+                    <td>${Math.round(muscleStrength)}%</td>
+                    <td>${Math.round(energyLevel)}%</td>
+                </tr>
+            `;
+            realAge += 10; // Öka åldern med 10 år
+        }
+    }
+
+    // Uppdatera resultaten i realtid
+    startAgeInput.addEventListener("input", () => {
+        const startAge = parseInt(startAgeInput.value);
+        ageValueDisplay.textContent = startAge;
+        calculateResults(startAge);
+    });
+
+    // Initiera med standardvärde
+    calculateResults(30);
+</script>
+    
     <footer>
         <p>© 2024 LifeExtender 2030 - All Rights Reserved</p>
     </footer>
