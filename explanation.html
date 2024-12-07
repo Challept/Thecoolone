@@ -191,6 +191,93 @@
     white-space: pre-wrap;
 }
 
+.container {
+    margin-top: 50px;
+}
+
+.equation-btn {
+    padding: 15px 25px;
+    font-size: 1.2rem;
+    color: #fff;
+    background: #1e90ff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.equation-btn:hover {
+    background: #0073e6;
+}
+
+/* Popup Overlay */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup {
+    background: #222;
+    color: #fff;
+    padding: 20px;
+    width: 80%;
+    max-height: 80%;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    overflow-y: auto;
+    text-align: left;
+    position: relative;
+}
+
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.8rem;
+    color: #fff;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-btn:hover {
+    color: #ff4d4d;
+}
+
+/* Equations */
+.equations p {
+    margin: 10px 0;
+    font-size: 1rem;
+    color: #88c0d0;
+    white-space: pre-wrap;
+}
+
+/* Scrollbar */
+.popup::-webkit-scrollbar {
+    width: 10px;
+}
+
+.popup::-webkit-scrollbar-track {
+    background: #333;
+    border-radius: 10px;
+}
+
+.popup::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+}
+
+.popup::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
         /* Treatment Details Section */
 #treatment-details {
     margin: 40px auto;
@@ -299,6 +386,110 @@
     </div>
 </section>
 
+<body>
+    <!-- Button -->
+    <div class="container">
+        <button class="equation-btn" onclick="openPopup()">View All Equations</button>
+    </div>
+
+    <!-- Popup -->
+    <div id="popup-overlay" class="overlay">
+        <div class="popup">
+            <span class="close-btn" onclick="closePopup()">×</span>
+            <div class="equations" id="equation-container">
+                <!-- Equations inserted dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Open Popup
+        function openPopup() {
+            document.getElementById("popup-overlay").style.display = "flex";
+            populateEquations();
+        }
+
+        // Close Popup
+        function closePopup() {
+            document.getElementById("popup-overlay").style.display = "none";
+            document.getElementById("equation-container").innerHTML = "";
+        }
+
+        // Generate Equations
+        function populateEquations() {
+            const container = document.getElementById("equation-container");
+            let equationHTML = "";
+
+            for (let i = 1; i <= 1000; i++) {
+                equationHTML += `
+<p>
+\\( F_{${i}} = \\frac{ \\left( \\Sigma_{k=1}^n C_{k} \\cdot e^{-\\lambda t} + k^2 \\cdot \\nabla \\right) }{ R \\cdot T_{${i}} } \\)
+\\)
+\\( + \\int_0^T \\left( \\alpha \\cdot e^{-\\beta t} \\cdot \\cos(\\omega t) + \\gamma \\cdot \\sin(\\theta t) \\right) dt \\)
+</p>
+
+<p>
+\\( G_{${i}} = \\lim_{x \\to \\infty} \\frac{ \\left( \\Sigma_{m=1}^n \\int_{0}^{\\infty} e^{-mx} \\cdot \\sin(\\pi x) dx \\right) + k^3 }{ 2\\pi \\cdot e^{\\lambda t} } \\)
+</p>
+
+<p>
+\\( P = \\int_{a}^{b} \\frac{1}{2} \\rho v^2 \\cdot A_{\\text{eff}} \\cdot \\cos(\\phi) dx + \\Sigma_{j=1}^m k_j e^{-\\alpha t} \\cdot \\nabla^2 \\psi \\)
+</p>
+
+<p>
+\\( \\nabla \\cdot \\vec{E} = \\frac{\\rho}{\\epsilon_0}, \\quad \\nabla \\times \\vec{B} = \\mu_0 \\cdot \\vec{J} + \\mu_0 \\epsilon_0 \\frac{\\partial \\vec{E}}{\\partial t} \\)
+</p>
+
+<p>
+\\( \\oint_{S} \\vec{E} \\cdot d\\vec{A} = \\frac{Q}{\\epsilon_0}, \\quad \\oint_{C} \\vec{B} \\cdot d\\vec{l} = \\mu_0 I \\)
+</p>
+
+<p>
+\\( \\Phi = \\int_{0}^{T} \\left( \\frac{\\partial u}{\\partial t} + \\nabla \\cdot (u \\vec{v}) \\right) dV - \\sum_{i=1}^n \\frac{k_i \\cdot \\sin(\\omega t)}{e^{-\\beta t} + 1} \\)
+</p>
+
+<p>
+\\( V = \\sqrt{\\frac{2GM}{r}}, \\quad \\gamma = \\frac{1}{\\sqrt{1 - \\frac{v^2}{c^2}}}, \\quad F = ma \\)
+</p>
+
+<p>
+\\( E = mc^2, \\quad N(t) = N_0 e^{-\\lambda t}, \\quad x(t) = A \\sin(\\omega t - \\phi) \\)
+</p>
+
+<p>
+\\( \\lim_{x \\to 0} \\frac{\\sin(x)}{x} = 1, \\quad \\int_{0}^{T} e^{-at} dt = \\frac{1 - e^{-aT}}{a}, \\quad \\Sigma_{n=1}^{\\infty} \\frac{1}{n^2} = \\frac{\\pi^2}{6} \\)
+</p>
+
+<p>
+\\( \\nabla^2 \\psi - \\frac{1}{c^2} \\frac{\\partial^2 \\psi}{\\partial t^2} = 0, \\quad \\vec{J} = \\sigma \\vec{E}, \\quad \\nabla \\times \\vec{E} = -\\frac{\\partial \\vec{B}}{\\partial t} \\)
+</p>
+
+<p>
+\\( F_{\\text{net}} = m \\cdot a = \\int_{0}^{T} \\left( F_{\\text{applied}} - F_{\\text{resistive}} \\right) dt + k \\cdot \\nabla^2 \\phi \\)
+</p>
+
+<p>
+\\( \\int_{0}^{\\infty} e^{-ax} \\cos(bx) dx = \\frac{a}{a^2 + b^2}, \\quad \\int_{0}^{T} \\frac{d}{dt} \\left( \\nabla \\cdot \\vec{u} \\right) dt = \\phi_0 e^{-\\beta t} \\)
+</p>
+
+<p>
+\\( \\nabla^2 T - \\frac{1}{\\alpha} \\frac{\\partial T}{\\partial t} = 0, \\quad E = h \\nu, \\quad p = \\frac{\\partial T}{\\partial x} \\cdot \\sin(\\theta) \\)
+</p>
+
+<p>
+\\( Q = mc\\Delta T, \\quad W = Fd \\cos(\\theta), \\quad U = \\frac{1}{2}kx^2 \\)
+</p>
+
+<p>
+\\( \\text{lim}_{x \\to \\infty} \\frac{1}{x} = 0, \\quad \\frac{d}{dt} \\left( \\frac{1}{2}mv^2 \\right) = F \\cdot v \\)
+</p>
+                `;
+            }
+
+            container.innerHTML = equationHTML;
+        }
+    </script>
+    
 <!-- Popup -->
 <div id="popup-container">
     <div class="popup-content">
