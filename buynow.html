@@ -198,13 +198,15 @@
 <script>
     const button = document.getElementById("buy-button");
     const priceResult = document.getElementById("price-result");
-    const currentHash = window.location.hash; // Hämta hash från URL
+    const currentHash = window.location.hash.trim(); // Ta bort extra mellanslag och hämta hash
 
-    // Funktion som uppdaterar knappen baserat på valt paket
+    // Kontrollera om hashtagen är korrekt
+    const validHash = "#19417571";
+
     function updateButton() {
         const select = document.getElementById("variant").value;
 
-        if (currentHash === "#19417571") { // Aktivera endast om hash är korrekt
+        if (currentHash === validHash) { // Kolla om hash är exakt
             if (select === "1") {
                 priceResult.textContent = "You selected 1 Treatment for $2,004.";
                 button.disabled = false;
@@ -228,7 +230,6 @@
         }
     }
 
-    // Funktion för att omdirigera till betalning
     function redirectToPayment(option) {
         if (option === "1") {
             window.location.href = "https://buy.stripe.com/28o8yr2uj5Fmfsc28e";
@@ -237,12 +238,14 @@
         }
     }
 
-    // Initial kontroll när sidan laddas
+    // Kontrollera hash när sidan laddas
     document.addEventListener("DOMContentLoaded", () => {
-        if (currentHash !== "#19417571") {
+        if (currentHash !== validHash) {
             priceResult.textContent = "Access denied: Invalid access token.";
             button.disabled = true;
             button.classList.add("disabled");
+        } else {
+            priceResult.textContent = "Please select a package.";
         }
     });
 </script>
