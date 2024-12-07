@@ -22,23 +22,22 @@
             color: #fff;
             text-align: center;
             padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
 
         header h1 {
             margin: 0;
             font-size: 2.5rem;
-            letter-spacing: 1px;
         }
 
         header p {
             font-size: 1.2rem;
-            color: #d1e8ff;
         }
 
-        /* Product Section */
+        /* Product Container */
         .product-container {
             display: flex;
+            justify-content: center;
+            align-items: center;
             max-width: 1000px;
             margin: 40px auto;
             background: #fff;
@@ -56,75 +55,48 @@
         }
 
         .product-image img {
-            max-width: 100%;
-            border-radius: 10px;
+            width: 100%;
             object-fit: contain;
         }
 
         .product-details {
             flex: 1;
             padding: 30px;
-            color: #333;
-            background: #f8f9fa;
         }
 
         h2 {
             font-size: 2rem;
-            margin-bottom: 10px;
             color: #2c3e50;
         }
 
         .desc {
-            font-size: 1rem;
-            margin: 10px 0 20px;
-            color: #555;
+            margin: 15px 0;
         }
 
         .price {
             font-size: 1.8rem;
             color: #27ae60;
-            font-weight: bold;
-            margin-bottom: 20px;
         }
 
-        /* Variant Selection */
+        /* Dropdown and Buttons */
         .variant-select {
             margin-top: 20px;
         }
 
-        label {
-            font-size: 1rem;
-            color: #333;
-        }
-
         select {
             padding: 10px;
-            font-size: 1rem;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            margin-top: 5px;
             width: 100%;
-            background: #e8f4ff;
-            color: #333;
-            outline: none;
+            margin-bottom: 15px;
         }
 
         .calculation {
             font-size: 1.2rem;
-            margin-top: 15px;
             font-weight: bold;
-            color: #2c3e50;
+            margin-bottom: 20px;
         }
 
-        /* Buttons */
-        .buttons {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        button {
-            flex: 1;
+        .buttons button {
+            width: 100%;
             padding: 12px;
             font-size: 1rem;
             color: #fff;
@@ -132,6 +104,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
         .buy-button {
@@ -140,16 +113,11 @@
 
         .buy-button:hover {
             background-color: #2980b9;
-            transform: translateY(-3px);
         }
 
-        .interest-button {
-            background-color: #e67e22;
-        }
-
-        .interest-button:hover {
-            background-color: #d35400;
-            transform: translateY(-3px);
+        .disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
 
         /* Footer */
@@ -166,39 +134,31 @@
     <!-- Header -->
     <header>
         <h1>LifeExtender 2030</h1>
-        <p>The Revolutionary Path to Longevity</p>
+        <p>Choose the treatment that's right for you</p>
     </header>
 
-    <!-- Product Container -->
+    <!-- Product Section -->
     <div class="product-container">
-        <!-- Product Image -->
         <div class="product-image">
-            <img src="cure.jpg" alt="LifeExtender Product Image">
+            <img src="cure.png" alt="LifeExtender Product Image">
         </div>
-
-        <!-- Product Details -->
         <div class="product-details">
-            <h2>LifeExtender - Ultimate Package</h2>
-            <p class="desc">
-                Choose between a single treatment or a package for 30 years. You are limited to a maximum of **60 treatments** to ensure safety and maximum benefits.
-            </p>
-            <p class="price">Starting at: $2,004</p>
+            <h2>LifeExtender Packages</h2>
+            <p class="desc">Choose between a single treatment or a 30-year plan (60 treatments). Treatments are limited to ensure safety and maximum benefits.</p>
 
-            <!-- Variant Selection -->
             <div class="variant-select">
                 <label for="variant">Select Package:</label>
-                <select id="variant" onchange="calculatePrice()">
+                <select id="variant" onchange="updateButton()">
+                    <option value="">-- Select an Option --</option>
                     <option value="1">1 Treatment - $2,004</option>
-                    <option value="30">Treatments for 30 Years (60 treatments)</option>
+                    <option value="30">30 Years (60 Treatments) - $120,240</option>
                 </select>
-                <div id="price-result" class="calculation"></div>
             </div>
 
-            <!-- Buttons -->
-            <div class="buttons">
-                <button class="buy-button" onclick="alert('Payments are not available yet.')">Buy Now</button>
-                <button class="interest-button" onclick="alert('Thank you for your interest!')">Register Interest</button>
-            </div>
+            <div id="price-result" class="calculation">Please select a package.</div>
+
+            <!-- Buy Button -->
+            <button id="buy-button" class="buy-button disabled" disabled>Buy Now</button>
         </div>
     </div>
 
@@ -209,22 +169,42 @@
 
     <!-- Script -->
     <script>
-        function calculatePrice() {
-            const select = document.getElementById('variant');
-            const resultDiv = document.getElementById('price-result');
+        const button = document.getElementById("buy-button");
+        const priceResult = document.getElementById("price-result");
+        const currentUrl = document.referrer;
 
-            const basePrice = 2004;
-            const totalPrice = basePrice * 2 * 30; // Price for 30 years
+        function updateButton() {
+            const select = document.getElementById("variant").value;
 
-            if (select.value === "1") {
-                resultDiv.innerHTML = `You selected <strong>1 Treatment</strong>. Total Cost: <strong>$${basePrice}</strong>. Perfect for trying the treatment.`;
-            } else if (select.value === "30") {
-                resultDiv.innerHTML = `You selected <strong>30 Years (60 Treatments)</strong>. Total Cost: <strong>$${totalPrice}</strong>. Ensures long-term health and vitality.`;
+            if (select === "1") {
+                priceResult.textContent = "You selected 1 Treatment for $2,004.";
+                button.disabled = false;
+                button.classList.remove("disabled");
+                button.onclick = () => redirectToPayment("1");
+            } else if (select === "30") {
+                priceResult.textContent = "You selected 30 Years (60 Treatments) for $120,240.";
+                button.disabled = false;
+                button.classList.remove("disabled");
+                button.onclick = () => redirectToPayment("30");
+            } else {
+                priceResult.textContent = "Please select a package.";
+                button.disabled = true;
+                button.classList.add("disabled");
+                button.onclick = null;
             }
         }
 
-        // Default selection
-        calculatePrice();
+        function redirectToPayment(option) {
+            if (currentUrl.includes("thecoolpal.com/buynow#19417571buypass")) {
+                if (option === "1") {
+                    window.location.href = "https://buy.stripe.com/28o8yr2uj5Fmfsc28e";
+                } else if (option === "30") {
+                    window.location.href = "https://buy.stripe.com/28o9Cvc4TffWfsc4gn";
+                }
+            } else {
+                alert("Access denied: You do not have permission to purchase this product.");
+            }
+        }
     </script>
 </body>
 </html>
