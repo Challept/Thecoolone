@@ -37,7 +37,7 @@
             color: #d0dfff;
         }
 
-        /* Main Content */
+        /* Main Container */
         .container {
             max-width: 60%;
             margin: 50px auto;
@@ -46,25 +46,69 @@
             border-radius: 15px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
-            text-align: center;
             animation: fadeIn 1.5s ease-in-out;
         }
 
-        h2 {
-            font-size: 2.4rem;
+        /* Selection Section */
+        .selection {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            padding: 15px 20px;
+            background: #4a5c88;
             color: #f8f8ff;
-            margin-bottom: 15px;
-        }
-
-        .description {
             font-size: 1.1rem;
-            color: #dfe9ff;
-            margin-bottom: 30px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1;
         }
 
-        /* Risks Section */
+        .option:hover, .option.active {
+            background: #ff8c42;
+            border-color: #e67734;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .calculation {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+        .interest-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #ff8c42;
+            color: #fff;
+            font-size: 1.2rem;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interest-button:hover {
+            background: #e67734;
+            transform: translateY(-3px);
+        }
+
+        /* Description Section */
         .risks {
             text-align: left;
+            margin-top: 30px;
             color: #f0f0f0;
         }
 
@@ -104,8 +148,22 @@
     <!-- Header -->
     <header>
         <h1>LifeExtender 2030</h1>
-        <p>Revolutionizing the Future of Longevity</p>
+        <p>Select the Treatment That Suits You Best</p>
     </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Selection Options -->
+        <div class="selection">
+            <div class="option" id="option-one" onclick="selectOption('1')">1 Treatment <br> $2,004</div>
+            <div class="option" id="option-thirty" onclick="selectOption('30')">60 Treatments (30 Years) <br> $120,240</div>
+        </div>
+
+        <!-- Price Display -->
+        <div id="price-result" class="calculation">Please select an option to see the details.</div>
+
+        <!-- Interest Button -->
+        <button class="interest-button" onclick="recordInterest()">I'm Interested</button>
 
     <!-- Main Content -->
     <div class="container">
@@ -156,5 +214,25 @@
     <footer>
         <p>&copy; 2024 LifeExtender 2030 | Pioneering Tomorrow's Health</p>
     </footer>
+
+    <!-- Script -->
+    <script>
+        function selectOption(option) {
+            document.getElementById("option-one").classList.remove("active");
+            document.getElementById("option-thirty").classList.remove("active");
+
+            if (option === "1") {
+                document.getElementById("option-one").classList.add("active");
+                document.getElementById("price-result").innerHTML = "You selected <strong>1 Treatment</strong> for <strong>$2,004</strong>.";
+            } else if (option === "30") {
+                document.getElementById("option-thirty").classList.add("active");
+                document.getElementById("price-result").innerHTML = "You selected <strong>60 Treatments</strong> for <strong>$120,240</strong>.";
+            }
+        }
+
+        function recordInterest() {
+            alert("Thank you for your interest! We'll contact you with more details.");
+        }
+    </script>
 </body>
 </html>
