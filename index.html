@@ -100,64 +100,69 @@
             }, 1000);
         }
 
-        async function fetchDevices() {
-            const container = document.getElementById("device-container");
-            const loadingElement = document.getElementById("loading");
+async function fetchDevices() {
+    const container = document.getElementById("device-container");
+    const loadingElement = document.getElementById("loading");
 
-            try {
-                container.innerHTML = "<p id='loading'>Laddar enhetsdata...</p>";
-                const response = await fetch("https://abaa-83-250-213-73.ngrok-free.app/devices", {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Serverfel: ${response.status}`);
-                }
-
-                const data = await response.json();
-                if (data.status === "success") {
-                    container.innerHTML = ""; // Rensa gammal data
-                    data.devices.forEach(device => {
-                        let icon = "🔧"; // Standardikon
-                        if (device.type === "mobil") icon = "📱";
-                        else if (device.type === "dator") icon = "💻";
-
-                        const vendor = device.vendor || "Okänd tillverkare";
-
-                        container.innerHTML += `
-                            <div class="device-card">
-                                <div class="device-header">
-                                    <span class="icon">${icon}</span>
-                                    <div>
-                                        <h3>${device.name}</h3>
-                                        <p><strong>Vendor:</strong> ${vendor}</p>
-                                    </div>
-                                </div>
-                                <div class="device-info">
-                                    <p><strong>IP:</strong> ${device.ip}</p>
-                                    <p><strong>MAC:</strong> ${device.mac}</p>
-                                </div>
-                                <p class="${device.status === 'OK' ? 'status-ok' : 'status-suspekt'}">
-                                    Status: ${device.status}
-                                </p>
-                            </div>
-                        `;
-                    });
-                } else {
-                    container.innerHTML = "<p>❌ Ett fel uppstod vid hämtning av data.</p>";
-                }
-            } catch (error) {
-                console.error("Fel vid hämtning av data:", error);
-                container.innerHTML = `
-                    <p style="color: red;">❌ Kunde inte hämta enhetsdata. Kontrollera servern.</p>
-                `;
-            } finally {
-                loadingElement.style.display = "none";
-                startTimer();
+    try {
+        container.innerHTML = "<p id='loading'>Laddar enhetsdata...</p>";
+        
+        const response = await fetch("https://abaa-83-250-213-73.ngrok-free.app/devices", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
             }
-        }
+        });
 
+        // Logga rådata som text
+        const text = await response.text();
+        console.log("Rådata från servern:", text);
+
+        // Försök att konvertera texten till JSON
+        const data = JSON.parse(text);
+        console.log("Parsed JSON:", data);
+
+        if (data.status === "success") {
+            container.innerHTML = ""; // Töm gammal data
+            data.devices.forEach(device => {
+                let icon = "🔧"; // Standardikon
+                if (device.type === "mobil") icon = "📱";
+                else if (device.type === "dator") icon = "💻";
+
+                const vendor = device.vendor || "Okänd tillverkare";
+
+                container.innerHTML += `
+                    <div class="device-card">
+                        <div class="device-header">
+                            <span class="icon">${icon}</span>
+                            <div>
+                                <h3>${device.name}</h3>
+                                <p><strong>Vendor:</strong> ${vendor}</p>
+                            </div>
+                        </div>
+                        <div class="device-info">
+                            <p><strong>IP:</strong> ${device.ip}</p>
+                            <p><strong>MAC:</strong> ${device.mac}</p>
+                        </div>
+                        <p class="${device.status === 'OK' ? 'status-ok' : 'status-suspekt'}">
+                            Status: ${device.status}
+                        </p>
+                    </div>
+                `;
+            });
+        } else {
+            container.innerHTML = "<p>❌ Ett fel uppstod vid hämtning av data.</p>";
+        }
+    } catch (error) {
+        console.error("Fel vid hämtning av data:", error);
+        container.innerHTML = `
+            <p style="color: red;">❌ Kunde inte hämta enhetsdata. Kontrollera servern.</p>
+        `;
+    } finally {
+        loadingElement.style.display = "none";
+        startTimer();
+    }
+}
         startTimer();
     </script>
 </body>
