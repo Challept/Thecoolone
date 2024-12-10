@@ -110,7 +110,7 @@ async function fetchDevices() {
         const response = await fetch("https://346b-83-250-213-73.ngrok-free.app/devices", {
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
                 "ngrok-skip-browser-warning": "any value" // Lägg till detta!
             }
         });
