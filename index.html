@@ -47,15 +47,42 @@
             display: flex;
             align-items: center;
         }
+        #timer {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffcc00;
+        }
     </style>
 </head>
 <body>
     <h1>🔍 Nätverksövervakning</h1>
+    <div id="timer">Nästa uppdatering om: 12 sekunder</div>
     <div id="device-container">
         <p>Laddar enhetsdata...</p>
     </div>
 
     <script>
+        let timerValue = 12;
+
+        // Timer-funktion som räknar ner och hämtar data
+        function startTimer() {
+            const timerElement = document.getElementById("timer");
+            timerValue = 12; // Startvärde
+
+            const countdown = setInterval(() => {
+                timerElement.textContent = `Nästa uppdatering om: ${timerValue} sekunder`;
+
+                if (timerValue === 0) {
+                    clearInterval(countdown);
+                    fetchDevices();
+                }
+                timerValue--;
+            }, 1000);
+        }
+
+        // Funktion för att hämta enhetsdata
         async function fetchDevices() {
             const container = document.getElementById("device-container");
             container.innerHTML = "<p>Hämtar enhetsdata...</p>";
@@ -98,12 +125,13 @@
             } catch (error) {
                 console.error("Fel vid hämtning av data:", error);
                 container.innerHTML = "<p>Kunde inte ansluta till servern.</p>";
+            } finally {
+                startTimer(); // Starta timern igen
             }
         }
 
-        // Hämta data var 10:e sekund
+        // Starta första hämtningen och timern
         fetchDevices();
-        setInterval(fetchDevices, 10000);
     </script>
 </body>
 </html>
