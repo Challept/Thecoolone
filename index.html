@@ -54,22 +54,37 @@
             margin-bottom: 10px;
             color: #ffcc00;
         }
+        #loading {
+            text-align: center;
+            font-size: 18px;
+            color: #ffcc00;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
     <h1>🔍 Nätverksövervakning</h1>
     <div id="timer">Nästa uppdatering om: 12 sekunder</div>
     <div id="device-container">
-        <p>Laddar enhetsdata...</p>
+        <p id="loading">Laddar enhetsdata...</p>
     </div>
 
     <script>
         let timerValue = 12;
 
-        // Timer-funktion som räknar ner och hämtar data
+        // Timer-funktion
         function startTimer() {
             const timerElement = document.getElementById("timer");
-            timerValue = 12; // Startvärde
+            const loadingElement = document.getElementById("loading");
+            const container = document.getElementById("device-container");
+
+            timerValue = 12;
+            loadingElement.style.display = "block"; // Visa laddningsanimering
 
             const countdown = setInterval(() => {
                 timerElement.textContent = `Nästa uppdatering om: ${timerValue} sekunder`;
@@ -82,27 +97,29 @@
             }, 1000);
         }
 
-        // Funktion för att hämta enhetsdata
+        // Hämtar enhetsdata
         async function fetchDevices() {
             const container = document.getElementById("device-container");
-            container.innerHTML = "<p>Hämtar enhetsdata...</p>";
+            const loadingElement = document.getElementById("loading");
 
             try {
+                // Visa laddar-meddelande
+                container.innerHTML = "<p id='loading'>Laddar enhetsdata...</p>";
+
                 const response = await fetch("https://b5b8-83-250-213-73.ngrok-free.app/devices");
                 const data = await response.json();
 
                 if (data.status === "success") {
-                    container.innerHTML = ""; // Töm innehållet
+                    container.innerHTML = ""; // Töm gammal data
                     const devices = data.devices;
 
+                    // Generera HTML för varje enhet
                     devices.forEach(device => {
-                        // Välj ikon baserat på typ
                         let icon;
                         if (device.type === "mobil") icon = "📱";
                         else if (device.type === "dator") icon = "💻";
                         else icon = "🔧";
 
-                        // Skapa enhetsrad
                         const deviceRow = `
                             <div class="device">
                                 <div class="device-info">
@@ -130,8 +147,8 @@
             }
         }
 
-        // Starta första hämtningen och timern
-        fetchDevices();
+        // Starta första körningen
+        startTimer();
     </script>
 </body>
 </html>
