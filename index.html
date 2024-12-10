@@ -1,509 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="favicon13.png">
-    <title>LifeExtender 2030</title>
+    <title>Nätverksövervakning</title>
     <style>
-/* General Styles */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(to bottom, #add8e6, #e0ffff); /* Ljusblå bakgrund */
-    color: #333;
-    overflow-x: hidden;
-    scroll-behavior: smooth; /* Smidig scrollning */
-}
-
-/* General Header Styles */
-header {
-    position: static; /* Header stannar högst upp */
-    top: 0;
-    z-index: 1000;
-    background-color: rgba(173, 216, 230, 0.95); /* Ljusblå header */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    padding: 10px 0;
-}
-
-/* Navbar Styles */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.logo {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #1e90ff;
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-}
-
-.nav-links li {
-    margin: 0;
-}
-
-.nav-links a {
-    text-decoration: none;
-    font-size: 1.2rem;
-    color: #333;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: background 0.3s ease, color 0.3s ease;
-}
-
-.nav-links a:hover {
-    background: #1e90ff;
-    color: white;
-}
-
-/* Tagline Styles */
-.tagline {
-    font-size: 1.2rem;
-    color: #555;
-    margin-top: 5px;
-}
-
-/* Snow Effect */
-.snow {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 2;
-}
-
-.snow div {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    opacity: 0.8;
-    animation: fall linear infinite, sway 5s ease-in-out infinite;
-}
-
-@keyframes fall {
-    0% {
-        transform: translateY(-100%);
-    }
-    100% {
-        transform: translateY(100%);
-    }
-}
-
-@keyframes sway {
-    0%, 100% {
-        transform: translateX(0);
-    }
-    50% {
-        transform: translateX(15px);
-    }
-}
-
-/* Sections */
-section {
-    padding: 20px;
-    margin: 20px auto;
-    max-width: 900px;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 3;
-    animation: fadeIn 1.5s ease-in-out;
-}
-
-h2 {
-    font-size: 2rem;
-    text-align: center;
-    margin-bottom: 15px;
-    color: #1e90ff;
-}
-
-p {
-    font-size: 1.2rem;
-    line-height: 1.8;
-    color: #333;
-    text-align: justify;
-}
-
-/* Button */
-.button-container {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.button-container a {
-    display: inline-block;
-    padding: 10px 20px;
-    background: #1e90ff;
-    color: white;
-    text-decoration: none;
-    font-size: 1.2rem;
-    border-radius: 5px;
-    transition: transform 0.3s, background 0.3s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.button-container a:hover {
-    background: #87cefa;
-    transform: translateY(-3px);
-}
-
-/* Video */
-video {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Eligibility Check Section */
-#eligibility-check {
-    margin: 40px auto;
-    padding: 20px;
-    max-width: 600px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 1s ease-in-out;
-}
-
-h2 {
-    text-align: center;
-    color: #1e90ff;
-    margin-bottom: 15px;
-}
-
-p {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #555;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
-}
-
-input, select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-}
-
-input[type="checkbox"] {
-    width: auto;
-    margin-right: 10px;
-}
-
-.checkbox-group label {
-    font-weight: normal;
-}
-
-.result {
-    margin-top: 20px;
-    padding: 15px;
-    background: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1.2rem;
-    text-align: center;
-    color: #333;
-    min-height: 50px;
-}
-
-#age-simulator {
-    padding: 20px;
-    margin: 30px auto;
-    max-width: 800px;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-}
-
-#age-simulator h2 {
-    font-size: 2rem;
-    margin-bottom: 15px;
-    color: #1e90ff;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-    color: #333;
-}
-
-input[type="range"] {
-    width: 80%;
-    margin: 10px 0;
-}
-
-.results {
-    margin-top: 20px;
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-    font-size: 1rem;
-}
-
-th {
-    background-color: #1e90ff;
-    color: white;
-}
-
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-tr:hover {
-    background-color: #e6f7ff;
-    transition: background 0.3s ease;
-}
-        
-/* Footer */
-footer {
-    text-align: center;
-    padding: 10px;
-    background: rgba(173, 216, 230, 0.9);
-    color: #333;
-    margin-top: 20px;
-    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Animations */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-</style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2b5876, #4e4376);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #device-container {
+            width: 80%;
+            margin: 20px auto;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .device {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .device:last-child {
+            border-bottom: none;
+        }
+        .status-ok {
+            color: #28a745;
+        }
+        .status-suspekt {
+            color: #dc3545;
+        }
+        .icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .device-info {
+            display: flex;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
-    <div class="snow" id="snow-container"></div>
-<header>
-    <nav class="navbar">
-        <h1 class="logo">LifeExtender 2030</h1>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="explanation.html">Explanation</a></li>
-            <li><a href="extext.html">Text</a></li>
-            <li><a href="buynow.html" class="buy-now">Buy Now</a></li>
-        </ul>
-    </nav>
-    <p class="tagline">A Revolutionary Cure for a Longer Life</p>
-</header>
-    <video src="LifeExtender.mp4" autoplay loop muted></video>
-    <section>
-        <h2>About Us</h2>
-        <p>
-            Welcome to the future of health and wellness. "LifeExtender 2030" is the pinnacle of scientific advancement, designed to extend human life by addressing cellular decay and boosting immunity through advanced nanotechnology.
-        </p>
-    </section>
-    <div class="button-container">
-        <a href="explanation.html">Learn More</a>
+    <h1>🔍 Nätverksövervakning</h1>
+    <div id="device-container">
+        <p>Laddar enhetsdata...</p>
     </div>
 
-<section id="eligibility-check">
-    <h2>Eligibility Check</h2>
-    <p>Fill out the form below to check if LifeExtender is suitable for you:</p>
-    <form id="eligibility-form">
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-group">
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" min="1" max="120" required>
-        </div>
-        <div class="form-group">
-            <label for="country">Country:</label>
-            <input type="text" id="country" name="country" required>
-        </div>
-        <div class="form-group">
-            <label for="gender">Gender:</label>
-            <select id="gender" name="gender" required>
-                <option value="">Select</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="issues">Have you experienced any of the following?</label>
-            <div class="checkbox-group">
-                <input type="checkbox" id="alcohol" name="issues" value="alcohol">
-                <label for="alcohol">Alcohol problems</label><br>
-                <input type="checkbox" id="drugs" name="issues" value="drugs">
-                <label for="drugs">Drug use</label><br>
-                <input type="checkbox" id="nicotine" name="issues" value="nicotine">
-                <label for="nicotine">Nicotine use</label><br>
-                <input type="checkbox" id="none" name="issues" value="none">
-                <label for="none">None of the above</label>
-            </div>
-        </div>
-    </form>
-    <div id="result" class="result"></div>
-</section>
-
-<script>
-    const inputs = document.querySelectorAll('#eligibility-form input, #eligibility-form select');
-    const resultDiv = document.getElementById("result");
-
-    inputs.forEach(input => {
-        input.addEventListener("input", checkEligibility);
-    });
-
-    function checkEligibility() {
-        const name = document.getElementById("name").value.trim();
-        const age = parseInt(document.getElementById("age").value) || 0;
-        const country = document.getElementById("country").value.trim();
-        const gender = document.getElementById("gender").value;
-        const issues = Array.from(document.querySelectorAll("input[name='issues']:checked")).map(checkbox => checkbox.value);
-
-        const currentYear = new Date().getFullYear();
-        const targetYear = 2031;
-        const ageIn2030 = age + (targetYear - currentYear);
-
-        let resultMessage = "";
-
-        if (!name || !age || !country || !gender) {
-            resultMessage = "Please fill in all fields to see eligibility.";
-        } else if (ageIn2031 < 18) {
-            resultMessage = `Sorry, ${name}, you must be at least 18 years old by 2031 to use LifeExtender.`;
-        } else if (issues.includes("drugs") || issues.includes("alcohol")) {
-            resultMessage = `Sorry, ${name}, based on your history, LifeExtender may not be suitable for you. Please consult a medical professional.`;
-        } else {
-            resultMessage = `Congratulations, ${name}! Based on your inputs, LifeExtender is a suitable option for you.`;
-        }
-
-        resultDiv.innerText = resultMessage;
-    }
-</script>
-
-<section id="age-simulator">
-    <h2>LifeExtender Age Simulator</h2>
-    <p>Select the age you start taking LifeExtender treatments. The table below shows your real age, how old you will look, and how strong you will feel every 10 years:</p>
-
-    <!-- Slider för startålder -->
-    <div class="form-group">
-        <label for="start-age">Select Your Starting Age: <span id="age-value">30</span></label>
-        <input type="range" id="start-age" min="18" max="60" value="30">
-    </div>
-
-    <!-- Resultattabell -->
-    <div class="results">
-        <h3>Results Over Time</h3>
-        <table id="results-table">
-            <thead>
-                <tr>
-                    <th>Real Age</th>
-                    <th>How Old You Look</th>
-                    <th>Muscle Strength</th>
-                    <th>Energy Level</th>
-                </tr>
-            </thead>
-            <tbody id="results-body">
-                <!-- Resultat fylls i automatiskt -->
-            </tbody>
-        </table>
-    </div>
-</section>
-
-<script>
-    const startAgeInput = document.getElementById("start-age");
-    const ageValueDisplay = document.getElementById("age-value");
-    const resultsBody = document.getElementById("results-body");
-
-    // Funktion för att beräkna resultat
-    function calculateResults(startAge) {
-        resultsBody.innerHTML = ""; // Rensa tidigare resultat
-        let realAge = startAge;
-
-        for (let i = 0; realAge <= 120; i += 10) {
-            const lookAge = Math.max(25, realAge - (realAge - startAge) / 2); // Hur gammal du ser ut
-            const muscleStrength = 100 - Math.min(75, (realAge - startAge) * 0.5); // Muskelstyrka i %
-            const energyLevel = 100 - Math.min(70, (realAge - startAge) * 0.4); // Energinivå i %
-
-            // Lägg till en ny rad i tabellen
-            resultsBody.innerHTML += `
-                <tr>
-                    <td>${realAge} years</td>
-                    <td>${Math.round(lookAge)} years</td>
-                    <td>${Math.round(muscleStrength)}%</td>
-                    <td>${Math.round(energyLevel)}%</td>
-                </tr>
-            `;
-            realAge += 10; // Öka åldern med 10 år
-        }
-    }
-
-    // Uppdatera resultaten i realtid
-    startAgeInput.addEventListener("input", () => {
-        const startAge = parseInt(startAgeInput.value);
-        ageValueDisplay.textContent = startAge;
-        calculateResults(startAge);
-    });
-
-    // Initiera med standardvärde
-    calculateResults(30);
-</script>
-    
-    <footer>
-        <p>© 2024 LifeExtender 2030 - All Rights Reserved</p>
-    </footer>
     <script>
-        // Snow Effect
-        const snowContainer = document.getElementById('snow-container');
-        for (let i = 0; i < 200; i++) {
-            const snowflake = document.createElement('div');
-            const size = Math.random() * 5 + 2;
-            snowflake.style.width = `${size}px`;
-            snowflake.style.height = `${size}px`;
-            snowflake.style.left = `${Math.random() * 100}%`;
-            snowflake.style.animationDuration = `${Math.random() * 5 + 3}s`;
-            snowflake.style.animationDelay = `${Math.random() * 3}s`;
-            snowflake.style.top = `${-Math.random() * 100}px`;
-            snowContainer.appendChild(snowflake);
+        async function fetchDevices() {
+            const container = document.getElementById("device-container");
+            container.innerHTML = "<p>Hämtar enhetsdata...</p>";
+
+            try {
+                const response = await fetch("https://b5b8-83-250-213-73.ngrok-free.app/devices");
+                const data = await response.json();
+
+                if (data.status === "success") {
+                    container.innerHTML = ""; // Töm innehållet
+                    const devices = data.devices;
+
+                    devices.forEach(device => {
+                        // Välj ikon baserat på typ
+                        let icon;
+                        if (device.type === "mobil") icon = "📱";
+                        else if (device.type === "dator") icon = "💻";
+                        else icon = "🔧";
+
+                        // Skapa enhetsrad
+                        const deviceRow = `
+                            <div class="device">
+                                <div class="device-info">
+                                    <span class="icon">${icon}</span>
+                                    <div>
+                                        <p><strong>${device.name}</strong> (${device.vendor})</p>
+                                        <p>IP: ${device.ip} | MAC: ${device.mac}</p>
+                                    </div>
+                                </div>
+                                <p class="${device.status === 'OK' ? 'status-ok' : 'status-suspekt'}">
+                                    ${device.status}
+                                </p>
+                            </div>
+                        `;
+                        container.innerHTML += deviceRow;
+                    });
+                } else {
+                    container.innerHTML = "<p>Ett fel uppstod vid hämtning av data.</p>";
+                }
+            } catch (error) {
+                console.error("Fel vid hämtning av data:", error);
+                container.innerHTML = "<p>Kunde inte ansluta till servern.</p>";
+            }
         }
+
+        // Hämta data var 10:e sekund
+        fetchDevices();
+        setInterval(fetchDevices, 10000);
     </script>
 </body>
 </html>
