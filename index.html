@@ -111,6 +111,7 @@ async function fetchDevices() {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
+                "ngrok-skip-browser-warning": "any value" // Lägg till detta!
             }
         });
 
