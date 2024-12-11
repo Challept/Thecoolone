@@ -7,7 +7,7 @@
     <style>
         /* Allmän stil */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -22,24 +22,24 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(-45deg, #2b5876, #4e4376, #1c1f26, #0d0e13);
+            background: linear-gradient(-45deg, #1e3c72, #2a5298, #0f2027, #203a43);
             background-size: 400% 400%;
             z-index: -2;
-            animation: gradient 10s infinite ease-in-out;
+            animation: gradient 8s infinite ease-in-out;
         }
 
-        /* Snö-liknande animerade former */
+        /* Snö-liknande animerade prickar */
         body::after {
             content: "";
             position: absolute;
-            top: -10%;
+            top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background-image: radial-gradient(white 1px, transparent 1px);
             background-size: 20px 20px;
             opacity: 0.3;
-            animation: snowFall 20s linear infinite;
+            animation: snowFall 15s linear infinite;
             z-index: -1;
         }
 
@@ -54,9 +54,20 @@
             100% { transform: translateY(100%); }
         }
 
+        /* Titelstil */
         h1 {
             text-align: center;
             margin: 20px 0;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 2s infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 10px #ff7e5f, 0 0 20px #feb47b; }
+            to { text-shadow: 0 0 20px #ff7e5f, 0 0 30px #feb47b; }
         }
 
         /* Timer med loading bar */
@@ -76,7 +87,7 @@
             width: 100%;
             transform: scaleX(1);
             transform-origin: left;
-            animation: timerAnimation 12s linear infinite;
+            animation: timerAnimation 5s linear infinite;
         }
 
         @keyframes timerAnimation {
@@ -98,7 +109,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             padding: 10px;
-            width: 200px;
+            width: 150px; /* Mindre storlek */
             text-align: center;
             transition: transform 0.3s, box-shadow 0.3s;
         }
@@ -109,8 +120,8 @@
         }
 
         .device-header {
-            margin-bottom: 10px;
-            font-size: 16px;
+            margin-bottom: 8px;
+            font-size: 14px;
             font-weight: bold;
         }
 
@@ -124,13 +135,13 @@
 
         #loading {
             text-align: center;
-            font-size: 18px;
+            font-size: 16px;
             margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>🔍 Nätverksövervakning</h1>
+    <h1>🌐 Nätverksövervakning</h1>
 
     <!-- Timer med loading bar -->
     <div id="timer-container">
@@ -143,12 +154,14 @@
     </div>
 
     <script>
+        let previousDevices = {};
+
         // Timer-funktion med loading-bar reset
         async function startTimer() {
             await fetchDevices();
             document.getElementById("timer-bar").style.animation = "none";
             void document.getElementById("timer-bar").offsetWidth; // Trigger reflow
-            document.getElementById("timer-bar").style.animation = "timerAnimation 12s linear infinite";
+            document.getElementById("timer-bar").style.animation = "timerAnimation 5s linear infinite";
         }
 
         // Hämta enhetsdata
@@ -157,7 +170,6 @@
             const loadingElement = document.getElementById("loading");
 
             try {
-                container.innerHTML = "<p id='loading'>Laddar enhetsdata...</p>";
                 const response = await fetch("https://346b-83-250-213-73.ngrok-free.app/devices", {
                     method: "GET",
                     headers: {
@@ -167,10 +179,12 @@
                 });
 
                 const data = await response.json();
-                container.innerHTML = ""; // Rensa gammal data
 
-                // Skapa kort för varje enhet
-                data.devices.forEach(device => {
+                // Jämför med tidigare data
+                const newDevices = data.devices || [];
+                container.innerHTML = "";
+
+                newDevices.forEach(device => {
                     const statusClass = device.status === "OK" ? "status-ok" : "status-suspekt";
                     container.innerHTML += `
                         <div class="device-card">
@@ -181,6 +195,8 @@
                         </div>
                     `;
                 });
+
+                previousDevices = newDevices;
             } catch (error) {
                 console.error("Fel vid hämtning av data:", error);
                 container.innerHTML = `<p style="color: red;">❌ Kunde inte hämta enhetsdata.</p>`;
@@ -189,7 +205,7 @@
 
         // Starta timer vid laddning
         startTimer();
-        setInterval(startTimer, 12000); // Hämta data var 12:e sekund
+        setInterval(startTimer, 5000); // Hämta data var 5:e sekund
     </script>
 </body>
 </html>
