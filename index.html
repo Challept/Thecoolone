@@ -11,6 +11,7 @@
       padding: 0;
       background: linear-gradient(135deg, #74ebd5, #acb6e5);
       color: white;
+      overflow-x: hidden;
     }
 
     header {
@@ -35,21 +36,18 @@
       padding: 10px;
       margin: 10px;
       font-size: 1rem;
+      border-radius: 5px;
     }
 
     #compareBtn {
       background-color: #4CAF50;
       color: white;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     #compareBtn:hover {
       background-color: #45a049;
-    }
-
-    #result {
-      display: none;
-      margin-top: 40px;
     }
 
     .row {
@@ -64,6 +62,67 @@
       padding: 20px;
       background-color: rgba(0, 0, 0, 0.6);
       border-radius: 10px;
+    }
+
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 1s ease-out;
+      z-index: 999;
+      overflow: hidden;
+    }
+
+    .popup-content {
+      background-color: #333;
+      padding: 30px;
+      border-radius: 15px;
+      width: 80%;
+      max-width: 600px;
+      color: white;
+      text-align: center;
+      animation: popupContent 1s ease-out;
+    }
+
+    .popup h2 {
+      margin-bottom: 20px;
+    }
+
+    .popup p {
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+
+    .close-btn {
+      background-color: #f44336;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .close-btn:hover {
+      background-color: #d32f2f;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popupContent {
+      from { transform: scale(0.8); }
+      to { transform: scale(1); }
     }
 
     @media (max-width: 768px) {
@@ -81,10 +140,6 @@
       background-color: rgba(0, 0, 0, 0.8);
       padding: 10px;
     }
-
-    .hidden {
-      display: none;
-    }
   </style>
 </head>
 <body>
@@ -100,29 +155,22 @@
     <input type="text" id="country2" placeholder="Skriv det andra landet">
     <button id="compareBtn">Jämför länder</button>
   </div>
-
-  <div id="result" class="hidden">
-    <div class="row">
-      <div id="country1-info" class="column">
-        <h2 id="country1-name"></h2>
-        <p id="country1-details"></p>
-      </div>
-      <div id="winner" class="column">
-        <h2>Vinnare</h2>
-        <p id="winner-name"></p>
-        <p id="why-win"></p>
-      </div>
-      <div id="country2-info" class="column">
-        <h2 id="country2-name"></h2>
-        <p id="country2-details"></p>
-      </div>
-    </div>
-  </div>
 </div>
 
 <footer>
   Om oss - Landkrig
 </footer>
+
+<!-- Popup for Result -->
+<div id="popup" class="popup hidden">
+  <div class="popup-content">
+    <h2>Resultat av Strid</h2>
+    <div id="result-details">
+      <!-- Resultat Details will be dynamically populated -->
+    </div>
+    <button class="close-btn" id="closePopup">Stäng och Ladda om</button>
+  </div>
+</div>
 
 <script>
   const countries = {
@@ -2251,32 +2299,6 @@
     const country1Data = countries[country1];
     const country2Data = countries[country2];
 
-    document.getElementById("country1-name").textContent = country1;
-    document.getElementById("country1-details").innerHTML = `
-      Soldater: ${country1Data.soldiers} <br>
-      Flygplansstyrka: ${country1Data.airPower} <br>
-      Marin: ${country1Data.navyPower} <br>
-      Pengar: $${country1Data.money} miljarder <br>
-      Fighter Jets: ${country1Data.fighterJets} <br>
-      Navy Boats: ${country1Data.navyBoats} <br>
-      Ubåtar: ${country1Data.submarines} <br>
-      Kärnvapen: ${country1Data.nuclear} <br>
-      Robotförsvar: ${country1Data.missileDefense}
-    `;
-
-    document.getElementById("country2-name").textContent = country2;
-    document.getElementById("country2-details").innerHTML = `
-      Soldater: ${country2Data.soldiers} <br>
-      Flygplansstyrka: ${country2Data.airPower} <br>
-      Marin: ${country2Data.navyPower} <br>
-      Pengar: $${country2Data.money} miljarder <br>
-      Fighter Jets: ${country2Data.fighterJets} <br>
-      Navy Boats: ${country2Data.navyBoats} <br>
-      Ubåtar: ${country2Data.submarines} <br>
-      Kärnvapen: ${country2Data.nuclear} <br>
-      Robotförsvar: ${country2Data.missileDefense}
-    `;
-
     let winner = "Oavgjort";
     let reason = "Ingen klar vinnare.";
 
@@ -2288,12 +2310,27 @@
       reason = `${country2} har fler soldater.`;
     }
 
-    document.getElementById("winner-name").textContent = winner;
-    document.getElementById("why-win").textContent = reason;
+    const resultDetails = `
+      <h3>Vinnare: ${winner}</h3>
+      <p><strong>Styrka:</strong></p>
+      <p><strong>${country1}:</strong> ${country1Data.soldiers} soldater, ${country1Data.airPower} flygplan, ${country1Data.navyPower} marin, $${country1Data.money} miljarder</p>
+      <p><strong>${country2}:</strong> ${country2Data.soldiers} soldater, ${country2Data.airPower} flygplan, ${country2Data.navyPower} marin, $${country2Data.money} miljarder</p>
+      <p><strong>Varför ${winner} vann:</strong> ${reason}</p>
+    `;
 
-    document.getElementById("result").classList.remove("hidden");
+    document.getElementById("result-details").innerHTML = resultDetails;
+
+    // Show the popup
+    document.getElementById("popup").classList.remove("hidden");
   }
 
+  // Close Popup and reload page
+  document.getElementById("closePopup").addEventListener("click", () => {
+    document.getElementById("popup").classList.add("hidden");
+    location.reload();
+  });
+
+  // Compare Button Click Event
   document.getElementById("compareBtn").addEventListener("click", compareCountries);
 </script>
 
