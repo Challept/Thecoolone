@@ -1,199 +1,2301 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌐 Nätverksövervakning</title>
-    <style>
-        /* Allmän stil */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #fff;
-            overflow: hidden;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landkrig - Jämför Länders Militär Styrka</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #74ebd5, #acb6e5);
+      color: white;
+    }
 
-        /* Gradientbakgrund */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(-45deg, #1e3c72, #2a5298, #0f2027, #203a43);
-            background-size: 400% 400%;
-            z-index: -2;
-            animation: gradient 8s infinite ease-in-out;
-        }
+    header {
+      position: sticky;
+      top: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 10px 0;
+      text-align: center;
+      font-size: 2em;
+    }
 
-        /* Snöeffekt */
-        body::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(white 1px, transparent 1px);
-            background-size: 20px 20px;
-            opacity: 0.2;
-            animation: snowFall 20s linear infinite;
-            z-index: -1;
-        }
+    .content {
+      padding: 20px;
+      text-align: center;
+    }
 
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+    .intro {
+      margin: 20px 0;
+    }
 
-        @keyframes snowFall {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
-        }
+    input[type="text"], button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 1rem;
+    }
 
-        #device-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px;
-    max-height: 70vh; /* Max höjd för scroll */
-    overflow-y: auto; /* Gör innehållet scrollbart om det överstiger maxhöjden */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Valfri ram för att synliggöra området */
-    border-radius: 10px;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3); /* Snygg inre skugga */
-    background: rgba(0, 0, 0, 0.2); /* Halvgenomskinlig bakgrund */
-}
+    #compareBtn {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
 
-        /* Titelstil */
-        h1 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin: 20px 0;
-            background: linear-gradient(90deg, #ff7e5f, #feb47b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: titleGlow 2s infinite alternate;
-        }
+    #compareBtn:hover {
+      background-color: #45a049;
+    }
 
-        @keyframes titleGlow {
-            from { text-shadow: 0 0 10px #ff7e5f; }
-            to { text-shadow: 0 0 20px #feb47b; }
-        }
+    #result {
+      display: none;
+      margin-top: 40px;
+    }
 
-        /* Timer med loading bar */
-        #timer-container {
-            width: 300px;
-            margin: 0 auto 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 
-        #timer-bar {
-            height: 20px;
-            background: linear-gradient(90deg, #ff5733, #ffc107);
-            transform-origin: left;
-            animation: timerAnimation 5s linear infinite;
-        }
+    .column {
+      width: 30%;
+      margin: 10px;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+    }
 
-        @keyframes timerAnimation {
-            0% { transform: scaleX(1); }
-            100% { transform: scaleX(0); }
-        }
+    @media (max-width: 768px) {
+      .column {
+        width: 100%;
+      }
+    }
 
-        /* Kort för enheter */
-        #device-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            padding: 10px;
-        }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 1rem;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+    }
 
-        .device-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 10px;
-            width: 160px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .device-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .status-ok {
-            color: #28a745;
-        }
-
-        .status-suspekt {
-            color: #dc3545;
-        }
-    </style>
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <h1>🌐 Nätverksövervakning</h1>
-    <div id="timer-container">
-        <div id="timer-bar"></div>
+
+<header>
+  Landkrig - Jämför Länders Militär Styrka
+</header>
+
+<div class="content">
+  <div class="intro">
+    <p>Välj två länder att jämföra i en strid!</p>
+    <input type="text" id="country1" placeholder="Skriv det första landet">
+    <input type="text" id="country2" placeholder="Skriv det andra landet">
+    <button id="compareBtn">Jämför länder</button>
+  </div>
+
+  <div id="result" class="hidden">
+    <div class="row">
+      <div id="country1-info" class="column">
+        <h2 id="country1-name"></h2>
+        <p id="country1-details"></p>
+      </div>
+      <div id="winner" class="column">
+        <h2>Vinnare</h2>
+        <p id="winner-name"></p>
+        <p id="why-win"></p>
+      </div>
+      <div id="country2-info" class="column">
+        <h2 id="country2-name"></h2>
+        <p id="country2-details"></p>
+      </div>
     </div>
-    <div id="device-container">
-        <p id="loading">Laddar enhetsdata...</p>
-    </div>
+  </div>
+</div>
 
-    <script>
-        let previousDevices = {};
+<footer>
+  Om oss - Landkrig
+</footer>
 
-        async function startTimer() {
-            await fetchDevices();
-            document.getElementById("timer-bar").style.animation = "none";
-            void document.getElementById("timer-bar").offsetWidth;
-            document.getElementById("timer-bar").style.animation = "timerAnimation 5s linear infinite";
-        }
+<script>
+  const countries = {
+"Afghanistan": {
+  soldiers: 300000,
+  airPower: 50,
+  navyPower: 0,
+  money: 8.6,
+  fighterJets: 10,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Albania": {
+  soldiers: 20000,
+  airPower: 20,
+  navyPower: 5,
+  money: 5.0,
+  fighterJets: 5,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Algeria": {
+  soldiers: 1300000,
+  airPower: 600,
+  navyPower: 80,
+  money: 15.0,
+  fighterJets: 200,
+  navyBoats: 80,
+  submarines: 6,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Andorra": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.3,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Angola": {
+  soldiers: 107000,
+  airPower: 50,
+  navyPower: 30,
+  money: 24.7,
+  fighterJets: 10,
+  navyBoats: 30,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Antigua and Barbuda": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Argentina": {
+  soldiers: 120000,
+  airPower: 1200,
+  navyPower: 80,
+  money: 44.5,
+  fighterJets: 300,
+  navyBoats: 80,
+  submarines: 3,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Armenia": {
+  soldiers: 45000,
+  airPower: 50,
+  navyPower: 5,
+  money: 5.3,
+  fighterJets: 10,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Australia": {
+  soldiers: 59000,
+  airPower: 400,
+  navyPower: 45,
+  money: 50.4,
+  fighterJets: 200,
+  navyBoats: 45,
+  submarines: 6,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Austria": {
+  soldiers: 15000,
+  airPower: 100,
+  navyPower: 0,
+  money: 14.0,
+  fighterJets: 50,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Azerbaijan": {
+  soldiers: 300000,
+  airPower: 150,
+  navyPower: 50,
+  money: 12.5,
+  fighterJets: 50,
+  navyBoats: 50,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Bahamas": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 1.0,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Bahrain": {
+  soldiers: 10000,
+  airPower: 60,
+  navyPower: 10,
+  money: 2.4,
+  fighterJets: 20,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Bangladesh": {
+  soldiers: 1800000,
+  airPower: 1700,
+  navyPower: 60,
+  money: 41.4,
+  fighterJets: 200,
+  navyBoats: 60,
+  submarines: 3,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Barbados": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.3,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Belarus": {
+  soldiers: 600000,
+  airPower: 400,
+  navyPower: 30,
+  money: 9.4,
+  fighterJets: 100,
+  navyBoats: 30,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Belgium": {
+  soldiers: 32000,
+  airPower: 200,
+  navyPower: 10,
+  money: 18.0,
+  fighterJets: 50,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Belize": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Benin": {
+  soldiers: 10000,
+  airPower: 10,
+  navyPower: 5,
+  money: 1.2,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Bhutan": {
+  soldiers: 1000,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Bolivia": {
+  soldiers: 35000,
+  airPower: 50,
+  navyPower: 0,
+  money: 11.5,
+  fighterJets: 20,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Bosnia and Herzegovina": {
+  soldiers: 10000,
+  airPower: 30,
+  navyPower: 0,
+  money: 5.0,
+  fighterJets: 10,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Botswana": {
+  soldiers: 10000,
+  airPower: 5,
+  navyPower: 0,
+  money: 2.0,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Brazil": {
+  soldiers: 350000,
+  airPower: 1000,
+  navyPower: 100,
+  money: 35.5,
+  fighterJets: 350,
+  navyBoats: 100,
+  submarines: 5,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Brunei": {
+  soldiers: 6000,
+  airPower: 20,
+  navyPower: 5,
+  money: 2.5,
+  fighterJets: 5,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Bulgaria": {
+  soldiers: 45000,
+  airPower: 150,
+  navyPower: 25,
+  money: 7.5,
+  fighterJets: 50,
+  navyBoats: 25,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Burkina Faso": {
+  soldiers: 20000,
+  airPower: 10,
+  navyPower: 0,
+  money: 4.0,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Burundi": {
+  soldiers: 20000,
+  airPower: 5,
+  navyPower: 0,
+  money: 2.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Cabo Verde": {
+  soldiers: 5000,
+  airPower: 5,
+  navyPower: 5,
+  money: 0.7,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Cameroon": {
+  soldiers: 200000,
+  airPower: 100,
+  navyPower: 20,
+  money: 5.0,
+  fighterJets: 30,
+  navyBoats: 20,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Canada": {
+  soldiers: 68000,
+  airPower: 400,
+  navyPower: 60,
+  money: 22.2,
+  fighterJets: 200,
+  navyBoats: 60,
+  submarines: 4,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Central African Republic": {
+  soldiers: 6000,
+  airPower: 5,
+  navyPower: 0,
+  money: 0.9,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Chad": {
+  soldiers: 25000,
+  airPower: 20,
+  navyPower: 0,
+  money: 3.0,
+  fighterJets: 5,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Chile": {
+  soldiers: 43000,
+  airPower: 300,
+  navyPower: 50,
+  money: 25.2,
+  fighterJets: 100,
+  navyBoats: 50,
+  submarines: 4,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"China": {
+  soldiers: 2000000,
+  airPower: 3500,
+  navyPower: 700,
+  money: 261.2,
+  fighterJets: 3500,
+  navyBoats: 700,
+  submarines: 60,
+  nuclear: "Yes",
+  missileDefense: "Yes"
+},
+"Colombia": {
+  soldiers: 500000,
+  airPower: 200,
+  navyPower: 60,
+  money: 15.0,
+  fighterJets: 100,
+  navyBoats: 60,
+  submarines: 4,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Comoros": {
+  soldiers: 3000,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.3,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Congo (Congo-Brazzaville)": {
+  soldiers: 25000,
+  airPower: 30,
+  navyPower: 10,
+  money: 2.5,
+  fighterJets: 5,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Congo (Democratic Republic of the Congo)": {
+  soldiers: 150000,
+  airPower: 50,
+  navyPower: 20,
+  money: 7.0,
+  fighterJets: 20,
+  navyBoats: 20,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Costa Rica": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 3.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Cuba": {
+  soldiers: 500000,
+  airPower: 350,
+  navyPower: 60,
+  money: 12.0,
+  fighterJets: 150,
+  navyBoats: 60,
+  submarines: 5,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Cyprus": {
+  soldiers: 12000,
+  airPower: 50,
+  navyPower: 10,
+  money: 2.0,
+  fighterJets: 10,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Czech Republic": {
+  soldiers: 22000,
+  airPower: 200,
+  navyPower: 0,
+  money: 10.0,
+  fighterJets: 50,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Denmark": {
+  soldiers: 15000,
+  airPower: 200,
+  navyPower: 30,
+  money: 11.6,
+  fighterJets: 50,
+  navyBoats: 30,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Djibouti": {
+  soldiers: 5000,
+  airPower: 0,
+  navyPower: 10,
+  money: 0.5,
+  fighterJets: 0,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Dominica": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.3,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Dominican Republic": {
+  soldiers: 47000,
+  airPower: 100,
+  navyPower: 10,
+  money: 6.0,
+  fighterJets: 10,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Ecuador": {
+  soldiers: 50000,
+  airPower: 100,
+  navyPower: 30,
+  money: 10.0,
+  fighterJets: 20,
+  navyBoats: 30,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Egypt": {
+  soldiers: 450000,
+  airPower: 1000,
+  navyPower: 70,
+  money: 32.5,
+  fighterJets: 600,
+  navyBoats: 70,
+  submarines: 4,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"El Salvador": {
+  soldiers: 30000,
+  airPower: 30,
+  navyPower: 10,
+  money: 5.0,
+  fighterJets: 10,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Equatorial Guinea": {
+  soldiers: 3000,
+  airPower: 5,
+  navyPower: 5,
+  money: 1.3,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Eritrea": {
+  soldiers: 200000,
+  airPower: 50,
+  navyPower: 10,
+  money: 2.0,
+  fighterJets: 20,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Estonia": {
+  soldiers: 6000,
+  airPower: 50,
+  navyPower: 0,
+  money: 4.0,
+  fighterJets: 10,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Ethiopia": {
+  soldiers: 200000,
+  airPower: 100,
+  navyPower: 10,
+  money: 6.0,
+  fighterJets: 30,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Fiji": {
+  soldiers: 3500,
+  airPower: 10,
+  navyPower: 5,
+  money: 0.5,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Finland": {
+  soldiers: 35000,
+  airPower: 300,
+  navyPower: 30,
+  money: 15.0,
+  fighterJets: 50,
+  navyBoats: 30,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"France": {
+  soldiers: 300000,
+  airPower: 1200,
+  navyPower: 60,
+  money: 46.2,
+  fighterJets: 300,
+  navyBoats: 60,
+  submarines: 10,
+  nuclear: "Yes",
+  missileDefense: "Yes"
+},
+"Gabon": {
+  soldiers: 10000,
+  airPower: 5,
+  navyPower: 5,
+  money: 1.0,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Gambia": {
+  soldiers: 1000,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.6,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Georgia": {
+  soldiers: 37000,
+  airPower: 100,
+  navyPower: 10,
+  money: 4.0,
+  fighterJets: 20,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Germany": {
+  soldiers: 180000,
+  airPower: 1000,
+  navyPower: 70,
+  money: 54.4,
+  fighterJets: 300,
+  navyBoats: 70,
+  submarines: 6,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Ghana": {
+  soldiers: 15000,
+  airPower: 10,
+  navyPower: 10,
+  money: 5.7,
+  fighterJets: 0,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Greece": {
+  soldiers: 150000,
+  airPower: 800,
+  navyPower: 90,
+  money: 17.0,
+  fighterJets: 200,
+  navyBoats: 90,
+  submarines: 11,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Grenada": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.2,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Guatemala": {
+  soldiers: 30000,
+  airPower: 50,
+  navyPower: 10,
+  money: 5.5,
+  fighterJets: 10,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Guinea": {
+  soldiers: 10000,
+  airPower: 5,
+  navyPower: 0,
+  money: 1.2,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Guinea-Bissau": {
+  soldiers: 5000,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Guyana": {
+  soldiers: 5000,
+  airPower: 5,
+  navyPower: 5,
+  money: 1.8,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Haiti": {
+  soldiers: 10000,
+  airPower: 0,
+  navyPower: 0,
+  money: 2.0,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Honduras": {
+  soldiers: 25000,
+  airPower: 50,
+  navyPower: 10,
+  money: 3.5,
+  fighterJets: 5,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Hungary": {
+  soldiers: 25000,
+  airPower: 150,
+  navyPower: 10,
+  money: 10.0,
+  fighterJets: 50,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Iceland": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 1.3,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"India": {
+  soldiers: 1500000,
+  airPower: 2100,
+  navyPower: 150,
+  money: 67.5,
+  fighterJets: 600,
+  navyBoats: 150,
+  submarines: 16,
+  nuclear: "Yes",
+  missileDefense: "Yes"
+},
+"Indonesia": {
+  soldiers: 400000,
+  airPower: 500,
+  navyPower: 150,
+  money: 26.0,
+  fighterJets: 150,
+  navyBoats: 150,
+  submarines: 5,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Iran": {
+  soldiers: 500000,
+  airPower: 600,
+  navyPower: 50,
+  money: 15.0,
+  fighterJets: 150,
+  navyBoats: 50,
+  submarines: 7,
+  nuclear: "Yes",
+  missileDefense: "Yes"
+},
+"Iraq": {
+  soldiers: 650000,
+  airPower: 150,
+  navyPower: 30,
+  money: 10.0,
+  fighterJets: 50,
+  navyBoats: 30,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Ireland": {
+  soldiers: 10000,
+  airPower: 50,
+  navyPower: 10,
+  money: 5.2,
+  fighterJets: 0,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Israel": {
+  soldiers: 170000,
+  airPower: 700,
+  navyPower: 50,
+  money: 55.0,
+  fighterJets: 200,
+  navyBoats: 50,
+  submarines: 5,
+  nuclear: "Yes",
+  missileDefense: "Yes"
+},
+"Italy": {
+  soldiers: 300000,
+  airPower: 700,
+  navyPower: 90,
+  money: 33.0,
+  fighterJets: 250,
+  navyBoats: 90,
+  submarines: 6,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Jamaica": {
+  soldiers: 2000,
+  airPower: 0,
+  navyPower: 0,
+  money: 1.4,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Japan": {
+  soldiers: 250000,
+  airPower: 500,
+  navyPower: 120,
+  money: 48.1,
+  fighterJets: 200,
+  navyBoats: 120,
+  submarines: 20,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Jordan": {
+  soldiers: 100000,
+  airPower: 150,
+  navyPower: 20,
+  money: 12.0,
+  fighterJets: 50,
+  navyBoats: 20,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Kazakhstan": {
+  soldiers: 70000,
+  airPower: 250,
+  navyPower: 20,
+  money: 10.0,
+  fighterJets: 50,
+  navyBoats: 20,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Kenya": {
+  soldiers: 30000,
+  airPower: 20,
+  navyPower: 5,
+  money: 7.5,
+  fighterJets: 5,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Kiribati": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.2,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Korea North": {
+  soldiers: 1200000,
+  airPower: 850,
+  navyPower: 70,
+  money: 12.5,
+  fighterJets: 500,
+  navyBoats: 70,
+  submarines: 10,
+  nuclear: "Yes",
+  missileDefense: "No"
+},
+"Korea South": {
+  soldiers: 600000,
+  airPower: 1400,
+  navyPower: 130,
+  money: 37.7,
+  fighterJets: 400,
+  navyBoats: 130,
+  submarines: 12,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Kuwait": {
+  soldiers: 15000,
+  airPower: 150,
+  navyPower: 10,
+  money: 2.9,
+  fighterJets: 40,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Kyrgyzstan": {
+  soldiers: 25000,
+  airPower: 50,
+  navyPower: 0,
+  money: 5.0,
+  fighterJets: 10,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Laos": {
+  soldiers: 45000,
+  airPower: 10,
+  navyPower: 0,
+  money: 5.0,
+  fighterJets: 5,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Latvia": {
+  soldiers: 5000,
+  airPower: 50,
+  navyPower: 10,
+  money: 3.5,
+  fighterJets: 10,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Lebanon": {
+  soldiers: 75000,
+  airPower: 100,
+  navyPower: 10,
+  money: 5.0,
+  fighterJets: 20,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Lesotho": {
+  soldiers: 2500,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Liberia": {
+  soldiers: 5000,
+  airPower: 0,
+  navyPower: 5,
+  money: 1.0,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Libya": {
+  soldiers: 100000,
+  airPower: 250,
+  navyPower: 20,
+  money: 10.0,
+  fighterJets: 100,
+  navyBoats: 20,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Liechtenstein": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.6,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Lithuania": {
+  soldiers: 20000,
+  airPower: 50,
+  navyPower: 5,
+  money: 5.2,
+  fighterJets: 10,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Luxembourg": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 2.0,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Madagascar": {
+  soldiers: 20000,
+  airPower: 10,
+  navyPower: 10,
+  money: 5.0,
+  fighterJets: 5,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Malawi": {
+  soldiers: 25000,
+  airPower: 0,
+  navyPower: 0,
+  money: 1.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Malaysia": {
+  soldiers: 110000,
+  airPower: 300,
+  navyPower: 70,
+  money: 21.0,
+  fighterJets: 120,
+  navyBoats: 70,
+  submarines: 6,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Maldives": {
+  soldiers: 3000,
+  airPower: 0,
+  navyPower: 5,
+  money: 1.2,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Mali": {
+  soldiers: 25000,
+  airPower: 10,
+  navyPower: 0,
+  money: 3.5,
+  fighterJets: 5,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Malta": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.6,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Marshall Islands": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.2,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Mauritania": {
+  soldiers: 12000,
+  airPower: 10,
+  navyPower: 5,
+  money: 4.0,
+  fighterJets: 5,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Mauritius": {
+  soldiers: 2000,
+  airPower: 0,
+  navyPower: 5,
+  money: 1.0,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Mexico": {
+  soldiers: 250000,
+  airPower: 500,
+  navyPower: 50,
+  money: 19.0,
+  fighterJets: 200,
+  navyBoats: 50,
+  submarines: 6,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Micronesia": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.3,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Moldova": {
+  soldiers: 7000,
+  airPower: 10,
+  navyPower: 0,
+  money: 1.0,
+  fighterJets: 5,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Monaco": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 6.0,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Mongolia": {
+  soldiers: 100000,
+  airPower: 100,
+  navyPower: 0,
+  money: 6.0,
+  fighterJets: 30,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Montenegro": {
+  soldiers: 2000,
+  airPower: 10,
+  navyPower: 0,
+  money: 1.5,
+  fighterJets: 5,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Morocco": {
+  soldiers: 320000,
+  airPower: 400,
+  navyPower: 50,
+  money: 10.0,
+  fighterJets: 100,
+  navyBoats: 50,
+  submarines: 2,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Mozambique": {
+  soldiers: 25000,
+  airPower: 10,
+  navyPower: 5,
+  money: 4.0,
+  fighterJets: 5,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Myanmar": {
+  soldiers: 400000,
+  airPower: 250,
+  navyPower: 50,
+  money: 7.5,
+  fighterJets: 100,
+  navyBoats: 50,
+  submarines: 4,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Namibia": {
+  soldiers: 12000,
+  airPower: 10,
+  navyPower: 0,
+  money: 2.5,
+  fighterJets: 5,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Nauru": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.1,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Nepal": {
+  soldiers: 100000,
+  airPower: 50,
+  navyPower: 0,
+  money: 5.5,
+  fighterJets: 20,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Netherlands": {
+  soldiers: 40000,
+  airPower: 200,
+  navyPower: 50,
+  money: 14.0,
+  fighterJets: 100,
+  navyBoats: 50,
+  submarines: 4,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"New Zealand": {
+  soldiers: 9000,
+  airPower: 50,
+  navyPower: 10,
+  money: 4.5,
+  fighterJets: 10,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Nicaragua": {
+  soldiers: 25000,
+  airPower: 30,
+  navyPower: 10,
+  money: 3.5,
+  fighterJets: 10,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Niger": {
+  soldiers: 25000,
+  airPower: 10,
+  navyPower: 0,
+  money: 3.0,
+  fighterJets: 5,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Nigeria": {
+  soldiers: 200000,
+  airPower: 400,
+  navyPower: 50,
+  money: 13.0,
+  fighterJets: 200,
+  navyBoats: 50,
+  submarines: 3,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"North Macedonia": {
+  soldiers: 8000,
+  airPower: 20,
+  navyPower: 0,
+  money: 2.5,
+  fighterJets: 5,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Norway": {
+  soldiers: 23000,
+  airPower: 250,
+  navyPower: 30,
+  money: 12.0,
+  fighterJets: 50,
+  navyBoats: 30,
+  submarines: 6,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Oman": {
+  soldiers: 42000,
+  airPower: 80,
+  navyPower: 10,
+  money: 8.0,
+  fighterJets: 30,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Pakistan": {
+  soldiers: 650000,
+  airPower: 1300,
+  navyPower: 70,
+  money: 34.0,
+  fighterJets: 500,
+  navyBoats: 70,
+  submarines: 8,
+  nuclear: "Yes",
+  missileDefense: "Yes"
+},
+"Palau": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.3,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Panama": {
+  soldiers: 16000,
+  airPower: 30,
+  navyPower: 10,
+  money: 6.0,
+  fighterJets: 10,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Papua New Guinea": {
+  soldiers: 15000,
+  airPower: 10,
+  navyPower: 5,
+  money: 2.0,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Paraguay": {
+  soldiers: 20000,
+  airPower: 10,
+  navyPower: 5,
+  money: 3.0,
+  fighterJets: 5,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Peru": {
+  soldiers: 120000,
+  airPower: 200,
+  navyPower: 20,
+  money: 16.5,
+  fighterJets: 50,
+  navyBoats: 20,
+  submarines: 3,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Philippines": {
+  soldiers: 225000,
+  airPower: 300,
+  navyPower: 80,
+  money: 8.5,
+  fighterJets: 100,
+  navyBoats: 80,
+  submarines: 2,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Poland": {
+  soldiers: 120000,
+  airPower: 500,
+  navyPower: 30,
+  money: 15.0,
+  fighterJets: 150,
+  navyBoats: 30,
+  submarines: 5,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Portugal": {
+  soldiers: 30000,
+  airPower: 100,
+  navyPower: 20,
+  money: 10.0,
+  fighterJets: 40,
+  navyBoats: 20,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Qatar": {
+  soldiers: 12000,
+  airPower: 100,
+  navyPower: 10,
+  money: 10.0,
+  fighterJets: 50,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Romania": {
+  soldiers: 70000,
+  airPower: 200,
+  navyPower: 20,
+  money: 12.0,
+  fighterJets: 50,
+  navyBoats: 20,
+  submarines: 3,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Russia": {
+  soldiers: 1000000,
+  airPower: 11500,
+  navyPower: 350,
+  money: 155.3,
+  fighterJets: 10000,
+  navyBoats: 350,
+  submarines: 60,
+  nuclear: "Yes",
+  missileDefense: "Yes"
+},
+"Rwanda": {
+  soldiers: 50000,
+  airPower: 10,
+  navyPower: 0,
+  money: 3.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Saint Kitts and Nevis": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.2,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Saint Lucia": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.3,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Saint Vincent and the Grenadines": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.4,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Samoa": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"San Marino": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.03,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Sao Tome and Principe": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.2,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Saudi Arabia": {
+  soldiers: 500000,
+  airPower: 1000,
+  navyPower: 70,
+  money: 61.0,
+  fighterJets: 300,
+  navyBoats: 70,
+  submarines: 5,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Senegal": {
+  soldiers: 20000,
+  airPower: 30,
+  navyPower: 10,
+  money: 5.0,
+  fighterJets: 10,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Serbia": {
+  soldiers: 40000,
+  airPower: 250,
+  navyPower: 10,
+  money: 9.0,
+  fighterJets: 50,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Seychelles": {
+  soldiers: 1000,
+  airPower: 0,
+  navyPower: 5,
+  money: 0.6,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Sierra Leone": {
+  soldiers: 15000,
+  airPower: 10,
+  navyPower: 5,
+  money: 2.0,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Singapore": {
+  soldiers: 75000,
+  airPower: 400,
+  navyPower: 50,
+  money: 59.0,
+  fighterJets: 100,
+  navyBoats: 50,
+  submarines: 6,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Slovakia": {
+  soldiers: 15000,
+  airPower: 100,
+  navyPower: 0,
+  money: 6.0,
+  fighterJets: 30,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Slovenia": {
+  soldiers: 5000,
+  airPower: 20,
+  navyPower: 0,
+  money: 4.0,
+  fighterJets: 10,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Solomon Islands": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Somalia": {
+  soldiers: 20000,
+  airPower: 10,
+  navyPower: 5,
+  money: 3.0,
+  fighterJets: 5,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"South Africa": {
+  soldiers: 300000,
+  airPower: 200,
+  navyPower: 40,
+  money: 24.0,
+  fighterJets: 150,
+  navyBoats: 40,
+  submarines: 3,
+  nuclear: "Yes",
+  missileDefense: "Yes"
+},
+"South Sudan": {
+  soldiers: 15000,
+  airPower: 10,
+  navyPower: 0,
+  money: 2.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Spain": {
+  soldiers: 120000,
+  airPower: 800,
+  navyPower: 40,
+  money: 42.0,
+  fighterJets: 200,
+  navyBoats: 40,
+  submarines: 6,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Sri Lanka": {
+  soldiers: 200000,
+  airPower: 100,
+  navyPower: 20,
+  money: 4.0,
+  fighterJets: 50,
+  navyBoats: 20,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Sudan": {
+  soldiers: 400000,
+  airPower: 200,
+  navyPower: 20,
+  money: 6.5,
+  fighterJets: 50,
+  navyBoats: 20,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Suriname": {
+  soldiers: 1000,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.6,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Sweden": {
+  soldiers: 25000,
+  airPower: 200,
+  navyPower: 50,
+  money: 56.0,
+  fighterJets: 100,
+  navyBoats: 50,
+  submarines: 5,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Switzerland": {
+  soldiers: 15000,
+  airPower: 50,
+  navyPower: 0,
+  money: 8.0,
+  fighterJets: 30,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Syria": {
+  soldiers: 500000,
+  airPower: 500,
+  navyPower: 10,
+  money: 3.0,
+  fighterJets: 150,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Taiwan": {
+  soldiers: 250000,
+  airPower: 400,
+  navyPower: 50,
+  money: 20.0,
+  fighterJets: 200,
+  navyBoats: 50,
+  submarines: 5,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Tajikistan": {
+  soldiers: 20000,
+  airPower: 10,
+  navyPower: 0,
+  money: 3.0,
+  fighterJets: 5,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Tanzania": {
+  soldiers: 20000,
+  airPower: 20,
+  navyPower: 10,
+  money: 4.0,
+  fighterJets: 5,
+  navyBoats: 10,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Thailand": {
+  soldiers: 300000,
+  airPower: 500,
+  navyPower: 80,
+  money: 12.0,
+  fighterJets: 150,
+  navyBoats: 80,
+  submarines: 4,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Timor-Leste": {
+  soldiers: 5000,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.5,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Togo": {
+  soldiers: 10000,
+  airPower: 5,
+  navyPower: 5,
+  money: 1.5,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Tonga": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.2,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Trinidad and Tobago": {
+  soldiers: 5000,
+  airPower: 10,
+  navyPower: 5,
+  money: 3.0,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Tunisia": {
+  soldiers: 50000,
+  airPower: 150,
+  navyPower: 30,
+  money: 7.5,
+  fighterJets: 30,
+  navyBoats: 30,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Turkey": {
+  soldiers: 500000,
+  airPower: 1300,
+  navyPower: 100,
+  money: 45.0,
+  fighterJets: 500,
+  navyBoats: 100,
+  submarines: 14,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"Turkmenistan": {
+  soldiers: 25000,
+  airPower: 50,
+  navyPower: 0,
+  money: 6.0,
+  fighterJets: 10,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Tuvalu": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.1,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Uganda": {
+  soldiers: 45000,
+  airPower: 20,
+  navyPower: 5,
+  money: 6.0,
+  fighterJets: 5,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Ukraine": {
+  soldiers: 250000,
+  airPower: 800,
+  navyPower: 50,
+  money: 35.0,
+  fighterJets: 200,
+  navyBoats: 50,
+  submarines: 3,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"United Arab Emirates": {
+  soldiers: 65000,
+  airPower: 600,
+  navyPower: 60,
+  money: 59.0,
+  fighterJets: 200,
+  navyBoats: 60,
+  submarines: 6,
+  nuclear: "No",
+  missileDefense: "Yes"
+},
+"United Kingdom": {
+  soldiers: 150000,
+  airPower: 800,
+  navyPower: 75,
+  money: 51.4,
+  fighterJets: 200,
+  navyBoats: 75,
+  submarines: 11,
+  nuclear: "Yes",
+  missileDefense: "Yes"
+},
+"United States": {
+  soldiers: 1400000,
+  airPower: 13700,
+  navyPower: 490,
+  money: 732.8,
+  fighterJets: 13000,
+  navyBoats: 490,
+  submarines: 70,
+  nuclear: "Yes",
+  missileDefense: "Yes"
+},
+"Uruguay": {
+  soldiers: 25000,
+  airPower: 10,
+  navyPower: 5,
+  money: 6.0,
+  fighterJets: 0,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Uzbekistan": {
+  soldiers: 100000,
+  airPower: 150,
+  navyPower: 0,
+  money: 7.0,
+  fighterJets: 30,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Vanuatu": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.3,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Vatican City": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.1,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Venezuela": {
+  soldiers: 300000,
+  airPower: 200,
+  navyPower: 50,
+  money: 15.0,
+  fighterJets: 100,
+  navyBoats: 50,
+  submarines: 5,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Vietnam": {
+  soldiers: 500000,
+  airPower: 300,
+  navyPower: 50,
+  money: 12.0,
+  fighterJets: 100,
+  navyBoats: 50,
+  submarines: 5,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Yemen": {
+  soldiers: 200000,
+  airPower: 150,
+  navyPower: 20,
+  money: 6.5,
+  fighterJets: 50,
+  navyBoats: 20,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Zambia": {
+  soldiers: 25000,
+  airPower: 20,
+  navyPower: 5,
+  money: 4.0,
+  fighterJets: 5,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Zimbabwe": {
+  soldiers: 30000,
+  airPower: 20,
+  navyPower: 5,
+  money: 4.5,
+  fighterJets: 5,
+  navyBoats: 5,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+},
+"Zanzibar": {
+  soldiers: 0,
+  airPower: 0,
+  navyPower: 0,
+  money: 0.2,
+  fighterJets: 0,
+  navyBoats: 0,
+  submarines: 0,
+  nuclear: "No",
+  missileDefense: "No"
+}
 
-        async function fetchDevices() {
-            const container = document.getElementById("device-container");
-            const loadingElement = document.getElementById("loading");
+  function compareCountries() {
+    const country1 = document.getElementById("country1").value;
+    const country2 = document.getElementById("country2").value;
 
-            try {
-                const response = await fetch("https://55dd-83-250-213-73.ngrok-free.app/devices", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "ngrok-skip-browser-warning": "any value"
-                    }
-                });
-                const data = await response.json();
-                const newDevices = data.devices || [];
+    if (!countries[country1] || !countries[country2]) {
+      alert("Ett eller båda länderna finns inte i databasen.");
+      return;
+    }
 
-                newDevices.forEach(device => {
-                    const deviceId = device.mac;
-                    let deviceCard = document.getElementById(deviceId);
+    const country1Data = countries[country1];
+    const country2Data = countries[country2];
 
-                    if (!deviceCard) {
-                        // Skapa kort för nya enheter
-                        const card = document.createElement("div");
-                        card.className = "device-card";
-                        card.id = deviceId;
-                        card.innerHTML = `
-                            <div><strong>${device.name}</strong></div>
-                            <p>IP: ${device.ip}</p>
-                            <p>MAC: ${device.mac}</p>
-                            <p class="${device.status === "OK" ? "status-ok" : "status-suspekt"}">${device.status}</p>
-                        `;
-                        container.appendChild(card);
-                    } else {
-                        // Uppdatera befintliga kort
-                        deviceCard.querySelector("p:nth-child(2)").textContent = `IP: ${device.ip}`;
-                    }
-                });
-            } catch (error) {
-                console.error("Fel vid hämtning:", error);
-            }
-        }
+    document.getElementById("country1-name").textContent = country1;
+    document.getElementById("country1-details").innerHTML = `
+      Soldater: ${country1Data.soldiers} <br>
+      Flygplansstyrka: ${country1Data.airPower} <br>
+      Marin: ${country1Data.navyPower} <br>
+      Pengar: $${country1Data.money} miljarder <br>
+      Fighter Jets: ${country1Data.fighterJets} <br>
+      Navy Boats: ${country1Data.navyBoats} <br>
+      Ubåtar: ${country1Data.submarines} <br>
+      Kärnvapen: ${country1Data.nuclear} <br>
+      Robotförsvar: ${country1Data.missileDefense}
+    `;
 
-        startTimer();
-        setInterval(startTimer, 5000);
-    </script>
+    document.getElementById("country2-name").textContent = country2;
+    document.getElementById("country2-details").innerHTML = `
+      Soldater: ${country2Data.soldiers} <br>
+      Flygplansstyrka: ${country2Data.airPower} <br>
+      Marin: ${country2Data.navyPower} <br>
+      Pengar: $${country2Data.money} miljarder <br>
+      Fighter Jets: ${country2Data.fighterJets} <br>
+      Navy Boats: ${country2Data.navyBoats} <br>
+      Ubåtar: ${country2Data.submarines} <br>
+      Kärnvapen: ${country2Data.nuclear} <br>
+      Robotförsvar: ${country2Data.missileDefense}
+    `;
+
+    let winner = "Oavgjort";
+    let reason = "Ingen klar vinnare.";
+
+    if (country1Data.soldiers > country2Data.soldiers) {
+      winner = country1;
+      reason = `${country1} har fler soldater.`;
+    } else if (country2Data.soldiers > country1Data.soldiers) {
+      winner = country2;
+      reason = `${country2} har fler soldater.`;
+    }
+
+    document.getElementById("winner-name").textContent = winner;
+    document.getElementById("why-win").textContent = reason;
+
+    document.getElementById("result").classList.remove("hidden");
+  }
+
+  document.getElementById("compareBtn").addEventListener("click", compareCountries);
+</script>
+
 </body>
 </html>
