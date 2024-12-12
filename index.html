@@ -9,23 +9,26 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #74ebd5, #acb6e5);
+      background: linear-gradient(135deg, #FF6B6B, #F7B7A3); /* Färgglad bakgrund */
       color: white;
       overflow-x: hidden;
+      transition: background 0.5s ease;
     }
 
     header {
       position: sticky;
       top: 0;
       background-color: rgba(0, 0, 0, 0.8);
-      padding: 10px 0;
+      padding: 20px 0;
       text-align: center;
       font-size: 2em;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
     }
 
     .content {
-      padding: 20px;
+      padding: 40px;
       text-align: center;
+      margin-top: 60px;
     }
 
     .intro {
@@ -33,10 +36,12 @@
     }
 
     input[type="text"], button {
-      padding: 10px;
-      margin: 10px;
+      padding: 12px;
+      margin: 12px;
       font-size: 1rem;
-      border-radius: 5px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
     }
 
     #compareBtn {
@@ -44,24 +49,12 @@
       color: white;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
 
     #compareBtn:hover {
       background-color: #45a049;
-    }
-
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .column {
-      width: 30%;
-      margin: 10px;
-      padding: 20px;
-      background-color: rgba(0, 0, 0, 0.6);
-      border-radius: 10px;
     }
 
     .popup {
@@ -71,12 +64,11 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.8);
-      display: flex;
+      display: none; /* Popup kommer nu endast synas när den är aktiverad */
       justify-content: center;
       align-items: center;
       animation: fadeIn 1s ease-out;
-      z-index: 999;
-      overflow: hidden;
+      z-index: 1000;
     }
 
     .popup-content {
@@ -87,7 +79,8 @@
       max-width: 600px;
       color: white;
       text-align: center;
-      animation: popupContent 1s ease-out;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      animation: popupContent 0.5s ease-out;
     }
 
     .popup h2 {
@@ -95,24 +88,23 @@
     }
 
     .popup p {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       margin: 10px 0;
     }
 
     .close-btn {
-      background-color: #f44336;
+      background-color: #FF6347;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border: none;
       font-size: 1rem;
       cursor: pointer;
       border-radius: 5px;
-      margin-top: 20px;
       transition: background-color 0.3s ease;
     }
 
     .close-btn:hover {
-      background-color: #d32f2f;
+      background-color: #e53e3e;
     }
 
     @keyframes fadeIn {
@@ -125,10 +117,13 @@
       to { transform: scale(1); }
     }
 
-    @media (max-width: 768px) {
-      .column {
-        width: 100%;
-      }
+    .column {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 10px;
+      width: 30%;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
 
     footer {
@@ -139,6 +134,17 @@
       font-size: 1rem;
       background-color: rgba(0, 0, 0, 0.8);
       padding: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Responsivitet */
+    @media (max-width: 768px) {
+      .column {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -157,12 +163,8 @@
   </div>
 </div>
 
-<footer>
-  Om oss - Landkrig
-</footer>
-
 <!-- Popup for Result -->
-<div id="popup" class="popup hidden">
+<div id="popup" class="popup">
   <div class="popup-content">
     <h2>Resultat av Strid</h2>
     <div id="result-details">
@@ -171,6 +173,10 @@
     <button class="close-btn" id="closePopup">Stäng och Ladda om</button>
   </div>
 </div>
+
+<footer>
+  Om oss - Landkrig
+</footer>
 
 <script>
   const countries = {
@@ -2321,12 +2327,12 @@
     document.getElementById("result-details").innerHTML = resultDetails;
 
     // Show the popup
-    document.getElementById("popup").classList.remove("hidden");
+    document.getElementById("popup").style.display = "flex";
   }
 
   // Close Popup and reload page
   document.getElementById("closePopup").addEventListener("click", () => {
-    document.getElementById("popup").classList.add("hidden");
+    document.getElementById("popup").style.display = "none";
     location.reload();
   });
 
