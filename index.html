@@ -14,6 +14,7 @@
       overflow: hidden;
       color: white;
       text-align: center;
+      cursor: pointer;
     }
 
     /* Snöeffekt */
@@ -43,10 +44,15 @@
       100% { top: 100vh; left: calc(100% * random()); }
     }
 
-    /* Stil för vädersektionen */
+    /* Hover-effekt för bakgrund */
+    body:hover {
+      background: linear-gradient(to bottom, rgba(168, 192, 255, 0.7), rgba(63, 135, 242, 0.7));
+    }
+
+    /* Stil för vädersektionerna */
     .weather-section {
       position: absolute;
-      top: 20%;
+      top: 10%;
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;
@@ -56,16 +62,44 @@
       max-width: 90%;
     }
 
+    /* Dagens väder */
+    .today-section {
+      margin-bottom: 20px;
+    }
+
+    /* Väderprognos för veckan */
+    .week-section {
+      margin-top: 40px;
+    }
+
     /* Text för platsen */
     .location {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
       margin-bottom: 20px;
     }
 
-    .forecast {
+    /* Timme-för-timme väder */
+    .hourly {
       display: flex;
       justify-content: space-around;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .hour {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      padding: 10px;
+      margin: 5px;
+      width: 18%;
+      color: white;
+    }
+
+    /* Veckans väder */
+    .week {
+      display: flex;
+      justify-content: space-between;
       flex-wrap: wrap;
       margin-top: 20px;
     }
@@ -95,11 +129,18 @@
   <!-- Snöeffekt -->
   <div class="snow"></div>
 
-  <!-- Vädersektion -->
-  <div class="weather-section">
+  <!-- Dagens vädersektion -->
+  <div class="weather-section today-section">
     <div class="location" id="location">Hämtar plats...</div>
-    <div class="forecast" id="forecast">
-      <!-- Prognos kommer här -->
+    <div class="hourly" id="hourly">
+      <!-- Timme-för-timme väder -->
+    </div>
+  </div>
+
+  <!-- Veckans vädersektion -->
+  <div class="weather-section week-section">
+    <div class="week" id="week">
+      <!-- Veckans prognos kommer här -->
     </div>
   </div>
 
@@ -136,10 +177,26 @@
       const locationElement = document.getElementById('location');
       locationElement.textContent = `Väder för: ${weatherData.location.name}, ${weatherData.location.country}`;
 
-      // Visa veckans prognos
-      const forecastElement = document.getElementById('forecast');
+      // Dagens timme-för-timme väder
+      const hourlyElement = document.getElementById('hourly');
+      const hourlyData = weatherData.forecast.forecastday[0].hour;
+      hourlyElement.innerHTML = '';
+
+      hourlyData.forEach((hour) => {
+        const hourElement = document.createElement('div');
+        hourElement.classList.add('hour');
+        hourElement.innerHTML = `
+          <div>${new Date(hour.time).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>
+          <div>${hour.temp_c}°C</div>
+          <div><img class="weather-icon" src="${hour.condition.icon}" alt="weather icon"></div>
+        `;
+        hourlyElement.appendChild(hourElement);
+      });
+
+      // Veckans väderprognos
+      const weekElement = document.getElementById('week');
       const dailyData = weatherData.forecast.forecastday;
-      forecastElement.innerHTML = '';
+      weekElement.innerHTML = '';
 
       dailyData.forEach((day, index) => {
         const dayElement = document.createElement('div');
@@ -151,7 +208,7 @@
           <div>${day.day.avgtemp_c}°C</div>
           <div><img class="weather-icon" src="${day.day.condition.icon}" alt="weather icon"></div>
         `;
-        forecastElement.appendChild(dayElement);
+        weekElement.appendChild(dayElement);
       });
     }
 
