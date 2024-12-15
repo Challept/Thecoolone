@@ -15,6 +15,7 @@
       color: white;
       text-align: center;
       cursor: pointer;
+      position: relative;
     }
 
     /* Snöeffekt */
@@ -25,7 +26,7 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 100;
+      z-index: 1;
     }
 
     .snowflake {
@@ -49,8 +50,8 @@
       background: linear-gradient(to bottom, rgba(168, 192, 255, 0.7), rgba(63, 135, 242, 0.7));
     }
 
-    /* Stil för vädersektionerna */
-    .weather-section {
+    /* Vädersektion */
+    .weather-container {
       position: absolute;
       top: 10%;
       left: 50%;
@@ -60,16 +61,8 @@
       background-color: rgba(0, 0, 0, 0.7);
       border-radius: 10px;
       max-width: 90%;
-    }
-
-    /* Dagens väder */
-    .today-section {
-      margin-bottom: 20px;
-    }
-
-    /* Väderprognos för veckan */
-    .week-section {
-      margin-top: 40px;
+      width: 800px;
+      box-sizing: border-box;
     }
 
     /* Text för platsen */
@@ -79,49 +72,49 @@
       margin-bottom: 20px;
     }
 
-    /* Timme-för-timme väder */
-    .hourly {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-
-    .hour {
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 10px;
-      padding: 10px;
-      margin: 5px;
-      width: 18%;
-      color: white;
-    }
-
     /* Veckans väder */
-    .week {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
+    .weather-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
       margin-top: 20px;
     }
 
-    .day {
+    .weather-card {
       background: rgba(0, 0, 0, 0.5);
       border-radius: 10px;
       padding: 10px;
-      margin: 5px;
-      width: 45%;
       color: white;
+      text-align: center;
     }
 
     .highlight {
       background-color: #ff5f5f;
     }
 
-    /* Vädersymboler */
-    .weather-icon {
-      width: 30px;
-      height: 30px;
+    .weather-card img {
+      width: 40px;
+      height: 40px;
     }
+
+    .weather-card h3 {
+      margin-top: 10px;
+    }
+
+    /* Responsiv design */
+    @media screen and (max-width: 768px) {
+      .weather-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .weather-container {
+        width: 100%;
+        padding: 10px;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -129,17 +122,17 @@
   <!-- Snöeffekt -->
   <div class="snow"></div>
 
-  <!-- Dagens vädersektion -->
-  <div class="weather-section today-section">
+  <!-- Vädersektion -->
+  <div class="weather-container">
     <div class="location" id="location">Hämtar plats...</div>
-    <div class="hourly" id="hourly">
-      <!-- Timme-för-timme väder -->
-    </div>
-  </div>
 
-  <!-- Veckans vädersektion -->
-  <div class="weather-section week-section">
-    <div class="week" id="week">
+    <!-- Dagens väder -->
+    <div class="weather-grid" id="today">
+      <!-- Timme-för-timme väder kommer här -->
+    </div>
+
+    <!-- Veckans väder -->
+    <div class="weather-grid" id="week">
       <!-- Veckans prognos kommer här -->
     </div>
   </div>
@@ -160,7 +153,6 @@
 
     // Hämta användarens plats och väderprognos
     async function getWeather() {
-      // Hämta plats
       const position = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
@@ -178,19 +170,19 @@
       locationElement.textContent = `Väder för: ${weatherData.location.name}, ${weatherData.location.country}`;
 
       // Dagens timme-för-timme väder
-      const hourlyElement = document.getElementById('hourly');
+      const todayElement = document.getElementById('today');
       const hourlyData = weatherData.forecast.forecastday[0].hour;
-      hourlyElement.innerHTML = '';
+      todayElement.innerHTML = '';
 
       hourlyData.forEach((hour) => {
         const hourElement = document.createElement('div');
-        hourElement.classList.add('hour');
+        hourElement.classList.add('weather-card');
         hourElement.innerHTML = `
           <div>${new Date(hour.time).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>
           <div>${hour.temp_c}°C</div>
-          <div><img class="weather-icon" src="${hour.condition.icon}" alt="weather icon"></div>
+          <img src="${hour.condition.icon}" alt="weather icon">
         `;
-        hourlyElement.appendChild(hourElement);
+        todayElement.appendChild(hourElement);
       });
 
       // Veckans väderprognos
@@ -200,13 +192,13 @@
 
       dailyData.forEach((day, index) => {
         const dayElement = document.createElement('div');
-        dayElement.classList.add('day');
+        dayElement.classList.add('weather-card');
         if (index === 0) dayElement.classList.add('highlight');
 
         dayElement.innerHTML = `
-          <div>${new Date(day.date).toLocaleDateString()}</div>
+          <h3>${new Date(day.date).toLocaleDateString()}</h3>
           <div>${day.day.avgtemp_c}°C</div>
-          <div><img class="weather-icon" src="${day.day.condition.icon}" alt="weather icon"></div>
+          <img src="${day.day.condition.icon}" alt="weather icon">
         `;
         weekElement.appendChild(dayElement);
       });
