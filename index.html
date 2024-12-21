@@ -123,7 +123,7 @@
 
     <script>
         // Backend-URL
-        const API_URL = "https://6144-83-250-213-73.ngrok-free.app/ask";
+        const API_URL = "https://2492-83-250-213-73.ngrok-free.app/ask";
 
         // Referenser till HTML-element
         const questionInput = document.getElementById('questionInput');
@@ -131,20 +131,30 @@
         const loadingText = document.getElementById('loadingText');
         const responseContainer = document.getElementById('responseContainer');
 
-        // Funktion för att skapa snöflingor
-        function createSnow() {
-            const snowContainer = document.querySelector('.snow');
-            for (let i = 0; i < 100; i++) {
-                const snowflake = document.createElement('div');
-                snowflake.className = 'snowflake';
-                snowflake.style.width = `${Math.random() * 10 + 2}px`;
-                snowflake.style.height = snowflake.style.width;
-                snowflake.style.left = `${Math.random() * 100}vw`;
-                snowflake.style.animationDuration = `${Math.random() * 5 + 2}s`;
-                snowflake.style.animationDelay = `${Math.random() * 5}s`;
-                snowContainer.appendChild(snowflake);
-            }
-        }
+// Funktion för att skapa snöflingor
+function createSnow() {
+    const snowContainer = document.querySelector('.snow');
+    for (let i = 0; i < 100; i++) {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+
+        // Dynamisk storlek
+        snowflake.style.width = `${Math.random() * 10 + 2}px`;
+        snowflake.style.height = snowflake.style.width;
+
+        // Placering horisontellt
+        snowflake.style.left = `${Math.random() * 100}vw`;
+
+        // Gör att snöflingorna faller snabbare
+        snowflake.style.animationDuration = `${Math.random() * 3 + 1.5}s`; // Tid är mellan 1.5s och 4.5s
+
+        // Slumpad fördröjning
+        snowflake.style.animationDelay = `${Math.random() * 2}s`; // Max 2s fördröjning
+
+        // Lägg till snöflingan i containern
+        snowContainer.appendChild(snowflake);
+    }
+}
 
         // Funktion för att skicka fråga till backend
         async function askQuestion() {
