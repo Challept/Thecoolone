@@ -3,215 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FrågeApp</title>
+    <title>Secure Notes</title>
     <style>
-        /* Gradient bakgrund */
         body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
-        /* Snöeffekt */
-        .snow {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .snowflake {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            0% {
-                transform: translateY(-10%);
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(110%);
-                opacity: 0;
-            }
-        }
-
-        /* Sektion */
         .container {
-            background: white;
+            width: 400px;
+            margin: 50px auto;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h2 {
             text-align: center;
-            z-index: 2;
         }
 
-        h1 {
-            margin-bottom: 20px;
-            font-size: 2rem;
-            color: #333;
+        form {
+            display: flex;
+            flex-direction: column;
         }
 
-        .loading {
-            display: none;
-            margin: 10px auto;
-            font-size: 1.2rem;
-            color: #007bff;
-        }
-
-        input[type="text"] {
-            width: 80%;
+        input, textarea {
+            margin-bottom: 10px;
             padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            font-size: 1rem;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
         }
 
         button {
-            padding: 10px 20px;
-            font-size: 1rem;
+            padding: 10px;
+            background-color: #4CAF50;
             color: white;
-            background: #007bff;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            border-radius: 4px;
         }
 
         button:hover {
-            background: #0056b3;
+            background-color: #45a049;
         }
 
-        .response {
-            margin-top: 20px;
-            text-align: left;
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
 
-        .response h2 {
-            color: #007bff;
+        ul li {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
         }
 
-        .response p {
-            color: #555;
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+        }
+
+        .popup-header {
+            text-align: center;
+        }
+
+        .back-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <!-- Snöeffekt -->
-    <div class="snow"></div>
+    <!-- Sign-In Popup -->
+    <div id="signin-popup" class="popup">
+        <div class="popup-content">
+            <h3 class="popup-header">Sign-In</h3>
+            <form id="signin-form">
+                <input type="text" id="signin-username" placeholder="Username" required>
+                <input type="password" id="signin-password" placeholder="Password" required>
+                <button type="button" onclick="signin()">Sign In</button>
+            </form>
+            <p>Don't have an account? <a href="#" onclick="showSignUp()">Sign Up</a></p>
+            <button class="back-button" onclick="closePopup('signin-popup')">Back</button>
+        </div>
+    </div>
 
-    <!-- Innehåll -->
-    <div class="container">
-        <h1>Fråga och få svar!</h1>
-        <input type="text" id="questionInput" placeholder="Skriv din fråga här..." />
-        <button id="askButton">Fråga</button>
-        <p class="loading" id="loadingText">Laddar, vänta...</p>
-        <div class="response" id="responseContainer"></div>
+    <!-- Sign-Up Popup -->
+    <div id="signup-popup" class="popup">
+        <div class="popup-content">
+            <h3 class="popup-header">Sign-Up</h3>
+            <form id="signup-form">
+                <input type="text" id="signup-username" placeholder="Username" required>
+                <input type="password" id="signup-password" placeholder="Password" required>
+                <button type="button" onclick="signup()">Sign Up</button>
+            </form>
+            <p>Already have an account? <a href="#" onclick="showSignIn()">Sign In</a></p>
+            <button class="back-button" onclick="closePopup('signup-popup')">Back</button>
+        </div>
+    </div>
+
+    <!-- Notes App Popup -->
+    <div id="notes-popup" class="popup">
+        <div class="popup-content">
+            <h3 class="popup-header">Your Notes</h3>
+            <form id="note-form">
+                <textarea id="note-content" placeholder="Write your note here..." required></textarea>
+                <input type="password" id="note-password" placeholder="Password for Encryption" required>
+                <button type="button" onclick="addNote()">Save Note</button>
+            </form>
+            <ul id="notes-list"></ul>
+            <button class="back-button" onclick="closePopup('notes-popup')">Back</button>
+        </div>
     </div>
 
     <script>
-        // Backend-URL
-        const API_URL = "https://c381-83-250-213-73.ngrok-free.app/ask";
+        const apiBaseUrl = "https://8ada-83-250-213-73.ngrok-free.app"; // Update with your backend URL
 
-        // Referenser till HTML-element
-        const questionInput = document.getElementById('questionInput');
-        const askButton = document.getElementById('askButton');
-        const loadingText = document.getElementById('loadingText');
-        const responseContainer = document.getElementById('responseContainer');
-
-// Funktion för att skapa snöflingor
-function createSnow() {
-    const snowContainer = document.querySelector('.snow');
-    for (let i = 0; i < 100; i++) {
-        const snowflake = document.createElement('div');
-        snowflake.className = 'snowflake';
-
-        // Dynamisk storlek
-        snowflake.style.width = `${Math.random() * 10 + 2}px`;
-        snowflake.style.height = snowflake.style.width;
-
-        // Placering horisontellt
-        snowflake.style.left = `${Math.random() * 100}vw`;
-
-        // Gör att snöflingorna faller snabbare
-        snowflake.style.animationDuration = `${Math.random() * 3 + 1.5}s`; // Tid är mellan 1.5s och 4.5s
-
-        // Slumpad fördröjning
-        snowflake.style.animationDelay = `${Math.random() * 2}s`; // Max 2s fördröjning
-
-        // Lägg till snöflingan i containern
-        snowContainer.appendChild(snowflake);
-    }
-}
-
-        // Funktion för att skicka fråga till backend
-        async function askQuestion() {
-            const question = questionInput.value.trim();
-
-            if (!question) {
-                alert("Skriv en fråga först!");
-                return;
-            }
-
-            // Visa laddningsikonen
-            loadingText.style.display = 'block';
-            responseContainer.innerHTML = '';
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ question }),
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    // Visa svar
-                    responseContainer.innerHTML = `
-                        <h2>Direkt Svar:</h2>
-                        <p><strong>${data.direct_answer}</strong></p>
-                        <h2>Full Text:</h2>
-                        <p>${data.full_text}</p>
-                        <p><a href="${data.source}" target="_blank">Källa</a></p>
-                    `;
-                } else {
-                    responseContainer.innerHTML = `<p style="color: red;">Fel: ${data.error}</p>`;
-                }
-            } catch (error) {
-                responseContainer.innerHTML = `<p style="color: red;">Något gick fel. Kontrollera servern!</p>`;
-            } finally {
-                // Göm laddningsikonen
-                loadingText.style.display = 'none';
-            }
+        // Show Sign-Up popup and hide Sign-In popup
+        function showSignUp() {
+            document.getElementById('signin-popup').style.display = 'none';
+            document.getElementById('signup-popup').style.display = 'flex';
         }
 
-        // Event för att klicka på "Fråga" med Enter
-        questionInput.addEventListener('keypress', function (event) {
-            if (event.key === 'Enter') {
-                askButton.click();
-            }
-        });
+        // Show Sign-In popup and hide Sign-Up popup
+        function showSignIn() {
+            document.getElementById('signup-popup').style.display = 'none';
+            document.getElementById('signin-popup').style.display = 'flex';
+        }
 
-        // Lägg till klickhändelse för knappen
-        askButton.addEventListener('click', askQuestion);
+        // Close any popup
+        function closePopup(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+        }
 
-        // Skapa snö
-        createSnow();
+        // Handle Sign-Up
+        function signup() {
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+
+            fetch(`${apiBaseUrl}/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    showSignIn();
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
+        // Handle Sign-In
+        function signin() {
+            const username = document.getElementById('signin-username').value;
+            const password = document.getElementById('signin-password').value;
+
+            fetch(`${apiBaseUrl}/signin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    openNotesApp();
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
+        // Open Notes App popup
+        function openNotesApp() {
+            document.getElementById('signin-popup').style.display = 'none';
+            document.getElementById('signup-popup').style.display = 'none';
+            document.getElementById('notes-popup').style.display = 'flex';
+            fetchNotes();
+        }
+
+        // Fetch notes from the backend
+        function fetchNotes() {
+            fetch(`${apiBaseUrl}/get_notes`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const notesList = document.getElementById('notes-list');
+                    notesList.innerHTML = ''; // Clear the list
+                    data.notes.forEach(note => {
+                        const li = document.createElement('li');
+                        li.textContent = note;
+                        notesList.appendChild(li);
+                    });
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
+        // Handle adding a note
+        function addNote() {
+            const note = document.getElementById('note-content').value;
+            const password = document.getElementById('note-password').value;
+
+            fetch(`${apiBaseUrl}/add_note`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ note, password }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    fetchNotes(); // Refresh notes list
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
     </script>
 </body>
 </html>
