@@ -158,50 +158,41 @@
     <div class="container">
         <h1>Welcome to Secure Notes</h1>
         <p>Your encrypted space to store personal notes, secure and private.</p>
-        <button class="button" onclick="showSignUp()">Sign Up</button>
-        <button class="button" onclick="showSignIn()">Sign In</button>
-        <button class="button" onclick="openNotesApp()">View Notes</button>
+        <button class="button" onclick="showCreateFolder()">Create Folder</button>
+        <button class="button" onclick="showViewFolders()">View Folders</button>
     </div>
 
-    <!-- Sign-In Popup -->
-    <div id="signin-popup" class="popup">
+    <!-- Create Folder Popup -->
+    <div id="create-folder-popup" class="popup">
         <div class="popup-content">
-            <h3 class="popup-header">Sign-In</h3>
-            <form id="signin-form">
-                <input type="text" id="signin-username" placeholder="Username" required>
-                <input type="password" id="signin-password" placeholder="Password" required>
-                <button type="button" onclick="signin()">Sign In</button>
+            <h3 class="popup-header">Create New Folder</h3>
+            <form id="create-folder-form">
+                <input type="text" id="folder-username" placeholder="Folder Name" required>
+                <button type="button" onclick="createFolder()">Create Folder</button>
             </form>
-            <p>Don't have an account? <a href="#" onclick="showSignUp()">Sign Up</a></p>
-            <button class="back-button" onclick="closePopup('signin-popup')">Back</button>
+            <button class="back-button" onclick="closePopup('create-folder-popup')">Back</button>
         </div>
     </div>
 
-    <!-- Sign-Up Popup -->
-    <div id="signup-popup" class="popup">
+    <!-- View Folders Popup -->
+    <div id="view-folders-popup" class="popup">
         <div class="popup-content">
-            <h3 class="popup-header">Sign-Up</h3>
-            <form id="signup-form">
-                <input type="text" id="signup-username" placeholder="Username" required>
-                <input type="password" id="signup-password" placeholder="Password" required>
-                <button type="button" onclick="signup()">Sign Up</button>
-            </form>
-            <p>Already have an account? <a href="#" onclick="showSignIn()">Sign In</a></p>
-            <button class="back-button" onclick="closePopup('signup-popup')">Back</button>
+            <h3 class="popup-header">Your Folders</h3>
+            <ul id="folders-list"></ul>
+            <button class="back-button" onclick="closePopup('view-folders-popup')">Back</button>
         </div>
     </div>
 
-    <!-- Notes App Popup -->
-    <div id="notes-popup" class="popup">
+    <!-- Add File to Folder Popup -->
+    <div id="add-file-popup" class="popup">
         <div class="popup-content">
-            <h3 class="popup-header">Your Notes</h3>
-            <form id="note-form">
-                <textarea id="note-content" placeholder="Write your note here..." required></textarea>
-                <input type="password" id="note-password" placeholder="Password for Encryption" required>
-                <button type="button" onclick="addNote()">Save Note</button>
+            <h3 class="popup-header">Add File to Folder</h3>
+            <form id="add-file-form">
+                <input type="text" id="file-name" placeholder="File Name" required>
+                <textarea id="file-content" placeholder="File Content" required></textarea>
+                <button type="button" onclick="addFile()">Save File</button>
             </form>
-            <ul id="notes-list"></ul>
-            <button class="back-button" onclick="closePopup('notes-popup')">Back</button>
+            <button class="back-button" onclick="closePopup('add-file-popup')">Back</button>
         </div>
     </div>
 
@@ -210,95 +201,49 @@
     </footer>
 
     <script>
-        const apiBaseUrl = "https://97ea-83-250-213-73.ngrok-free.app"; // Backend URL
+        const apiBaseUrl = "https://2e07-83-250-213-73.ngrok-free.app"; // Backend URL
 
-        // Show Sign-Up popup and hide Sign-In popup
-        function showSignUp() {
-            document.getElementById('signin-popup').style.display = 'none';
-            document.getElementById('signup-popup').style.display = 'flex';
+        // Show Create Folder Popup
+        function showCreateFolder() {
+            document.getElementById('create-folder-popup').style.display = 'flex';
         }
 
-        // Show Sign-In popup and hide Sign-Up popup
-        function showSignIn() {
-            document.getElementById('signup-popup').style.display = 'none';
-            document.getElementById('signin-popup').style.display = 'flex';
+        // Show View Folders Popup
+        function showViewFolders() {
+            fetchFolders();
+            document.getElementById('view-folders-popup').style.display = 'flex';
         }
 
-        // Close any popup
+        // Close Popup
         function closePopup(popupId) {
             document.getElementById(popupId).style.display = 'none';
         }
 
-        // Handle Sign-Up
-        function signup() {
-            const username = document.getElementById('signup-username').value;
-            const password = document.getElementById('signup-password').value;
+        // Create Folder
+        function createFolder() {
+            const folderName = document.getElementById('folder-username').value;
 
-            fetch(`${apiBaseUrl}/signup`, {
+            fetch(`${apiBaseUrl}/create_folder`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ username: folderName }),
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert(data.message);
-                    showSignIn();
+                    closePopup('create-folder-popup');
                 } else {
                     alert(data.message);
                 }
             });
         }
 
-        // Handle Sign-In
-        function signin() {
-            const username = document.getElementById('signin-username').value;
-            const password = document.getElementById('signin-password').value;
-
-            fetch(`${apiBaseUrl}/signin`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    sessionStorage.setItem('username', username); // Save username to sessionStorage
-                    openNotesApp();
-                } else {
-                    alert(data.message);
-                }
-            });
-        }
-
-        // Open Notes App popup
-        function openNotesApp() {
-            const username = sessionStorage.getItem('username');
-            if (!username) {
-                alert('User not logged in.');
-                return;
-            }
-
-            document.getElementById('signin-popup').style.display = 'none';
-            document.getElementById('signup-popup').style.display = 'none';
-            document.getElementById('notes-popup').style.display = 'flex';
-            fetchNotes();
-        }
-
-        // Fetch notes from the backend
-        function fetchNotes() {
-            const username = sessionStorage.getItem('username');
-            if (!username) {
-                alert('User not logged in.');
-                return;
-            }
-
-            fetch(`${apiBaseUrl}/get_notes`, {
+        // Fetch folders from backend
+        function fetchFolders() {
+            fetch(`${apiBaseUrl}/list_folders`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -307,12 +252,16 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    const notesList = document.getElementById('notes-list');
-                    notesList.innerHTML = ''; // Clear the list
-                    data.notes.forEach(note => {
+                    const foldersList = document.getElementById('folders-list');
+                    foldersList.innerHTML = ''; // Clear the list
+                    data.folders.forEach(folder => {
                         const li = document.createElement('li');
-                        li.textContent = note;
-                        notesList.appendChild(li);
+                        li.textContent = folder;
+                        const addFileButton = document.createElement('button');
+                        addFileButton.textContent = 'Add File';
+                        addFileButton.onclick = () => showAddFilePopup(folder);
+                        li.appendChild(addFileButton);
+                        foldersList.appendChild(li);
                     });
                 } else {
                     alert(data.message);
@@ -320,28 +269,39 @@
             });
         }
 
-        // Handle adding a note
-        function addNote() {
-            const note = document.getElementById('note-content').value;
-            const password = document.getElementById('note-password').value;
+        // Show Add File Popup
+        function showAddFilePopup(folder) {
+            document.getElementById('add-file-popup').style.display = 'flex';
+            document.getElementById('add-file-form').onsubmit = () => addFile(folder);
+        }
 
-            fetch(`${apiBaseUrl}/add_note`, {
+        // Add File to Folder
+        function addFile() {
+            const folderName = document.getElementById('file-name').value;
+            const fileContent = document.getElementById('file-content').value;
+
+            fetch(`${apiBaseUrl}/create_file`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ note, password }),
+                body: JSON.stringify({
+                    username: folderName,
+                    filename: folderName,
+                    content: fileContent,
+                }),
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert(data.message);
-                    fetchNotes(); // Refresh notes list
+                    closePopup('add-file-popup');
                 } else {
                     alert(data.message);
                 }
             });
         }
+
     </script>
 </body>
 </html>
