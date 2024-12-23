@@ -234,7 +234,7 @@
             .then(data => {
                 if (data.success) {
                     alert(data.message);
-                    window.location.href = `folder.html?folder=${folderName}`; // Redirect to folder page
+                    window.location.href = `#`; // Replace this with the folder's path once implemented
                     closePopup('create-folder-popup');
                 } else {
                     alert(data.message);
