@@ -201,7 +201,7 @@
     </footer>
 
     <script>
-        const apiBaseUrl = "https://2e07-83-250-213-73.ngrok-free.app"; // Backend URL
+        const apiBaseUrl = "https://8184-83-250-213-73.ngrok-free"; // Backend URL
 
         // Show Create Folder Popup
         function showCreateFolder() {
@@ -234,6 +234,7 @@
             .then(data => {
                 if (data.success) {
                     alert(data.message);
+                    window.location.href = `folder.html?folder=${folderName}`; // Redirect to folder page
                     closePopup('create-folder-popup');
                 } else {
                     alert(data.message);
