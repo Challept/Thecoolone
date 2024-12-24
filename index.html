@@ -1,308 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Notes</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(45deg, #6a11cb, #2575fc);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: white;
-            text-align: center;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vetra</title>
+  <style>
+    /* Base Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+      color: #ffffff;
+    }
 
-        .container {
-            width: 400px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease;
-        }
+    h1 {
+      font-size: 4rem;
+      font-weight: bold;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+      background: linear-gradient(to right, #ff512f, #dd2476);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        .container:hover {
-            transform: scale(1.05);
-        }
+    .container {
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    }
 
-        h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: white;
-        }
+    input[type="text"] {
+      width: 100%;
+      padding: 15px;
+      margin: 20px 0;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      outline: none;
+      text-align: center;
+      color: #fff;
+      background: linear-gradient(135deg, #434343, #000000);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
 
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-        }
+    input[type="text"]::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
 
-        .button {
-            padding: 12px 30px;
-            margin: 10px;
-            background-color: #ff6f61;
-            color: white;
-            border: none;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+      color: #fff;
+      transition: 0.3s ease;
+    }
 
-        .button:hover {
-            background-color: #ff5a47;
-            transform: scale(1.1);
-        }
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #dd2476, #ff512f);
+    }
 
-        footer {
-            position: absolute;
-            bottom: 10px;
-            font-size: 1rem;
-            color: white;
-            padding: 10px;
-        }
+    .visitor-list {
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 15px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    }
 
-        /* Popup Styles */
-        .popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            align-items: center;
-            justify-content: center;
-        }
+    .visitor {
+      margin-bottom: 10px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      text-align: left;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
 
-        .popup-content {
-            background-color: #fff;
-            color: #333;
-            padding: 20px;
-            border-radius: 8px;
-            width: 400px;
-            text-align: center;
-            animation: fadeIn 0.3s ease;
-        }
+    .visitor:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+    .visitor-details {
+      display: none;
+      padding-top: 10px;
+    }
 
-        .popup-header {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            background: #f8f8f8;
-            transition: background 0.3s ease;
-        }
-
-        input:focus, textarea:focus {
-            background: #e0e0e0;
-            outline: none;
-        }
-
-        button {
-            padding: 12px;
-            font-size: 1.1rem;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .back-button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-    </style>
+    .visitor.active .visitor-details {
+      display: block;
+    }
+  </style>
 </head>
 <body>
+  <h1>Vetra</h1>
+  <div class="container">
+    <input type="text" id="urlInput" placeholder="Enter website URL to track">
+    <button onclick="startTracking()">Track Website</button>
+  </div>
+  <div class="visitor-list" id="visitorList">
+    <p>No visitors yet. Start tracking to see updates!</p>
+  </div>
 
-    <!-- Main Container -->
-    <div class="container">
-        <h1>Welcome to Secure Notes</h1>
-        <p>Your encrypted space to store personal notes, secure and private.</p>
-        <button class="button" onclick="showCreateFolder()">Create Folder</button>
-        <button class="button" onclick="showViewFolders()">View Folders</button>
-    </div>
+  <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+  <script>
+    const socket = io('http://localhost:5000');
+    const visitorList = document.getElementById('visitorList');
 
-    <!-- Create Folder Popup -->
-    <div id="create-folder-popup" class="popup">
-        <div class="popup-content">
-            <h3 class="popup-header">Create New Folder</h3>
-            <form id="create-folder-form">
-                <input type="text" id="folder-username" placeholder="Folder Name" required>
-                <button type="button" onclick="createFolder()">Create Folder</button>
-            </form>
-            <button class="back-button" onclick="closePopup('create-folder-popup')">Back</button>
+    function startTracking() {
+      const url = document.getElementById('urlInput').value.trim();
+      if (!url) {
+        alert("Please enter a valid URL!");
+        return;
+      }
+
+      fetch('http://localhost:5000/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      }).then(response => response.json()).then(data => {
+        console.log(data);
+        socket.emit('visitor_event', { url });
+      });
+    }
+
+    socket.on('visitor_update', data => {
+      const { visitors } = data;
+      visitorList.innerHTML = visitors.map((visitor, index) => `
+        <div class="visitor" onclick="toggleDetails(${index})">
+          <div>Visitor ${index + 1}</div>
+          <div class="visitor-details">
+            <p>IP: ${visitor.ip}</p>
+            <p>User Agent: ${visitor.user_agent}</p>
+            <p>Timestamp: ${visitor.timestamp}</p>
+          </div>
         </div>
-    </div>
+      `).join('');
+    });
 
-    <!-- View Folders Popup -->
-    <div id="view-folders-popup" class="popup">
-        <div class="popup-content">
-            <h3 class="popup-header">Your Folders</h3>
-            <ul id="folders-list"></ul>
-            <button class="back-button" onclick="closePopup('view-folders-popup')">Back</button>
-        </div>
-    </div>
-
-    <!-- Add File to Folder Popup -->
-    <div id="add-file-popup" class="popup">
-        <div class="popup-content">
-            <h3 class="popup-header">Add File to Folder</h3>
-            <form id="add-file-form">
-                <input type="text" id="file-name" placeholder="File Name" required>
-                <textarea id="file-content" placeholder="File Content" required></textarea>
-                <button type="button" onclick="addFile()">Save File</button>
-            </form>
-            <button class="back-button" onclick="closePopup('add-file-popup')">Back</button>
-        </div>
-    </div>
-
-    <footer>
-        <p>&copy; 2024 Secure Notes - All Rights Reserved</p>
-    </footer>
-
-    <script>
-        const apiBaseUrl = "https://78bb-83-250-213-73.ngrok-free.app"; // Backend URL
-
-        // Show Create Folder Popup
-        function showCreateFolder() {
-            document.getElementById('create-folder-popup').style.display = 'flex';
-        }
-
-        // Show View Folders Popup
-        function showViewFolders() {
-            fetchFolders();
-            document.getElementById('view-folders-popup').style.display = 'flex';
-        }
-
-        // Close Popup
-        function closePopup(popupId) {
-            document.getElementById(popupId).style.display = 'none';
-        }
-
-        // Create Folder
-        function createFolder() {
-            const folderName = document.getElementById('folder-username').value;
-
-            fetch(`${apiBaseUrl}/create_folder`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username: folderName }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    window.location.href = `#`; // Replace this with the folder's path once implemented
-                    closePopup('create-folder-popup');
-                } else {
-                    alert(data.message);
-                }
-            });
-        }
-
-        // Fetch folders from backend
-        function fetchFolders() {
-            fetch(`${apiBaseUrl}/list_folders`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const foldersList = document.getElementById('folders-list');
-                    foldersList.innerHTML = ''; // Clear the list
-                    data.folders.forEach(folder => {
-                        const li = document.createElement('li');
-                        li.textContent = folder;
-                        const addFileButton = document.createElement('button');
-                        addFileButton.textContent = 'Add File';
-                        addFileButton.onclick = () => showAddFilePopup(folder);
-                        li.appendChild(addFileButton);
-                        foldersList.appendChild(li);
-                    });
-                } else {
-                    alert(data.message);
-                }
-            });
-        }
-
-        // Show Add File Popup
-        function showAddFilePopup(folder) {
-            document.getElementById('add-file-popup').style.display = 'flex';
-            document.getElementById('add-file-form').onsubmit = () => addFile(folder);
-        }
-
-        // Add File to Folder
-        function addFile() {
-            const folderName = document.getElementById('file-name').value;
-            const fileContent = document.getElementById('file-content').value;
-
-            fetch(`${apiBaseUrl}/create_file`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: folderName,
-                    filename: folderName,
-                    content: fileContent,
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    closePopup('add-file-popup');
-                } else {
-                    alert(data.message);
-                }
-            });
-        }
-
-    </script>
+    function toggleDetails(index) {
+      const visitors = document.querySelectorAll('.visitor');
+      visitors[index].classList.toggle('active');
+    }
+  </script>
 </body>
 </html>
