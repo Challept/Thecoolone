@@ -3,111 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Recommender</title>
+    <title>Vetra - Movie Recommender</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #141e30, #243b55);
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
             color: white;
             margin: 0;
             padding: 0;
         }
-        .container {
+        header {
+            background: #1e293b;
+            padding: 1rem;
             text-align: center;
-            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
-        h1 {
+        header h1 {
             font-size: 2.5rem;
-            margin-bottom: 1rem;
+            margin: 0;
+            color: #e50914;
+            text-shadow: 1px 1px 2px black;
         }
-        form {
+        header p {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #b3b3b3;
+        }
+        footer {
+            background: #1e293b;
+            padding: 1rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1rem;
+            color: #b3b3b3;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            text-align: center;
+        }
+        .card {
+            background: #1c1c1c;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1.2s ease-in-out;
+        }
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.8rem;
+            color: #ff5733;
+        }
+        .btn-group {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
         }
-        form label, form select, form button {
-            font-size: 1.2rem;
-        }
-        form button {
-            padding: 0.5rem 1rem;
-            background-color: #e50914;
-            color: white;
+        .btn {
+            background: #e50914;
             border: none;
+            color: white;
+            padding: 15px 20px;
+            font-size: 1rem;
             cursor: pointer;
-            font-size: 1.2rem;
+            border-radius: 8px;
+            transition: transform 0.3s, background 0.3s;
+        }
+        .btn:hover {
+            background: #ff5733;
+            transform: scale(1.1);
+        }
+        #submit-btn {
+            margin-top: 20px;
+            background: #1db954;
+        }
+        #submit-btn:hover {
+            background: #28a745;
+            transform: scale(1.1);
         }
         .movie-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 20px;
             justify-content: center;
-            margin-top: 2rem;
+            margin-top: 30px;
         }
         .movie-card {
-            background: #1c1c1c;
+            background: #1e293b;
             border-radius: 8px;
-            padding: 1rem;
+            padding: 15px;
             width: 200px;
             text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        .movie-card:hover {
+            transform: scale(1.1);
         }
         .movie-card img {
             width: 100%;
             border-radius: 8px;
         }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
+    <header>
+        <h1>Vetra</h1>
+        <p>Your Ultimate Movie Recommender</p>
+    </header>
+
     <div class="container">
-        <h1>Find Your Next Favorite Movie!</h1>
-        <form id="recommender-form">
-            <label for="genre">Choose a Genre:</label>
-            <select id="genre" name="genre" required>
-                <!-- Genres will be populated dynamically -->
-            </select>
-            
-            <label for="language">Preferred Language:</label>
-            <select id="language" name="language" required>
-                <option value="en">English</option>
-                <option value="sv">Swedish</option>
-                <option value="ko">Korean</option>
-                <option value="ja">Japanese</option>
-                <option value="es">Spanish</option>
-            </select>
-            
-            <button type="submit">Get Recommendations</button>
-        </form>
-        
+        <div class="card">
+            <h2>Choose Genre</h2>
+            <p>Select your favorite genre to get started.</p>
+            <div class="btn-group" id="genre-buttons">
+                <!-- Genre buttons will be populated dynamically -->
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Choose Movie Language</h2>
+            <p>Pick the language you'd like for the movie recommendations.</p>
+            <div class="btn-group" id="language-buttons">
+                <button class="btn" data-language="en">English</button>
+                <button class="btn" data-language="sv">Swedish</button>
+                <button class="btn" data-language="ko">Korean</button>
+                <button class="btn" data-language="ja">Japanese</button>
+                <button class="btn" data-language="es">Spanish</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <button id="submit-btn" class="btn">Get Recommendations</button>
+        </div>
+
+        <div class="card">
+            <h2>About Us</h2>
+            <p>Vetra is a modern platform dedicated to helping movie enthusiasts discover their next favorite film. We blend advanced algorithms with user preferences to deliver the best recommendations tailored just for you.</p>
+        </div>
+
         <div class="movie-grid" id="movie-grid">
             <!-- Movie cards will appear here -->
         </div>
     </div>
 
-    <script>
-        const API_BASE_URL = "https://4294-83-250-213-73.ngrok-free.app";
+    <footer>
+        <p>© 2024 Vetra. All Rights Reserved.</p>
+    </footer>
 
-        // Fetch genres and populate the dropdown
+    <script>
+        const API_BASE_URL = "https://6cbe-83-250-213-73.ngrok-free.app";
+
+        let selectedGenre = null;
+        let selectedLanguage = null;
+
+        // Fetch genres and populate buttons
         async function loadGenres() {
             const response = await fetch(`${API_BASE_URL}/api/genres`);
             const genres = await response.json();
-            const genreSelect = document.getElementById("genre");
+            const genreButtons = document.getElementById("genre-buttons");
 
             for (const [genreName, genreId] of Object.entries(genres)) {
-                const option = document.createElement("option");
-                option.value = genreName;
-                option.textContent = genreName;
-                genreSelect.appendChild(option);
+                const button = document.createElement("button");
+                button.className = "btn";
+                button.textContent = genreName;
+                button.dataset.genre = genreName;
+                button.onclick = () => selectGenre(button);
+                genreButtons.appendChild(button);
             }
         }
 
+        // Highlight selected genre
+        function selectGenre(button) {
+            const buttons = document.querySelectorAll("#genre-buttons .btn");
+            buttons.forEach(btn => btn.style.background = "#e50914");
+            button.style.background = "#ff5733";
+            selectedGenre = button.dataset.genre;
+        }
+
+        // Highlight selected language
+        document.querySelectorAll("#language-buttons .btn").forEach(button => {
+            button.addEventListener("click", () => {
+                const buttons = document.querySelectorAll("#language-buttons .btn");
+                buttons.forEach(btn => btn.style.background = "#e50914");
+                button.style.background = "#ff5733";
+                selectedLanguage = button.dataset.language;
+            });
+        });
+
         // Fetch recommendations and display them
-        async function getRecommendations(event) {
-            event.preventDefault();
+        async function getRecommendations() {
+            if (!selectedGenre || !selectedLanguage) {
+                alert("Please select both a genre and a language!");
+                return;
+            }
 
-            const genre = document.getElementById("genre").value;
-            const language = document.getElementById("language").value;
-
-            const response = await fetch(`${API_BASE_URL}/api/recommend?genre=${genre}&language=${language}`);
+            const response = await fetch(`${API_BASE_URL}/api/recommend?genre=${selectedGenre}&language=${selectedLanguage}`);
             const movies = await response.json();
 
             const movieGrid = document.getElementById("movie-grid");
@@ -127,8 +234,8 @@
             });
         }
 
-        // Event listeners
-        document.getElementById("recommender-form").addEventListener("submit", getRecommendations);
+        // Event listener for submit button
+        document.getElementById("submit-btn").addEventListener("click", getRecommendations);
 
         // Load genres on page load
         loadGenres();
