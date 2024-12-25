@@ -168,7 +168,7 @@
 
   <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
   <script>
-    const socket = io('http://localhost:5000');
+    const socket = io('https://2afc-83-250-213-73.ngrok-free.app');
     const visitorList = document.getElementById('visitorList');
 
     function startTracking() {
@@ -178,7 +178,7 @@
         return;
       }
 
-      fetch('http://localhost:5000/track', {
+      fetch('https://2afc-83-250-213-73.ngrok-free.app', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url })
