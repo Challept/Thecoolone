@@ -7,21 +7,21 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            background: linear-gradient(to right, #34495e, #2ecc71);
             color: white;
             margin: 0;
             padding: 0;
         }
         header {
-            background: #1c2833;
+            background: #2c3e50;
             padding: 1.5rem;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
         header h1 {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             margin: 0;
-            color: #e74c3c;
+            color: #f1c40f;
             text-shadow: 1px 2px 4px black;
         }
         header p {
@@ -30,7 +30,7 @@
             color: #ecf0f1;
         }
         footer {
-            background: #1c2833;
+            background: #2c3e50;
             padding: 1rem;
             text-align: center;
             margin-top: 2rem;
@@ -42,23 +42,22 @@
             color: #ecf0f1;
         }
         .container {
-            max-width: 1000px;
+            max-width: 800px;
             margin: 2rem auto;
             padding: 1rem;
             text-align: center;
         }
         .card {
-            background: #283747;
+            background: #22303c;
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
             margin: 20px auto;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 1.2s ease-in-out;
         }
         .card h2 {
             margin-top: 0;
-            font-size: 2rem;
-            color: #f1c40f;
+            font-size: 1.8rem;
+            color: #e74c3c;
         }
         .btn-group {
             display: flex;
@@ -70,10 +69,10 @@
             background: #2980b9;
             border: none;
             color: white;
-            padding: 15px 25px;
+            padding: 10px 20px;
             font-size: 1rem;
             cursor: pointer;
-            border-radius: 10px;
+            border-radius: 8px;
             transition: transform 0.3s, background 0.3s;
         }
         .btn:hover {
@@ -82,13 +81,12 @@
         }
         #submit-btn {
             margin-top: 20px;
-            background: #2ecc71;
+            background: #27ae60;
             color: black;
             font-weight: bold;
         }
         #submit-btn:hover {
-            background: #27ae60;
-            transform: scale(1.1);
+            background: #2ecc71;
         }
         .movie-grid {
             display: flex;
@@ -98,17 +96,12 @@
             margin-top: 30px;
         }
         .movie-card {
-            background: #34495e;
+            background: #2d3436;
             border-radius: 8px;
             padding: 15px;
             width: 220px;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s;
-        }
-        .movie-card:hover {
-            transform: scale(1.1);
-            background: #3c6382;
         }
         .movie-card img {
             width: 100%;
@@ -117,30 +110,21 @@
         }
         .movie-card h2 {
             color: #f1c40f;
+            margin: 10px 0;
         }
         .movie-card p {
             font-size: 0.9rem;
-            color: #ecf0f1;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            color: #bdc3c7;
         }
         @media (max-width: 768px) {
             header h1 {
-                font-size: 2.4rem;
+                font-size: 2rem;
             }
             .card h2 {
-                font-size: 1.6rem;
+                font-size: 1.4rem;
             }
             .btn {
-                padding: 10px 20px;
+                padding: 10px 15px;
                 font-size: 0.9rem;
             }
         }
@@ -149,25 +133,25 @@
 <body>
     <header>
         <h1>Vetra</h1>
-        <p>Your Ultimate Movie Discovery Tool</p>
+        <p>Personalized Movie Recommendations</p>
     </header>
 
     <div class="container">
         <div class="card">
             <h2>Select Genre</h2>
-            <p>Pick a genre to discover movies tailored to your taste.</p>
+            <p>Pick a genre to get started!</p>
             <div class="btn-group" id="genre-buttons"></div>
         </div>
 
         <div class="card">
             <h2>Select Language</h2>
-            <p>Choose the language of your preferred movies.</p>
+            <p>Choose your preferred movie language.</p>
             <div class="btn-group" id="language-buttons">
                 <button class="btn" data-language="en">English</button>
                 <button class="btn" data-language="sv">Swedish</button>
+                <button class="btn" data-language="es">Spanish</button>
                 <button class="btn" data-language="ko">Korean</button>
                 <button class="btn" data-language="ja">Japanese</button>
-                <button class="btn" data-language="es">Spanish</button>
             </div>
         </div>
 
@@ -175,96 +159,88 @@
             <button id="submit-btn" class="btn">Get Recommendations</button>
         </div>
 
-        <div class="card">
-            <h2>About Vetra</h2>
-            <p>
-                Vetra is a platform designed for movie lovers who want personalized recommendations. 
-                Our mission is to help you explore new favorites and timeless classics.
-            </p>
-        </div>
-
         <div class="movie-grid" id="movie-grid"></div>
     </div>
 
     <footer>
-        <p>© 2024 Vetra. Built to Inspire Your Movie Adventures.</p>
+        <p>© 2024 Vetra. All rights reserved.</p>
     </footer>
 
-<script>
-    const API_BASE_URL = "https://vetra.pagekite.me";
+    <script>
+        const API_BASE_URL = "https://vetra.pagekite.me";
+        let selectedGenre = null;
+        let selectedLanguage = null;
 
-    let selectedGenre = null;
-    let selectedLanguage = null;
+        async function loadGenres() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/genres?t=${Date.now()}`, { mode: 'cors' });
+                if (!response.ok) throw new Error("Network response was not ok");
+                const genres = await response.json();
 
-    async function loadGenres() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/genres`, { mode: 'cors' });
-            if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-            const genres = await response.json();
-            const genreButtons = document.getElementById("genre-buttons");
+                const genreButtons = document.getElementById("genre-buttons");
+                genreButtons.innerHTML = ""; // Clear existing buttons
 
-            for (const [genreName] of Object.entries(genres)) {
-                const button = document.createElement("button");
-                button.className = "btn";
-                button.textContent = genreName;
-                button.onclick = () => selectGenre(button);
-                genreButtons.appendChild(button);
+                for (const [genreName, genreId] of Object.entries(genres)) {
+                    const button = document.createElement("button");
+                    button.className = "btn";
+                    button.textContent = genreName;
+                    button.onclick = () => selectGenre(button);
+                    genreButtons.appendChild(button);
+                }
+            } catch (error) {
+                alert("Failed to load genres. Please refresh the page or try again later.");
             }
-        } catch (error) {
-            alert("Failed to load genres. Please try again later.");
         }
-    }
 
-    function selectGenre(button) {
-        document.querySelectorAll("#genre-buttons .btn").forEach(btn => btn.style.background = "#2980b9");
-        button.style.background = "#3498db";
-        selectedGenre = button.textContent;
-    }
-
-    document.querySelectorAll("#language-buttons .btn").forEach(button => {
-        button.addEventListener("click", () => {
-            document.querySelectorAll("#language-buttons .btn").forEach(btn => btn.style.background = "#2980b9");
+        function selectGenre(button) {
+            document.querySelectorAll("#genre-buttons .btn").forEach(btn => btn.style.background = "#2980b9");
             button.style.background = "#3498db";
-            selectedLanguage = button.dataset.language;
-        });
-    });
-
-    async function getRecommendations() {
-        if (!selectedGenre || !selectedLanguage) {
-            alert("Please select both a genre and a language!");
-            return;
+            selectedGenre = button.textContent;
         }
 
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/recommend?genre=${selectedGenre}&language=${selectedLanguage}`, { mode: 'cors' });
-            if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-            const movies = await response.json();
-
-            const movieGrid = document.getElementById("movie-grid");
-            movieGrid.innerHTML = "";
-
-            movies.forEach(movie => {
-                const movieCard = document.createElement("div");
-                movieCard.className = "movie-card";
-                movieCard.innerHTML = `
-                    <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
-                    <h2>${movie.title}</h2>
-                    <p>Rating: ${movie.vote_average}</p>
-                    <p>${movie.overview}</p>
-                `;
-                movieGrid.appendChild(movieCard);
+        document.querySelectorAll("#language-buttons .btn").forEach(button => {
+            button.addEventListener("click", () => {
+                document.querySelectorAll("#language-buttons .btn").forEach(btn => btn.style.background = "#2980b9");
+                button.style.background = "#3498db";
+                selectedLanguage = button.dataset.language;
             });
+        });
 
-            document.getElementById("movie-grid").scrollIntoView({ behavior: "smooth" });
+        async function getRecommendations() {
+            if (!selectedGenre || !selectedLanguage) {
+                alert("Please select both a genre and a language!");
+                return;
+            }
 
-        } catch (error) {
-            alert("Failed to load recommendations. Try again later.");
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/recommend?genre=${selectedGenre}&language=${selectedLanguage}&t=${Date.now()}`, { mode: 'cors' });
+                if (!response.ok) throw new Error("Network response was not ok");
+                const movies = await response.json();
+
+                const movieGrid = document.getElementById("movie-grid");
+                movieGrid.innerHTML = ""; // Clear previous movies
+
+                movies.forEach(movie => {
+                    const movieCard = document.createElement("div");
+                    movieCard.className = "movie-card";
+                    movieCard.innerHTML = `
+                        <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                        <h2>${movie.title}</h2>
+                        <p>Rating: ${movie.vote_average}</p>
+                        <p>${movie.overview}</p>
+                    `;
+                    movieGrid.appendChild(movieCard);
+                });
+
+                movieGrid.scrollIntoView({ behavior: "smooth" });
+            } catch (error) {
+                alert("Failed to load recommendations. Please try again later.");
+            }
         }
-    }
 
-    document.getElementById("submit-btn").addEventListener("click", getRecommendations);
+        document.getElementById("submit-btn").addEventListener("click", getRecommendations);
 
-    loadGenres();
-</script>
+        loadGenres();
+    </script>
 </body>
 </html>
