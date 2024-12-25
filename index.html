@@ -22,19 +22,16 @@
             font-size: 2.5rem;
             margin: 0;
             color: #f1c40f;
-            text-shadow: 1px 2px 4px black;
         }
         header p {
             margin: 0.5rem 0 0;
             font-size: 1.2rem;
-            color: #ecf0f1;
         }
         footer {
             background: #2c3e50;
             padding: 1rem;
             text-align: center;
             margin-top: 2rem;
-            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.5);
         }
         footer p {
             margin: 0;
@@ -55,7 +52,6 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
         .card h2 {
-            margin-top: 0;
             font-size: 1.8rem;
             color: #e74c3c;
         }
@@ -110,7 +106,6 @@
         }
         .movie-card h2 {
             color: #f1c40f;
-            margin: 10px 0;
         }
         .movie-card p {
             font-size: 0.9rem;
@@ -173,12 +168,18 @@
 
         async function loadGenres() {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/genres?t=${Date.now()}`, { mode: 'cors' });
-                if (!response.ok) throw new Error("Network response was not ok");
+                const response = await fetch(`${API_BASE_URL}/api/genres`, {
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'application/json',
+                        'User-Agent': 'Mozilla/5.0 (Mobile; rv:68.0) Gecko/68.0 Firefox/68.0',
+                    },
+                });
+                if (!response.ok) throw new Error(`Network error: ${response.status}`);
                 const genres = await response.json();
 
                 const genreButtons = document.getElementById("genre-buttons");
-                genreButtons.innerHTML = ""; // Clear existing buttons
+                genreButtons.innerHTML = "";
 
                 for (const [genreName, genreId] of Object.entries(genres)) {
                     const button = document.createElement("button");
@@ -188,7 +189,8 @@
                     genreButtons.appendChild(button);
                 }
             } catch (error) {
-                alert("Failed to load genres. Please refresh the page or try again later.");
+                alert("Failed to load genres. Try refreshing or check your network.");
+                console.error(error);
             }
         }
 
@@ -213,12 +215,17 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE_URL}/api/recommend?genre=${selectedGenre}&language=${selectedLanguage}&t=${Date.now()}`, { mode: 'cors' });
-                if (!response.ok) throw new Error("Network response was not ok");
+                const response = await fetch(`${API_BASE_URL}/api/recommend?genre=${selectedGenre}&language=${selectedLanguage}`, {
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                });
+                if (!response.ok) throw new Error(`Network error: ${response.status}`);
                 const movies = await response.json();
 
                 const movieGrid = document.getElementById("movie-grid");
-                movieGrid.innerHTML = ""; // Clear previous movies
+                movieGrid.innerHTML = "";
 
                 movies.forEach(movie => {
                     const movieCard = document.createElement("div");
@@ -234,7 +241,8 @@
 
                 movieGrid.scrollIntoView({ behavior: "smooth" });
             } catch (error) {
-                alert("Failed to load recommendations. Please try again later.");
+                alert("Failed to load recommendations. Try again later.");
+                console.error(error);
             }
         }
 
