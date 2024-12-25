@@ -1,220 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vetra</title>
-  <style>
-    /* Base Styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #141e30, #243b55);
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    h1 {
-      font-size: 4rem;
-      font-weight: bold;
-      letter-spacing: 5px;
-      text-transform: uppercase;
-      margin: 50px 0 20px;
-      background: linear-gradient(to right, #ff512f, #f09819);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-align: center;
-    }
-
-    .container {
-      width: 90%;
-      max-width: 600px;
-      text-align: center;
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
-      margin-bottom: 30px;
-      animation: fadeIn 1s ease-in-out;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 15px;
-      margin: 20px 0;
-      border: none;
-      border-radius: 30px;
-      font-size: 1rem;
-      outline: none;
-      text-align: center;
-      color: #fff;
-      background: linear-gradient(135deg, #434343, #1f1f1f);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.3s ease-in-out;
-    }
-
-    input[type="text"]::placeholder {
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    input[type="text"]:focus {
-      border: 1px solid #ff512f;
-      box-shadow: 0px 0px 10px rgba(255, 81, 47, 0.8);
-    }
-
-    button {
-      width: 100%;
-      padding: 15px;
-      margin-top: 10px;
-      font-size: 1rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      background: linear-gradient(135deg, #ff512f, #f09819);
-      color: #fff;
-      transition: all 0.3s ease-in-out;
-    }
-
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0px 4px 15px rgba(255, 81, 47, 0.5);
-    }
-
-    .visitor-list {
-      width: 90%;
-      max-width: 600px;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 15px;
-      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
-      overflow-y: auto;
-      max-height: 400px;
-      text-align: left;
-    }
-
-    .visitor {
-      margin-bottom: 10px;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-    }
-
-    .visitor:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-3px);
-    }
-
-    .visitor-details {
-      display: none;
-      padding-top: 10px;
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .visitor.active .visitor-details {
-      display: block;
-    }
-
-    /* Scrollbar Styles */
-    .visitor-list::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    .visitor-list::-webkit-scrollbar-thumb {
-      background: rgba(255, 81, 47, 0.8);
-      border-radius: 10px;
-    }
-
-    .visitor-list::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.9);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommender</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #141e30, #243b55);
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        form label, form select, form button {
+            font-size: 1.2rem;
+        }
+        form button {
+            padding: 0.5rem 1rem;
+            background-color: #e50914;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .movie-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        .movie-card {
+            background: #1c1c1c;
+            border-radius: 8px;
+            padding: 1rem;
+            width: 200px;
+            text-align: center;
+        }
+        .movie-card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Vetra</h1>
-  <div class="container">
-    <input type="text" id="urlInput" placeholder="Enter website URL to track">
-    <button onclick="startTracking()">Track Website</button>
-  </div>
-  <div class="visitor-list" id="visitorList">
-    <p>No visitors yet. Start tracking to see updates!</p>
-  </div>
-
-<script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
-<script>
-  const socket = io('https://c3b2-83-250-213-73.ngrok-free.app');
-  const visitorList = document.getElementById('visitorList');
-
-  function startTracking() {
-    const url = document.getElementById('urlInput').value.trim();
-    if (!url) {
-      alert("Please enter a valid URL!");
-      return;
-    }
-
-    fetch('https://c3b2-83-250-213-73.ngrok-free.app/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url })
-    })
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not ok");
-        return response.json();
-      })
-      .then(data => {
-        console.log(data);
-        socket.emit('visitor_event', { url });
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        alert("Failed to start tracking. Please check the backend or URL.");
-      });
-  }
-
-  socket.on('visitor_update', data => {
-    const { visitors } = data;
-    visitorList.innerHTML = visitors.map((visitor, index) => `
-      <div class="visitor" onclick="toggleDetails(${index})">
-        <div>Visitor ${index + 1}</div>
-        <div class="visitor-details">
-          <p>IP: ${visitor.ip}</p>
-          <p>User Agent: ${visitor.user_agent}</p>
-          <p>Timestamp: ${visitor.timestamp}</p>
+    <div class="container">
+        <h1>Find Your Next Favorite Movie!</h1>
+        <form id="recommender-form">
+            <label for="genre">Choose a Genre:</label>
+            <select id="genre" name="genre" required>
+                <!-- Genres will be populated dynamically -->
+            </select>
+            
+            <label for="language">Preferred Language:</label>
+            <select id="language" name="language" required>
+                <option value="en">English</option>
+                <option value="sv">Swedish</option>
+                <option value="ko">Korean</option>
+                <option value="ja">Japanese</option>
+                <option value="es">Spanish</option>
+            </select>
+            
+            <button type="submit">Get Recommendations</button>
+        </form>
+        
+        <div class="movie-grid" id="movie-grid">
+            <!-- Movie cards will appear here -->
         </div>
-      </div>
-    `).join('');
-  });
+    </div>
 
-  function toggleDetails(index) {
-    const visitors = document.querySelectorAll('.visitor');
-    visitors[index].classList.toggle('active');
-  }
-</script>
+    <script>
+        const API_BASE_URL = "https://4294-83-250-213-73.ngrok-free.app";
+
+        // Fetch genres and populate the dropdown
+        async function loadGenres() {
+            const response = await fetch(`${API_BASE_URL}/api/genres`);
+            const genres = await response.json();
+            const genreSelect = document.getElementById("genre");
+
+            for (const [genreName, genreId] of Object.entries(genres)) {
+                const option = document.createElement("option");
+                option.value = genreName;
+                option.textContent = genreName;
+                genreSelect.appendChild(option);
+            }
+        }
+
+        // Fetch recommendations and display them
+        async function getRecommendations(event) {
+            event.preventDefault();
+
+            const genre = document.getElementById("genre").value;
+            const language = document.getElementById("language").value;
+
+            const response = await fetch(`${API_BASE_URL}/api/recommend?genre=${genre}&language=${language}`);
+            const movies = await response.json();
+
+            const movieGrid = document.getElementById("movie-grid");
+            movieGrid.innerHTML = ""; // Clear previous results
+
+            movies.forEach(movie => {
+                const movieCard = document.createElement("div");
+                movieCard.className = "movie-card";
+                movieCard.innerHTML = `
+                    <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                    <h2>${movie.title}</h2>
+                    <p>Rating: ${movie.vote_average}</p>
+                    <p>Release Date: ${movie.release_date}</p>
+                    <p>${movie.overview}</p>
+                `;
+                movieGrid.appendChild(movieCard);
+            });
+        }
+
+        // Event listeners
+        document.getElementById("recommender-form").addEventListener("submit", getRecommendations);
+
+        // Load genres on page load
+        loadGenres();
+    </script>
 </body>
 </html>
