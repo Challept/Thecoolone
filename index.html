@@ -166,46 +166,55 @@
     <p>No visitors yet. Start tracking to see updates!</p>
   </div>
 
-  <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
-  <script>
-    const socket = io('https://2afc-83-250-213-73.ngrok-free.app');
-    const visitorList = document.getElementById('visitorList');
+<script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+<script>
+  const socket = io('https://c3b2-83-250-213-73.ngrok-free.app');
+  const visitorList = document.getElementById('visitorList');
 
-    function startTracking() {
-      const url = document.getElementById('urlInput').value.trim();
-      if (!url) {
-        alert("Please enter a valid URL!");
-        return;
-      }
+  function startTracking() {
+    const url = document.getElementById('urlInput').value.trim();
+    if (!url) {
+      alert("Please enter a valid URL!");
+      return;
+    }
 
-      fetch('https://2afc-83-250-213-73.ngrok-free.app', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url })
-      }).then(response => response.json()).then(data => {
+    fetch('https://c3b2-83-250-213-73.ngrok-free.app/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url })
+    })
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then(data => {
         console.log(data);
         socket.emit('visitor_event', { url });
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("Failed to start tracking. Please check the backend or URL.");
       });
-    }
+  }
 
-    socket.on('visitor_update', data => {
-      const { visitors } = data;
-      visitorList.innerHTML = visitors.map((visitor, index) => `
-        <div class="visitor" onclick="toggleDetails(${index})">
-          <div>Visitor ${index + 1}</div>
-          <div class="visitor-details">
-            <p>IP: ${visitor.ip}</p>
-            <p>User Agent: ${visitor.user_agent}</p>
-            <p>Timestamp: ${visitor.timestamp}</p>
-          </div>
+  socket.on('visitor_update', data => {
+    const { visitors } = data;
+    visitorList.innerHTML = visitors.map((visitor, index) => `
+      <div class="visitor" onclick="toggleDetails(${index})">
+        <div>Visitor ${index + 1}</div>
+        <div class="visitor-details">
+          <p>IP: ${visitor.ip}</p>
+          <p>User Agent: ${visitor.user_agent}</p>
+          <p>Timestamp: ${visitor.timestamp}</p>
         </div>
-      `).join('');
-    });
+      </div>
+    `).join('');
+  });
 
-    function toggleDetails(index) {
-      const visitors = document.querySelectorAll('.visitor');
-      visitors[index].classList.toggle('active');
-    }
-  </script>
+  function toggleDetails(index) {
+    const visitors = document.querySelectorAll('.visitor');
+    visitors[index].classList.toggle('active');
+  }
+</script>
 </body>
 </html>
