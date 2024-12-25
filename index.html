@@ -167,15 +167,21 @@
         <p>© 2024 Vetra. All Rights Reserved.</p>
     </footer>
 
-    <script>
-        const API_BASE_URL = "https://6cbe-83-250-213-73.ngrok-free.app";
+<script>
+    const API_BASE_URL = "https://6cbe-83-250-213-73.ngrok-free.app";
 
-        let selectedGenre = null;
-        let selectedLanguage = null;
+    let selectedGenre = null;
+    let selectedLanguage = null;
 
-        // Fetch genres and populate buttons
-        async function loadGenres() {
+    // Fetch genres and populate buttons
+    async function loadGenres() {
+        try {
             const response = await fetch(`${API_BASE_URL}/api/genres`);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new Error("Invalid JSON response from server.");
+            }
             const genres = await response.json();
             const genreButtons = document.getElementById("genre-buttons");
 
@@ -187,34 +193,44 @@
                 button.onclick = () => selectGenre(button);
                 genreButtons.appendChild(button);
             }
+        } catch (error) {
+            console.error("Error loading genres:", error);
+            alert("Failed to load genres. Please check the server and try again.");
         }
+    }
 
-        // Highlight selected genre
-        function selectGenre(button) {
-            const buttons = document.querySelectorAll("#genre-buttons .btn");
+    // Highlight selected genre
+    function selectGenre(button) {
+        const buttons = document.querySelectorAll("#genre-buttons .btn");
+        buttons.forEach(btn => btn.style.background = "#e50914");
+        button.style.background = "#ff5733";
+        selectedGenre = button.dataset.genre;
+    }
+
+    // Highlight selected language
+    document.querySelectorAll("#language-buttons .btn").forEach(button => {
+        button.addEventListener("click", () => {
+            const buttons = document.querySelectorAll("#language-buttons .btn");
             buttons.forEach(btn => btn.style.background = "#e50914");
             button.style.background = "#ff5733";
-            selectedGenre = button.dataset.genre;
+            selectedLanguage = button.dataset.language;
+        });
+    });
+
+    // Fetch recommendations and display them
+    async function getRecommendations() {
+        if (!selectedGenre || !selectedLanguage) {
+            alert("Please select both a genre and a language!");
+            return;
         }
 
-        // Highlight selected language
-        document.querySelectorAll("#language-buttons .btn").forEach(button => {
-            button.addEventListener("click", () => {
-                const buttons = document.querySelectorAll("#language-buttons .btn");
-                buttons.forEach(btn => btn.style.background = "#e50914");
-                button.style.background = "#ff5733";
-                selectedLanguage = button.dataset.language;
-            });
-        });
-
-        // Fetch recommendations and display them
-        async function getRecommendations() {
-            if (!selectedGenre || !selectedLanguage) {
-                alert("Please select both a genre and a language!");
-                return;
-            }
-
+        try {
             const response = await fetch(`${API_BASE_URL}/api/recommend?genre=${selectedGenre}&language=${selectedLanguage}`);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new Error("Invalid JSON response from server.");
+            }
             const movies = await response.json();
 
             const movieGrid = document.getElementById("movie-grid");
@@ -232,13 +248,17 @@
                 `;
                 movieGrid.appendChild(movieCard);
             });
+        } catch (error) {
+            console.error("Error fetching recommendations:", error);
+            alert("Failed to load recommendations. Please check the server and try again.");
         }
+    }
 
-        // Event listener for submit button
-        document.getElementById("submit-btn").addEventListener("click", getRecommendations);
+    // Event listener for submit button
+    document.getElementById("submit-btn").addEventListener("click", getRecommendations);
 
-        // Load genres on page load
-        loadGenres();
-    </script>
+    // Load genres on page load
+    loadGenres();
+</script>
 </body>
 </html>
