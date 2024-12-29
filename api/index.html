@@ -3,74 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Timer API</title>
+    <title>API Timer</title>
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #001f3f, #000428);
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #001f3f, #000428, #001d3f);
-            color: white;
             text-align: center;
         }
-        .countdown {
-            font-size: 2rem;
-            margin-top: 20px;
+        .container {
+            max-width: 800px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
         }
         h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2rem;
         }
     </style>
 </head>
 <body>
-    <div>
+    <div class="container">
         <h1>Countdown Timer</h1>
-        <div id="countdown" class="countdown">Loading...</div>
+        <p id="message">Calculating time...</p>
     </div>
+
     <script>
-        // Parse the URL to get the timer details
+        // Parse the URL path to extract date and time
         const path = window.location.pathname.split('/');
-        const apiIndex = path.indexOf('api');
-        if (apiIndex === -1 || path.length < apiIndex + 5) {
-            document.getElementById('countdown').textContent = 'Invalid URL format. Use /api/timer/<month>/<day>/<year>/<hour>:<minute>';
-            throw new Error('Invalid URL format.');
-        }
+        const [month, day, year, time] = path.slice(3);
+        const [hour, minute] = (time || "").split(':');
 
-        // Extract date and time components from the URL
-        const [month, day, year, time] = path.slice(apiIndex + 2);
-        const [hour, minute] = time.split(':');
+        // Validate URL parameters
+        if (!month || !day || !year || !time || isNaN(Date.parse(`${year}-${month}-${day}T${hour}:${minute}:00`))) {
+            document.getElementById('message').textContent = "Invalid URL format. Use /api/timer/<month>/<day>/<year>/<hour>:<minute>";
+        } else {
+            // Calculate and display countdown
+            const targetDate = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
+            const messageElement = document.getElementById('message');
 
-        const targetDate = new Date(`${year}-${month}-${day}T${hour}:${minute}:00Z`);
+            function updateCountdown() {
+                const now = new Date();
+                const distance = targetDate - now;
 
-        if (isNaN(targetDate.getTime())) {
-            document.getElementById('countdown').textContent = 'Invalid date or time.';
-            throw new Error('Invalid date or time.');
-        }
+                if (distance <= 0) {
+                    messageElement.textContent = "Time's up!";
+                } else {
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000)) / 1000);
 
-        // Function to update the countdown
-        function updateCountdown() {
-            const now = new Date();
-            const diff = targetDate - now;
-
-            if (diff <= 0) {
-                document.getElementById('countdown').textContent = "Time's up!";
-                return;
+                    messageElement.textContent = `Time remaining: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+                }
             }
 
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % 1000) / 1000);
-
-            document.getElementById('countdown').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
         }
-
-        // Initial call and refresh every second
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>
