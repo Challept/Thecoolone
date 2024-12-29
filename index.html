@@ -3,252 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vetra - Movie Recommender</title>
+    <title>Countdown Timer</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to right, #34495e, #2ecc71);
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #001f3f, #000428, #001d3f);
             color: white;
             margin: 0;
             padding: 0;
-        }
-        header {
-            background: #2c3e50;
-            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
-        header h1 {
+        h1 {
             font-size: 2.5rem;
-            margin: 0;
-            color: #f1c40f;
+            margin-bottom: 20px;
         }
-        header p {
-            margin: 0.5rem 0 0;
-            font-size: 1.2rem;
-        }
-        footer {
-            background: #2c3e50;
-            padding: 1rem;
-            text-align: center;
-            margin-top: 2rem;
-        }
-        footer p {
-            margin: 0;
-            font-size: 1rem;
-            color: #ecf0f1;
-        }
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 1rem;
-            text-align: center;
-        }
-        .card {
-            background: #22303c;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px auto;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        }
-        .card h2 {
+        .countdown {
             font-size: 1.8rem;
-            color: #e74c3c;
+            margin-top: 10px;
         }
-        .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-        }
-        .btn {
-            background: #2980b9;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: transform 0.3s, background 0.3s;
-        }
-        .btn:hover {
-            background: #3498db;
-            transform: scale(1.1);
-        }
-        #submit-btn {
+        .error {
+            color: red;
+            font-size: 1.2rem;
             margin-top: 20px;
-            background: #27ae60;
-            color: black;
-            font-weight: bold;
-        }
-        #submit-btn:hover {
-            background: #2ecc71;
-        }
-        .movie-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 30px;
-        }
-        .movie-card {
-            background: #2d3436;
-            border-radius: 8px;
-            padding: 15px;
-            width: 220px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        }
-        .movie-card img {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-        .movie-card h2 {
-            color: #f1c40f;
-        }
-        .movie-card p {
-            font-size: 0.9rem;
-            color: #bdc3c7;
-        }
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2rem;
-            }
-            .card h2 {
-                font-size: 1.4rem;
-            }
-            .btn {
-                padding: 10px 15px;
-                font-size: 0.9rem;
-            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Vetra</h1>
-        <p>Personalized Movie Recommendations</p>
-    </header>
-
-    <div class="container">
-        <div class="card">
-            <h2>Select Genre</h2>
-            <p>Pick a genre to get started!</p>
-            <div class="btn-group" id="genre-buttons"></div>
-        </div>
-
-        <div class="card">
-            <h2>Select Language</h2>
-            <p>Choose your preferred movie language.</p>
-            <div class="btn-group" id="language-buttons">
-                <button class="btn" data-language="en">English</button>
-                <button class="btn" data-language="sv">Swedish</button>
-                <button class="btn" data-language="es">Spanish</button>
-                <button class="btn" data-language="ko">Korean</button>
-                <button class="btn" data-language="ja">Japanese</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <button id="submit-btn" class="btn">Get Recommendations</button>
-        </div>
-
-        <div class="movie-grid" id="movie-grid"></div>
+    <div>
+        <h1>Countdown Timer</h1>
+        <div id="output" class="countdown">Loading...</div>
     </div>
 
-    <footer>
-        <p>© 2024 Vetra. All rights reserved.</p>
-    </footer>
-
     <script>
-        const API_BASE_URL = "https://vetra.pagekite.me";
-        let selectedGenre = null;
-        let selectedLanguage = null;
+        // Läs URL-parametrar
+        const url = window.location.href;
+        const regex = /timer\/(\d{2})\/(\d{2})\/(\d{4})\/(\d{2}):(\d{2})/;
+        const match = url.match(regex);
 
-        async function loadGenres() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/genres`, {
-                    mode: 'cors',
-                    headers: {
-                        'Accept': 'application/json',
-                        'User-Agent': 'Mozilla/5.0 (Mobile; rv:68.0) Gecko/68.0 Firefox/68.0',
-                    },
-                });
-                if (!response.ok) throw new Error(`Network error: ${response.status}`);
-                const genres = await response.json();
+        if (match) {
+            const [_, month, day, year, hour, minute] = match;
 
-                const genreButtons = document.getElementById("genre-buttons");
-                genreButtons.innerHTML = "";
+            // Skapa ett mål-datum
+            const targetDate = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
 
-                for (const [genreName, genreId] of Object.entries(genres)) {
-                    const button = document.createElement("button");
-                    button.className = "btn";
-                    button.textContent = genreName;
-                    button.onclick = () => selectGenre(button);
-                    genreButtons.appendChild(button);
+            if (isNaN(targetDate.getTime())) {
+                document.getElementById("output").innerHTML = `<div class='error'>Ogiltigt datumformat!</div>`;
+            } else {
+                // Timer-logik
+                function updateCountdown() {
+                    const now = new Date();
+                    const diff = targetDate - now;
+
+                    if (diff <= 0) {
+                        document.getElementById("output").innerHTML = "Tiden är slut!";
+                        return;
+                    }
+
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000)) / 1000);
+
+                    document.getElementById("output").innerHTML =
+                        `${days}d ${hours}h ${minutes}m ${seconds}s`;
                 }
-            } catch (error) {
-                alert("Failed to load genres. Try refreshing or check your network.");
-                console.error(error);
+
+                setInterval(updateCountdown, 1000);
+                updateCountdown();
             }
+        } else {
+            document.getElementById("output").innerHTML = `<div class='error'>Använd URL-format: /timer/&lt;månad&gt;/&lt;dag&gt;/&lt;år&gt;/&lt;timme&gt;:&lt;minut&gt;</div>`;
         }
-
-        function selectGenre(button) {
-            document.querySelectorAll("#genre-buttons .btn").forEach(btn => btn.style.background = "#2980b9");
-            button.style.background = "#3498db";
-            selectedGenre = button.textContent;
-        }
-
-        document.querySelectorAll("#language-buttons .btn").forEach(button => {
-            button.addEventListener("click", () => {
-                document.querySelectorAll("#language-buttons .btn").forEach(btn => btn.style.background = "#2980b9");
-                button.style.background = "#3498db";
-                selectedLanguage = button.dataset.language;
-            });
-        });
-
-        async function getRecommendations() {
-            if (!selectedGenre || !selectedLanguage) {
-                alert("Please select both a genre and a language!");
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/recommend?genre=${selectedGenre}&language=${selectedLanguage}`, {
-                    mode: 'cors',
-                    headers: {
-                        'Accept': 'application/json',
-                    },
-                });
-                if (!response.ok) throw new Error(`Network error: ${response.status}`);
-                const movies = await response.json();
-
-                const movieGrid = document.getElementById("movie-grid");
-                movieGrid.innerHTML = "";
-
-                movies.forEach(movie => {
-                    const movieCard = document.createElement("div");
-                    movieCard.className = "movie-card";
-                    movieCard.innerHTML = `
-                        <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
-                        <h2>${movie.title}</h2>
-                        <p>Rating: ${movie.vote_average}</p>
-                        <p>${movie.overview}</p>
-                    `;
-                    movieGrid.appendChild(movieCard);
-                });
-
-                movieGrid.scrollIntoView({ behavior: "smooth" });
-            } catch (error) {
-                alert("Failed to load recommendations. Try again later.");
-                console.error(error);
-            }
-        }
-
-        document.getElementById("submit-btn").addEventListener("click", getRecommendations);
-
-        loadGenres();
     </script>
 </body>
 </html>
